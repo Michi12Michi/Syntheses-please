@@ -2,6 +2,6 @@ images {
   image: "/assets/sprites/menu/button_rectangle_depth_line.png"
 }
 images {
-  image: "/assets/sprites/menu/input_square.png"
+  image: "/assets/sprites/game/input_square.png"
 }
 extrude_borders: 2

@@ -1,0 +1,4 @@
+images {
+  image: "/assets/sprites/menu/button_round_line.png"
+}
+extrude_borders: 2

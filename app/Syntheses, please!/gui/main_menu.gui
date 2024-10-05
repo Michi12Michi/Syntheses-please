@@ -9,17 +9,14 @@ textures {
 }
 nodes {
   position {
-    x: 491.0
-    y: 415.0
-  }
-  size {
-    x: 192.0
-    y: 64.0
+    x: 600.0
+    y: 237.0
   }
   type: TYPE_BOX
   texture: "menu_atlas/button_rectangle_depth_line"
   id: "start_button"
   inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
 }
 nodes {
   scale {
@@ -44,8 +41,8 @@ nodes {
 }
 nodes {
   position {
-    x: 490.0
-    y: 307.0
+    x: 600.0
+    y: 137.0
   }
   type: TYPE_BOX
   texture: "menu_atlas/button_rectangle_depth_line"
