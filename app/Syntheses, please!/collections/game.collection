@@ -1,2 +1,18 @@
 name: "game"
 scale_along_z: 0
+embedded_instances {
+  id: "game_interface"
+  data: "components {\n"
+  "  id: \"game_interface\"\n"
+  "  component: \"/gui/game_interface.gui\"\n"
+  "}\n"
+  ""
+}
+embedded_instances {
+  id: "controller"
+  data: "components {\n"
+  "  id: \"game_controller\"\n"
+  "  component: \"/scripts/game_controller.script\"\n"
+  "}\n"
+  ""
+}

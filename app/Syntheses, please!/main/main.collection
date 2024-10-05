@@ -4,7 +4,7 @@ embedded_instances {
   id: "controller"
   data: "components {\n"
   "  id: \"controller\"\n"
-  "  component: \"/scripts/controller.script\"\n"
+  "  component: \"/scripts/main_controller.script\"\n"
   "}\n"
   "embedded_components {\n"
   "  id: \"game_proxy\"\n"

@@ -10,7 +10,7 @@ textures {
 nodes {
   position {
     x: 491.0
-    y: 441.0
+    y: 415.0
   }
   size {
     x: 192.0
