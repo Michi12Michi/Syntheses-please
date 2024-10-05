@@ -1,29 +1,26 @@
+local function show(self, proxy)
+	-- proxy is a specified proxy to load
+	if self.current_proxy then 
+		msg.post(self.current_proxy, "unload")
+		self.current_proxy = nil
+	end
+	msg.post(proxy, "async_load")
+end
+
 function init(self)
-	-- 
-end
-
-function final(self)
-	-- 
-end
-
-function update(self, dt)
-	-- 
-end
-
-function fixed_update(self, dt)
-	-- 
+	msg.post(".", "acquire_input_focus")
+	self.current_proxy = nil
+	msg.post("#", "load_menu")
 end
 
 function on_message(self, message_id, message, sender)
-	-- 
-end
-
-function on_input(self, action_id, action)
-	-- 
-	--    msg.post(".", "acquire_input_focus")
-
-end
-
-function on_reload(self)
-	-- 
+	-- handles main menu and game loading
+	if message_id == hash("load_menu") then
+		show(self, "#main_menu_proxy")
+	elseif message_id == hash("start_game") then
+		show(self, "#game_proxy")
+	elseif message_id == hash("proxy_loaded") then
+		self.current_proxy = sender
+		msg.post(sender, "enable")
+	end
 end
