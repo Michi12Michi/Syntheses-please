@@ -13,7 +13,7 @@ nodes {
     y: 100.0
   }
   type: TYPE_BOX
-  id: "settings"
+  id: "settings_button"
   inherit_alpha: true
   size_mode: SIZE_MODE_AUTO
 }
@@ -31,7 +31,7 @@ nodes {
   text: "Settings"
   font: "default"
   id: "text"
-  parent: "settings"
+  parent: "settings_button"
   inherit_alpha: true
 }
 nodes {
@@ -49,7 +49,7 @@ nodes {
     y: 100.0
   }
   type: TYPE_BOX
-  id: "notes"
+  id: "notes_button"
   inherit_alpha: true
 }
 nodes {
@@ -63,10 +63,10 @@ nodes {
     z: 0.0
   }
   type: TYPE_TEXT
-  text: "Blog"
+  text: "Notes"
   font: "default"
   id: "text1"
-  parent: "notes"
+  parent: "notes_button"
   inherit_alpha: true
 }
 nodes {
@@ -79,7 +79,7 @@ nodes {
     y: 100.0
   }
   type: TYPE_TEXT
-  text: "Livello: stocazzo"
+  text: "Level"
   font: "default"
   id: "level"
   inherit_alpha: true
@@ -97,6 +97,21 @@ nodes {
   text: "Exp: Noob"
   font: "default"
   id: "experience"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: 683.0
+    y: 652.0
+  }
+  size {
+    x: 200.0
+    y: 100.0
+  }
+  type: TYPE_TEXT
+  text: "Cash: "
+  font: "default"
+  id: "cash"
   inherit_alpha: true
 }
 material: "/builtins/materials/gui.material"

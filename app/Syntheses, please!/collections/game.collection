@@ -18,24 +18,24 @@ embedded_instances {
 }
 embedded_instances {
   id: "_item"
-  data: "embedded_components {\n"
+  data: "components {\n"
+  "  id: \"_item\"\n"
+  "  component: \"/scripts/_item.script\"\n"
+  "}\n"
+  "embedded_components {\n"
   "  id: \"sprite\"\n"
   "  type: \"sprite\"\n"
   "  data: \"default_animation: \\\"button_round_line\\\"\\n"
   "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "size {\\n"
-  "  x: 64.0\\n"
-  "  y: 64.0\\n"
-  "}\\n"
   "textures {\\n"
   "  sampler: \\\"texture_sampler\\\"\\n"
   "  texture: \\\"/assets/sprites/game/game_atlas.atlas\\\"\\n"
   "}\\n"
   "\"\n"
-  "  position {\n"
-  "    x: 621.0\n"
-  "    y: 321.0\n"
-  "  }\n"
   "}\n"
   ""
+  position {
+    x: 500.0
+    y: 500.0
+  }
 }

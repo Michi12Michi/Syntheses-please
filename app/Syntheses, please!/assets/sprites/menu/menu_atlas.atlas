@@ -4,4 +4,7 @@ images {
 images {
   image: "/assets/sprites/game/input_square.png"
 }
+images {
+  image: "/assets/sprites/menu/Screenshot 2024-10-06 103200.png"
+}
 extrude_borders: 2
