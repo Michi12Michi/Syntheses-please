@@ -1,3 +1,5 @@
+-- the script lacks managing the credits scene (should it be a GUI or an animated screen?)
+
 local function show(self, proxy)
 	-- proxy is a specified proxy to load
 	if self.current_proxy then 

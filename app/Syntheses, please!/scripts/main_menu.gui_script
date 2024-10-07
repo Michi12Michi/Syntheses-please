@@ -1,18 +1,24 @@
 function init(self)
+	self.resume = false
 	-- needs further logic that checks if game data exist and allows resuming a game
-	-- 		set button text to "resume game"
-	--		read and pass data to game
+	-- 	set button text to "resume game"
+	if (0==1) then
+		gui.set_text(gui.get_node("start_button_text"), "Resume")
+		self.resume = true
+	end
+	--	Further, code needs to read and pass data to game
 	msg.post(".", "acquire_input_focus")
 	self.start_button = gui.get_node("start_button")
+	
 	self.credits_button = gui.get_node("credits_button")
 end
 
 function on_input(self, action_id, action)
 	if action_id == hash("mouse_left") and action.released then
-		if gui.pick_node(self.start_button, action.x, action.y) then
+		if gui.pick_node(self.start_button, action.x, action.y) and self.resume == false then
 			msg.post("main:/controller#controller", "start_game")
 		elseif gui.pick_node(self.credits_button, action.x, action.y) then
-			-- handles the projection of a credits screen
+			-- handles the projection of a credits screen (missing)
 			print "Sto cazzo"
 		end
 	end

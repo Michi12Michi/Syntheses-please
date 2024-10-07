@@ -114,5 +114,61 @@ nodes {
   id: "cash"
   inherit_alpha: true
 }
+nodes {
+  position {
+    x: 1031.0
+    y: 337.0
+  }
+  scale {
+    x: 0.83265
+  }
+  size {
+    x: 400.0
+    y: 675.0
+  }
+  color {
+    y: 0.6
+    z: 0.6
+  }
+  type: TYPE_BOX
+  id: "items_collection"
+  inherit_alpha: true
+  alpha: 0.53
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  position {
+    x: 419.0
+    y: 26.0
+  }
+  scale {
+    x: 1.666426
+  }
+  size {
+    x: 500.0
+    y: 50.0
+  }
+  type: TYPE_BOX
+  id: "message_box"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  size {
+    x: 200.0
+    y: 100.0
+  }
+  color {
+    x: 0.2
+    y: 0.102
+    z: 0.502
+  }
+  type: TYPE_TEXT
+  text: "(Pu\303\262 servire?)"
+  font: "default"
+  id: "text2"
+  parent: "message_box"
+  inherit_alpha: true
+}
 material: "/builtins/materials/gui.material"
 adjust_reference: ADJUST_REFERENCE_PARENT
