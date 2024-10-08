@@ -17,7 +17,7 @@ function loadPage(page) {
             if (existingScript) existingScript.remove();
 
             const script = document.createElement('script');
-            script.src = `./js/${page}.js`; 
+            script.src = `./js/src/${page}.js`; 
             script.setAttribute('data-page', page);
             document.body.appendChild(script);
         })
