@@ -3,10 +3,15 @@
     background-color: #3498db;
     color: white;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    justify-content: start;
+    align-items: center; 
     overflow: hidden; /* Nessun scroll per lavoro */
     border: 2px solid yellow; /* Contorno giallo per il div lavoro */
+}
+
+#controlli {
+    display: flex;
+    flex-direction: column;
 }
 
 #categorie {
@@ -21,11 +26,13 @@
 }
 
 #materiali {
+    display: flex;
     background-color: #2ecc71;
     color: white;
     height: 100%;
     overflow-y: auto; /* Scroll solo verticale */
     overflow-x: hidden;
+    border: 2px solid yellow;
 }
 
 /* Stili per il menu */
@@ -64,9 +71,9 @@
 #materiali .item {
     background-color: #34495e;
     color: white;
-    height: 100px;
-    width: 100%;
-    margin-bottom: 10px;
+    height: 80px;
+    width: 80px;
+    margin: 10px;
     display: flex;
     justify-content: center;
     align-items: center;
