@@ -12,13 +12,24 @@ function loadPage(page) {
             document.getElementById('app').innerHTML = html;
 
             // Rimuove file CSS e JS specifici
-            const existingScript = document.querySelector('script[data-page]');
-            if (existingScript) 
-                existingScript.remove();
-            const existingCSS = document.querySelector("link[data-page]");
-            if (existingCSS && (existingCSS.data !== page)) {
-                console.log("Sto facendo la rimozione di un css");
-                existingCSS.remove();
+            if (page === "menu") {
+                const existingScript = document.querySelector('script[data-page]');
+                if (existingScript) 
+                    existingScript.remove();
+                const existingCSS = document.querySelector("link[data-page]");
+                if (existingCSS)
+                    existingCSS.remove();
+            }
+            else {
+                const newScript = document.createElement("script");
+                const newCSS = document.createElement("link");
+                newScript.setAttribute("src", `./js/${page}.js`);
+                newScript.setAttribute("data-page", page);
+                newCSS.href = `./css/${page}.css`;
+                newCSS.rel = "stylesheet";
+                newCSS.setAttribute("data-page", page);
+                document.head.appendChild(newCSS);
+                document.body.appendChild(newScript);
             }
         })
         .catch(error => {
