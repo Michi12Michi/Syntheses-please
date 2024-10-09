@@ -10,36 +10,19 @@ function loadPage(page) {
         .then(html => {
             // Aggiorna il contenuto di #app
             document.getElementById('app').innerHTML = html;
-            console.log("Caricamento della pagina:", page);
 
-            // Rimuove e carica il file JS specifico
+            // Rimuove file CSS e JS specifici
             const existingScript = document.querySelector('script[data-page]');
-            if (existingScript) existingScript.remove();
-
-            const script = document.createElement('script');
-            script.src = `./js/src/${page}.js`; 
-            script.setAttribute('data-page', page);
-            document.body.appendChild(script);
+            if (existingScript) 
+                existingScript.remove();
+            const existingCSS = document.querySelector("link[data-page]");
+            if (existingCSS && (existingCSS.data !== page)) {
+                console.log("Sto facendo la rimozione di un css");
+                existingCSS.remove();
+            }
         })
         .catch(error => {
             console.error(`Errore nel caricamento della pagina: ${error}`);
             document.getElementById('app').innerHTML = '<h1>Errore: pagina non trovata</h1>';
         });
 }
-
-document.addEventListener('DOMContentLoaded', function() {
-    const startGameButton = document.getElementById('start-game');
-    const creditsButton = document.getElementById('credits');
-
-    if (startGameButton) {
-        startGameButton.addEventListener('click', function() {
-            loadPage('game'); 
-        });
-    }
-
-    if (creditsButton) {
-        creditsButton.addEventListener('click', function() {
-            loadPage('credits'); 
-        });
-    }
-});
