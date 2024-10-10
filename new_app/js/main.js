@@ -1,3 +1,22 @@
+class Materiale {
+    constructor(nome) {
+        this.nome = nome;
+        this.createElement();
+    }
+
+    createElement() {
+        // prova istanziamento elemento 
+        const container = document.body.querySelector("div#materiali");
+        const item = document.createElement('div');
+        item.classList.add("item");
+        // La proprietà draggable deve avere un corrispettivo in un metodo che gestisce clonazione e distruzione del clone
+        item.setAttribute("draggable", "true");
+        item.textContent = this.nome;
+        container.appendChild(item);
+        return item;
+    }
+}
+
 function loadPage(page) {
     fetch(`./${page}.html`)
         .then(response => {
