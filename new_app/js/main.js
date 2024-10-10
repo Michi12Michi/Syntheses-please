@@ -1,19 +1,51 @@
 class Materiale {
-    constructor(nome) {
+    constructor(id, nome, contenitore) {
+        // costruisce un materiale con id e nome nel contenitore HTML specificato
+        this.id = id;
         this.nome = nome;
-        this.createElement();
+        this.contenitore = contenitore;
+        this.HTMLelement = this.createElement();
+        this.initDrag();
     }
 
     createElement() {
-        // prova istanziamento elemento 
-        const container = document.body.querySelector("div#materiali");
+        const container = document.body.querySelector(this.contenitore);
         const item = document.createElement('div');
         item.classList.add("item");
-        // La proprietà draggable deve avere un corrispettivo in un metodo che gestisce clonazione e distruzione del clone
         item.setAttribute("draggable", "true");
-        item.textContent = this.nome;
+        item.setAttribute("data-nome", this.nome);
+        const span = document.createElement("span");
+        span.innerHTML = this.nome;
+        item.appendChild(span);
         container.appendChild(item);
         return item;
+    }
+
+    initDrag() {
+        this.HTMLelement.addEventListener('dragstart', (e) => {
+            e.dataTransfer.setData('element', this.nome);
+        });
+
+        // Aggiungi un listener per l'evento dragend
+        this.HTMLelement.addEventListener('dragend', (e) => {
+            // Controlla se l'elemento è stato rilasciato fuori dall'area lavoro
+            const lavoroArea = document.getElementById('lavoro');
+            const isOutside = !lavoroArea.contains(e.target);
+
+            if (isOutside) {
+                this.remove(); // Rimuovi l'elemento dal DOM
+            }
+        });
+    }
+
+    onDiscover() {
+        // Presenta una animazione carina
+        console.log("Sto cazzo");
+    }
+
+    remove() {
+        this.HTMLelement.remove();
+        delete this;
     }
 }
 

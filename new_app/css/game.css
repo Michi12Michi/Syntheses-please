@@ -1,5 +1,6 @@
 /* Stili per le colonne */
 #lavoro {
+    position: relative;
     background-color: #3498db;
     color: white;
     display: flex;
