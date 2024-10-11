@@ -5,23 +5,26 @@ const materiali = document.body.querySelector("div#materiali");
 
 lavoro.addEventListener('dragover', (e) => {
     e.preventDefault();
-    console.log("sono su div#lavoro");
+});
+
+materiali.addEventListener("dragover", (e) => {
+    e.preventDefault();
 });
 
 lavoro.addEventListener('drop', (e) => {
     e.preventDefault();
-    console.log("ho droppato in lavoro");
-    const droppedElementID = e.dataTransfer.getData('id');
     const droppedElementNome = e.dataTransfer.getData('nome');
     const droppedElement = materiali.querySelector(`[data-nome='${droppedElementNome}']`)
     if (droppedElement) {
-        console.log("sono qui <------")
-        const newElement = new Materiale(droppedElementID, droppedElementNome, lavoro, false);
-        newElement.HTMLelement.style.position = 'fixed';
+        const newElement = new Materiale(droppedElementNome, lavoro, false);
+        newElement.HTMLelement.style.position = 'absolute';
         newElement.HTMLelement.style.left = `${e.offsetX - 50}px`;
         newElement.HTMLelement.style.top = `${e.offsetY - 50}px`;
     }
     
 });
 
-let a = new Materiale(2, "tua mamma", materiali, true);
+
+// DEBUG DI OGGETTI
+let a = new Materiale("tua mamma", materiali, true);
+let b = new Categoria("Puttana");

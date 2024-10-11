@@ -40,18 +40,24 @@
 
 #materiali-categorie {
     display: flex;
-    background-color: #2ecc71;
+    background-color: none;
     color: white;
 }
 
 #materiali .item {
-    cursor: pointer;
+    cursor: move;
     background-color: #34495e;
     color: white;
     width: 20%;
     aspect-ratio: 1/1;
+    border-radius: 50%;
     margin: 10px;
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+/* Prova */
+#lavoro .item {
+    background-color: black;
 }
