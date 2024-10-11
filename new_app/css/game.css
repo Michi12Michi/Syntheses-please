@@ -45,6 +45,7 @@
 }
 
 #materiali .item {
+    cursor: pointer;
     background-color: #34495e;
     color: white;
     width: 20%;

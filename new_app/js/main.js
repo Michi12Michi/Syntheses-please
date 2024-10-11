@@ -1,15 +1,17 @@
 class Materiale {
-    constructor(id, nome, contenitore) {
+    constructor(id, nome, contenitore, appena_scoperto) {
         // costruisce un materiale con id e nome nel contenitore HTML specificato
         this.id = id;
         this.nome = nome;
         this.contenitore = contenitore;
         this.HTMLelement = this.createElement();
         this.initDrag();
+        if (appena_scoperto)
+            this.onDiscover();
     }
 
     createElement() {
-        const container = document.body.querySelector(this.contenitore);
+        const container = this.contenitore;
         const item = document.createElement('div');
         item.classList.add("item");
         item.setAttribute("draggable", "true");
@@ -23,18 +25,10 @@ class Materiale {
 
     initDrag() {
         this.HTMLelement.addEventListener('dragstart', (e) => {
-            e.dataTransfer.setData('element', this.nome);
-        });
-
-        // Aggiungi un listener per l'evento dragend
-        this.HTMLelement.addEventListener('dragend', (e) => {
-            // Controlla se l'elemento è stato rilasciato fuori dall'area lavoro
-            const lavoroArea = document.getElementById('lavoro');
-            const isOutside = !lavoroArea.contains(e.target);
-
-            if (isOutside) {
-                this.remove(); // Rimuovi l'elemento dal DOM
-            }
+            console.log("started drag and drop");
+            console.log(e);
+            e.dataTransfer.setData('id', this.id);
+            e.dataTransfer.setData('nome', this.nome);
         });
     }
 
@@ -45,7 +39,7 @@ class Materiale {
 
     remove() {
         this.HTMLelement.remove();
-        delete this;
+        // this = null;
     }
 }
 
