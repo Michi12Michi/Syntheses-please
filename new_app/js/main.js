@@ -1,4 +1,5 @@
 // ---------- UTILS ----------
+const max_items_per_combination = 5;
 
 // -> implementa la modalità schermo intero su più piattaforme
 var screen = document.documentElement;
@@ -135,7 +136,7 @@ class Categoria {
     creaCategoria() {
         const container = document.querySelector("div#categorie");
         const item = document.createElement('div');
-        item.classList.add("item");
+        item.classList.add("categoria");
         item.innerHTML = this.nome;
         container.appendChild(item);
         return item;
@@ -151,3 +152,36 @@ class GameObject {
 
 }
 
+class Combinazione {
+    constructor() {
+        // l'elemento fondamentale è una lista di ID corrispondenti alle sostanze nel DB
+        this.elements_list = [];
+    }
+
+    add_material(material) {
+        if (this.elements_list.length < max_items_per_combination && this.elements_list.length > 1) {
+            this.elements_list.push(material);
+            // ci può stare una certa animazione (ad esempio un pop up che mostra che è stato aggiunto qualcosa)
+            this.check();
+        }
+    }
+
+    check() {
+        // la funzione deve controllare con una query se gli elementi, senza ordine alcuno, creano un nuovo composto
+        var query = 0;
+        if (query) {
+            // in caso positivo, verifica se il nuovo composto l'ho già scoperto (animazione se nuovo, via instanza)
+            // ...
+            // aggiorna il punteggio, l'esperienza o quello che è, nell'oggetto GameObject (verificando se la reazione è nuova)
+            // ...
+            this.empty();
+        } else {
+            if (this.elements_list.length == max_items_per_combination)
+                this.empty();
+        }
+    }
+
+    empty() {
+        this.elements_list = [];
+    }
+}

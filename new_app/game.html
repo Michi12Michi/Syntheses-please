@@ -1,28 +1,66 @@
 <div id="game" class="container-fluid d-flex row p-0 vh-100">
+    <!-- PLANCIA DI LAVORO -->
     <div id="lavoro" class="col-7">
-        <div id="indicatori" class="d-flex justify-content-center">
-            <p class="m-3">Livello: sto cazzo</p>
-            <p class="m-3">Esperienza: lattante</p>
-            <p class="m-3">$ molti</p>
+        <div id="indicatori" class="d-flex">
+          <div class="item mt-4">
+            <div class="circle me-2">
+                <div class="hexagon">
+                    <div class="inner">
+                        <img src="./assets/experience.png" alt=""/>
+                    </div>
+                </div>
+            </div>
+            <span>Coglione</span>
+          </div>
+          <div class="item mt-4">
+            <div class="circle me-2">
+                <div class="hexagon">
+                    <div class="inner">
+                        <img src="./assets/level.png" alt=""/>
+                    </div>
+                </div>
+            </div>
+            <span>0</span>
+          </div>
+          <div class="item mt-4">
+              <div class="circle me-2">
+                  <div class="hexagon">
+                      <div class="inner">
+                          <img src="./assets/dollar.png" alt=""/>
+                      </div>
+                  </div>
+              </div>
+              <span>Stocazzo</span>
+            </div>
         </div>
         <div id="controlli">
-            <button class="m-3" data-bs-toggle="modal" data-bs-target="#objective">Objective</button>
-            <button class="m-3">Blog</button>
+            <button class="m-3" data-bs-toggle="modal" data-bs-target="#obiettivo">Obiettivo</button>
+            <button class="m-3" data-bs-toggle="modal" data-bs-target="#lezioni">Lezioni</button>
             <button class="m-3">Shop</button>
         </div>
     </div>
     <div id="materiali-categorie" class="col-5 flex-column">
         <div id="categorie" class="row">
-            <div class="item">Categoria 1</div>
-            <div class="item">Categoria 2</div>
+            <div class="categoria">Categoria 1</div>
+            <div class="categoria">Categoria 2</div>
         </div>
         <!-- Popolazione div materiali -->
         <div id="materiali" class="row">
-            <div class="item">Elem 1</div>
-            <div class="item">Elem 2</div>
+          <div class="materiale">Elem 1</div>
+          <div class="materiale">Elem 2</div>
+          <div class="item">
+            <div class="circle">
+                <div class="hexagon">
+                    <div class="inner">
+                        <img src="./assets/2-Propanol.svg.png" alt=""/>
+                    </div>
+                </div>
+            </div>
+            <span>2-propanolo</span>
+          </div>
         </div> 
     </div>
-    <div class="modal fade p-0" id="objective" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade p-0" id="obiettivo" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-fullscreen">
           <div class="modal-content">
             <div class="modal-header" style="border: none;">
@@ -35,5 +73,17 @@
           </div>
         </div>
       </div>
-      
+      <div class="modal fade p-0" id="lezioni" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+          <div class="modal-content">
+            <div class="modal-header" style="border: none;">
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              Scrivi qui la tua lezione
+            </div>
+            
+          </div>
+        </div>
+      </div>
 </div>
