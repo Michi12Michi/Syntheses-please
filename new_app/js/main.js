@@ -150,6 +150,7 @@ class GameObject {
 
     }
 
+
 }
 
 class Combinazione {
@@ -174,6 +175,7 @@ class Combinazione {
             // ...
             // aggiorna il punteggio, l'esperienza o quello che è, nell'oggetto GameObject (verificando se la reazione è nuova)
             // ...
+            // peraltro, i $ dovrebbero diminuire se la stessa reazione viene ripetuta
             this.empty();
         } else {
             if (this.elements_list.length == max_items_per_combination)

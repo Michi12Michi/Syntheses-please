@@ -34,5 +34,4 @@ lavoro.addEventListener('drop', (e) => {
 
 
 // DEBUG DI OGGETTI
-let a = new Materiale("tua mamma", materiali, true);
 let b = new Categoria("Puttana");
