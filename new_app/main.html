@@ -9,12 +9,12 @@
 </head>
 <body class="vh-100">
     <!-- MAIN START -->
-    <div id="app" class="d-flex flex-column align-items-center justify-content-center min-vh-100">
+    <div id="app" class="d-flex flex-column align-items-center justify-content-center min-vh-100" onclick="openFullscreen()">
         <!-- Bootstrapped menu -->
         <div id="menu" class="d-flex flex-column align-items-center p-0">
             <img src="./assets/logo.png" alt="Logo" class="mb-3 col-6"/>
-            <button id="start-game" onclick="loadPage('game')" class="btn btn-outline-primary my-2 col-4">Start</button>
-            <button id="credits" onclick="loadPage('credits')" class="btn btn-outline-primary my-2 col-4">Credits</button>
+            <button id="start-game" onclick="loadPage('game')" class="btn btn-outline-primary my-2 col-4 col-md-3">Start</button>
+            <button id="credits" onclick="loadPage('credits')" class="btn btn-outline-primary my-2 col-4 col-md-3">Credits</button>
         </div>
     </div>
     <script src="./js/bootstrap.bundle.min.js"></script>

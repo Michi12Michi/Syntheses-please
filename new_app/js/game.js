@@ -13,6 +13,7 @@ const categorie = document.body.querySelector("div#categorie");
 [materiali, categorie].forEach((element) => {
     element.addEventListener("drop", (e) => {
         e.preventDefault();
+        console.log("Ho droppato in materiali o categorie");
         console.log(e);
     })
 });
