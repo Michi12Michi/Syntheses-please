@@ -56,26 +56,33 @@ function loadPage(page) {
 }
 
 // -> verifica il tipo di dispositivo e istanzia eventi generici (per il drag and drop)
-var deviceType = "unknown";
+let deviceType = "unknown";
 
-const deviceTouch = () => {
-    try {
-        document.createEvent("TouchEvent");
-        deviceType = "touch";
-        return true;
-    } catch(error) {
-        deviceType = "mouse";
-        return false;
+const isTouchDevice = () => {
+    return ('ontouchstart' in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0);
+};
+
+// Funzione per rilevare il tipo di dispositivo (mobile o desktop)
+const detectDeviceType = () => {
+    if (isTouchDevice()) {
+        deviceType = "mobile";
+    } else {
+        deviceType = "desktop";
     }
-}
+    return deviceType;
+};
+
+window.addEventListener("DOMContentLoaded", () => {
+    detectDeviceType();
+});
 
 var events = {
-    mouse: {
+    desktop: {
         down: "mousedown",
         up: "mouseup",
         move: "mousemove",
     }, 
-    touch: {
+    mobile: {
         down: "touchstart",
         up: "touchend",
         move: "touchmove",
@@ -84,73 +91,67 @@ var events = {
 
 // -> definizione di classi di gioco
 
-class Materiale {
-    constructor(nome, contenitore, appena_scoperto) {
-        // costruisce un materiale con nome nel contenitore HTML specificato
-        this.nome = nome;
-        this.contenitore = contenitore;
-        this.HTMLelement = this.creaMateriale(); // ritorna qualcosa come <div class="item" draggable="true" data-nome="nome"><span>nome</span></div>
-        this.initDrag();
-        if (appena_scoperto)
-            this.onDiscover();
-    }
+// class Materiale {
+//     constructor(nome, contenitore, appena_scoperto) {
+//         // costruisce un materiale con nome nel contenitore HTML specificato
+//         this.nome = nome;
+//         this.contenitore = contenitore;
+//         this.HTMLelement = this.creaMateriale(); // ritorna qualcosa come <div class="item" draggable="true" data-nome="nome"><span>nome</span></div>
+//         this.initDrag();
+//         if (appena_scoperto)
+//             this.onDiscover();
+//     }
 
-    creaMateriale() {
-        const item = document.createElement('div');
-        item.classList.add("item");
-        item.setAttribute("draggable", "true");
-        item.setAttribute("data-nome", this.nome);
-        const span = document.createElement("span");
-        span.innerHTML = this.nome;
-        item.appendChild(span);
-        this.contenitore.appendChild(item);
-        return item;
-    }
+//     creaMateriale() {
+//         const item = document.createElement('div');
+//         item.classList.add("item");
+//         item.setAttribute("draggable", "true");
+//         item.setAttribute("data-nome", this.nome);
+//         const span = document.createElement("span");
+//         span.innerHTML = this.nome;
+//         item.appendChild(span);
+//         this.contenitore.appendChild(item);
+//         return item;
+//     }
 
-    initDrag() {
-        this.HTMLelement.addEventListener('dragstart', (e) => {
-            e.dataTransfer.setData('nome', this.nome);
-        });
-    }
+//     initDrag() {
+//         this.HTMLelement.addEventListener('dragstart', (e) => {
+//             e.dataTransfer.setData('nome', this.nome);
+//         });
+//     }
 
-    onDiscover() {
-        // Presenta una animazione carina
-        console.log("Sto cazzo");
-    }
+//     onDiscover() {
+//         // Presenta una animazione carina
+//         console.log("Sto cazzo");
+//     }
 
-    remove() {
-        this.HTMLelement.remove();
-        // this = null; ---> speravo che funzionasse l'autoeliminazione dell'oggetto e invece no
-    }
-}
+//     remove() {
+//         this.HTMLelement.remove();
+//         // this = null; ---> speravo che funzionasse l'autoeliminazione dell'oggetto e invece no
+//     }
+// }
 
 class Categoria {
     constructor(nome) {
         this.nome = nome;
-        this.HTMLelement = this.creaCategoria();
+        this.HTMLelement = this.renderizzaCategoria();
         // Per la renderizzazione dei materiali corrispondenti nella sezione materiali:
-        this.HTMLelement.addEventListener("click", function() {console.log("Porco dio")});
-        this.items = []; // --> array di Materiale
+        this.HTMLelement.addEventListener("click", this.mostraMateriali);
     }
 
-    creaCategoria() {
-        const container = document.querySelector("div#categorie");
-        const item = document.createElement('div');
+    renderizzaCategoria() {
+        let item = document.createElement('div');
         item.classList.add("categoria");
         item.innerHTML = this.nome;
-        container.appendChild(item);
+        divCategorie.appendChild(item);
         return item;
     }
-}
 
-// La classe Gameobject dovrebbe contenere i progressi di tutto il gioco (livello, esperienza, soldi, reazioni fatte, 
-// sostanze scoperte (le relative categorie sono istanziate dinamicamente all'avvio del gioco).
-class GameObject {
-    constructor() {
-
+    mostraMateriali() {
+        // svuoto eventuali materiali
+        divMateriali.innerHTML = "";
+        // si rende necessario interrogare il DB, congiuntamente all'oggetto GameObject, per renderizzare i materiali appropriati
     }
-
-
 }
 
 class Combinazione {
@@ -186,4 +187,19 @@ class Combinazione {
     empty() {
         this.elements_list = [];
     }
+}
+
+
+// La classe Gameobject dovrebbe contenere i progressi di tutto il gioco (livello, esperienza, soldi, reazioni fatte, 
+// sostanze scoperte (le relative categorie sono istanziate dinamicamente all'avvio del gioco).
+class GameObject {
+    constructor() {
+        this.level = 0;
+        this.experience = 0;
+        this.credit = 0;
+        this.reaction_list = new Map(); // salva id e numero di volte con set()
+        this.elements_list = [];
+    }
+
+
 }

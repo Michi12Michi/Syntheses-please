@@ -1,37 +1,27 @@
-// console.log("Porco dio")
+const divLavoro = document.body.querySelector("div#lavoro");
+const divMateriali = document.body.querySelector("div#materiali");
+const divCategorie = document.body.querySelector("div#categorie");
 
-const lavoro = document.body.querySelector("div#lavoro");
-const materiali = document.body.querySelector("div#materiali");
-const categorie = document.body.querySelector("div#categorie");
+////////////////////////////////////////////////////////////////////////
+// utilities per il drag and drop degli elementi #materiali.materiale //
+let initialX = 0, initialY = 0;
+let moving = false;
+let activeElement = null; 
 
-[materiali, lavoro, categorie].forEach((element) => {
-    element.addEventListener("dragover", (e) => {
-        e.preventDefault();
-    })
-});
-
-[materiali, categorie].forEach((element) => {
-    element.addEventListener("drop", (e) => {
-        e.preventDefault();
-        console.log("Ho droppato in materiali o categorie");
-        console.log(e);
-    })
-});
-
-lavoro.addEventListener('drop', (e) => {
+const startDragging = (e, element) => {
     e.preventDefault();
-    const droppedElementNome = e.dataTransfer.getData('nome');
-    const droppedElement = materiali.querySelector(`[data-nome='${droppedElementNome}']`)
-    const alreadyPresentElement = lavoro.querySelector(`[data-nome='${droppedElementNome}']`);
-    if (droppedElement && ! alreadyPresentElement) {
-        const newElement = new Materiale(droppedElementNome, lavoro, false);
-        newElement.HTMLelement.style.position = 'absolute';
-        newElement.HTMLelement.style.left = `${e.offsetX - 50}px`;
-        newElement.HTMLelement.style.top = `${e.offsetY - 50}px`;
-    }
-    
-});
+    initialX = e.clientX;
+    initialY = e.clientY;
+    moving = true;
+    activeElement = element;
+};
 
+const makeDraggable = (element) => {
+    element.addEventListener(events[deviceType].down, (e) => {
+        if (!moving)
+            startDragging(e, element);
+    });
+};
 
-// DEBUG DI OGGETTI
-let b = new Categoria("Puttana");
+// associo al contenitore div di materiali un event listener, di modo che ciascun materiale (anche dinamicamente generato
+// possa ereditare la funzionalità di drag and drop
