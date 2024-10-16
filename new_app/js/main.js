@@ -69,12 +69,11 @@ const detectDeviceType = () => {
     } else {
         deviceType = "desktop";
     }
+    console.log(deviceType);
     return deviceType;
 };
 
-window.addEventListener("DOMContentLoaded", () => {
-    detectDeviceType();
-});
+detectDeviceType();
 
 var events = {
     desktop: {
@@ -154,7 +153,7 @@ class Categoria {
     }
 }
 
-class Combinazione {
+class Combination {
     constructor() {
         // l'elemento fondamentale è una lista di ID corrispondenti alle sostanze nel DB
         this.elements_list = [];

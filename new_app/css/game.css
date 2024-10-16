@@ -47,19 +47,6 @@
     color: white;
 }
 
-/* #materiali .materiale {
-    cursor: move;
-    background-color: #34495e;
-    color: white;
-    width: 20%;
-    aspect-ratio: 1/1;
-    border-radius: 50%;
-    margin: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-} */
-
 #indicatori .item {
     display: flex;
     align-items: center;
@@ -145,17 +132,7 @@
     object-fit: contain;
 }
 
-.materiale span {
-    color: black;
-    font-weight: 500;
-}
-
 #lezioni .modal-body {
     background-color: rgb(5, 119, 5);
     border: solid 30px rgb(180, 89, 89);
 }
-
-
-
-
-
