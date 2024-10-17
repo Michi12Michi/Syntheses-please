@@ -2,7 +2,7 @@
   <!-- PLANCIA DI LAVORO -->
   <div id="lavoro" class="col-7 p-0">
     <div id="indicatori" class="d-flex">
-      <div class="item mt-4">
+      <div id="esperienza" class="item mt-4">
         <div class="circle me-2">
           <div class="hexagon">
             <div class="inner">
@@ -10,9 +10,9 @@
             </div>
           </div>
         </div>
-        <span>Coglione</span>
+        <span></span>
       </div>
-      <div class="item mt-4">
+      <div id="livello" class="item mt-4">
         <div class="circle me-2">
           <div class="hexagon">
             <div class="inner">
@@ -20,41 +20,47 @@
             </div>
           </div>
         </div>
-        <span>0</span>
+        <span></span>
       </div>
-      <div class="item mt-4">
+      <div id="soldi" class="item mt-4">
         <div class="circle me-2">
-            <div class="hexagon">
-                <div class="inner">
-                  <img src="./assets/dollar.png" alt=""/>
-                </div>
+          <div class="hexagon">
+            <div class="inner">
+              <img src="./assets/dollar.png" alt=""/>
             </div>
+          </div>
         </div>
-        <span>Stocazzo</span>
+        <span></span>
       </div>
     </div>
     <div id="controlli">
-      <button class="m-3" data-bs-toggle="modal" data-bs-target="#obiettivo">Obiettivo</button>
+      <button class="m-3" data-bs-toggle="modal" data-bs-target="#obiettivo">
+      </button>
       <button class="m-3" data-bs-toggle="modal" data-bs-target="#lezioni">Lezioni</button>
-      <button class="m-3">Shop</button>
+      <button class="m-3">
+      </button>
     </div>
   </div>
   <div id="materiali-categorie" class="col-5 flex-column">
-    <div id="categorie" class="row p-2">
-      <div class="categoria">Categoria 1</div>
-      <div class="categoria">Categoria 2</div>
+    <div id="categorie" class="row p-3">
+      <!-- <div class="categoria p-0 mx-3" data-categoriaid="1">
+        <div class="hexagon">
+          <div class="inner">
+            
+            <span style="font-size: larger; color: black;">Bufala</span>
+          </div>
+        </div>
+      </div> -->
     </div>
     <!-- Popolazione div materiali -->
     <div id="materiali" class="row p-3">
-      <div class="materiale p-0">
-        <div class="circle">
-          <div class="hexagon">
-            <div class="inner">
-              <svg width="38px" height="31px" viewBox="0 0 38 31" style="background-color: #ffffff00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1">
-                <text x="0" y="0" stroke="none" fill="#0000ff" transform="matrix(0.0666667 0 0 0.0666667 3.66222 22.88)" font-style="normal" font-weight="bold" font-size="320px" font-family="Arial">
-                Mg</text>
-              </svg>
-            </div>
+      <div class="materiale p-0" data-materialeid="1">
+        <div class="hexagon">
+          <div class="inner">
+            <svg width="38px" height="31px" viewBox="0 0 38 31" style="background-color: #ffffff00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1">
+              <text x="0" y="0" stroke="none" fill="#0000ff" transform="matrix(0.0666667 0 0 0.0666667 3.66222 22.88)" font-style="normal" font-weight="bold" font-size="320px" font-family="Arial">
+              Mg</text>
+            </svg>
           </div>
         </div>
       </div>

@@ -130,28 +130,28 @@ var events = {
 //     }
 // }
 
-class Categoria {
-    constructor(nome) {
-        this.nome = nome;
-        this.HTMLelement = this.renderizzaCategoria();
-        // Per la renderizzazione dei materiali corrispondenti nella sezione materiali:
-        this.HTMLelement.addEventListener("click", this.mostraMateriali);
-    }
+// class Categoria {
+//     constructor(nome) {
+//         this.nome = nome;
+//         this.HTMLelement = this.renderizzaCategoria();
+//         // Per la renderizzazione dei materiali corrispondenti nella sezione materiali:
+//         this.HTMLelement.addEventListener("click", this.mostraMateriali);
+//     }
 
-    renderizzaCategoria() {
-        let item = document.createElement('div');
-        item.classList.add("categoria");
-        item.innerHTML = this.nome;
-        divCategorie.appendChild(item);
-        return item;
-    }
+//     renderizzaCategoria() {
+//         let item = document.createElement('div');
+//         item.classList.add("categoria");
+//         item.innerHTML = this.nome;
+//         divCategorie.appendChild(item);
+//         return item;
+//     }
 
-    mostraMateriali() {
-        // svuoto eventuali materiali
-        divMateriali.innerHTML = "";
-        // si rende necessario interrogare il DB, congiuntamente all'oggetto GameObject, per renderizzare i materiali appropriati
-    }
-}
+//     mostraMateriali() {
+//         // svuoto eventuali materiali
+//         divMateriali.innerHTML = "";
+//         // si rende necessario interrogare il DB, congiuntamente all'oggetto GameObject, per renderizzare i materiali appropriati
+//     }
+// }
 
 class Combination {
     constructor() {
@@ -169,6 +169,7 @@ class Combination {
 
     check() {
         // la funzione deve controllare con una query se gli elementi, senza ordine alcuno, creano un nuovo composto
+        // suppongo che la query sia sempre la stessa
         var query = 0;
         if (query) {
             // in caso positivo, verifica se il nuovo composto l'ho già scoperto (animazione se nuovo, via instanza)
@@ -196,7 +197,7 @@ class GameObject {
         this.level = 0;
         this.experience = 0;
         this.credit = 0;
-        this.reaction_list = new Map(); // salva id e numero di volte con set()
+        this.reaction_list = new Map(); // salva id e numero di volte con set(), recupera con get()
         this.elements_list = [];
     }
 
