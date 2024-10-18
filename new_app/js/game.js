@@ -16,7 +16,8 @@ var combinazione = new Combination();
 // ...... 2b) altrimenti l'oggetto giocatore va popolato
 //              ..........................
 // ...... 2c) le categorie vanno istanziate (almeno queste) in ordine di id crescente
-//              ... query che rende id e immagine categoria dalla lista giocatore.elements_list
+//              ... query* che rende id e immagine categoria dalla lista giocatore.elements_list
+//              ... SELECT DISTINCT c.id, c.image FROM categories c JOIN material_category mc ON mc.category_id = c.id WHERE mc.material_id IN (/* lista di id dei materiali */) ORDER BY c.id ASC;
 //              ... e per ognuno di essi chiama Categoria (già definita sotto)
 //              ... la quale renderizza la categoria e appende eventlistener per renderizzare i materiali al click (già def)
 
@@ -88,7 +89,9 @@ const moveElement = (e) => {
 const checkDropZone = (e) => {
     e.preventDefault();
     if (!activeElement) return;
+    // PROVA
 
+    // FINE PROVA
     const itemRect = activeElement.getBoundingClientRect();
     const itemCenterX = itemRect.left + itemRect.width / 2;
     const itemCenterY = itemRect.top + itemRect.height / 2;
@@ -108,11 +111,17 @@ const checkDropZone = (e) => {
         if (combinator !== null) {
             const combinatorRect = combinator.getBoundingClientRect();
             if (itemCenterX > combinatorRect.left && itemCenterX < combinatorRect.right && itemCenterY > combinatorRect.top && itemCenterY < combinatorRect.bottom) {
+                // recupero l'id coddato in data-materialeid
+                var id = activeElement.getAttribute("data-materialeid");
+                console.log(id);
                 activeElement.classList.add("disappearing");
                 const elementToRemove = activeElement;
                 setTimeout(() => {
                     elementToRemove.remove();
                 }, 700);
+                // qui va gestito il combinatore
+                Combination.add_material(id);
+
             }
         }
     }
@@ -148,6 +157,9 @@ function Categoria(id, img) {
 function Materiali(id_cat) {
     // va gestita la query che mi ritorna id e immagine di tutti i materiali in giocatore.elements_list
     // appartenenti alla categoria con id_cat
+    //
+    // SELECT m.id, m.image FROM materials m JOIN material_category mc ON mc.material_id = m.id WHERE mc.category_id = id_cat ORDER BY m.id ASC;
+    //
     // esempio di prova
     let elementi = new Array(1,2,3,4);
     elementi.forEach(element => {
@@ -159,7 +171,8 @@ function Materiali(id_cat) {
         mat_div.setAttribute("data-materialeid", element);
         hex_div.classList.add("hexagon");
         inner_div.classList.add("inner");
-        mat_div.appendChild(hex_div).appendChild(inner_div).innerHTML = "sto cazzo";
+        mat_div.appendChild(hex_div).appendChild(inner_div).innerHTML = "sto cazzo"; // mettere immagine
+        // manca da aggiungere eventlistener per il trasporto
         divMateriali.appendChild(mat_div);
     });
 };

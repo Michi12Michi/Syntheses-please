@@ -88,71 +88,6 @@ var events = {
     }
 };
 
-// -> definizione di classi di gioco
-
-// class Materiale {
-//     constructor(nome, contenitore, appena_scoperto) {
-//         // costruisce un materiale con nome nel contenitore HTML specificato
-//         this.nome = nome;
-//         this.contenitore = contenitore;
-//         this.HTMLelement = this.creaMateriale(); // ritorna qualcosa come <div class="item" draggable="true" data-nome="nome"><span>nome</span></div>
-//         this.initDrag();
-//         if (appena_scoperto)
-//             this.onDiscover();
-//     }
-
-//     creaMateriale() {
-//         const item = document.createElement('div');
-//         item.classList.add("item");
-//         item.setAttribute("draggable", "true");
-//         item.setAttribute("data-nome", this.nome);
-//         const span = document.createElement("span");
-//         span.innerHTML = this.nome;
-//         item.appendChild(span);
-//         this.contenitore.appendChild(item);
-//         return item;
-//     }
-
-//     initDrag() {
-//         this.HTMLelement.addEventListener('dragstart', (e) => {
-//             e.dataTransfer.setData('nome', this.nome);
-//         });
-//     }
-
-//     onDiscover() {
-//         // Presenta una animazione carina
-//         console.log("Sto cazzo");
-//     }
-
-//     remove() {
-//         this.HTMLelement.remove();
-//         // this = null; ---> speravo che funzionasse l'autoeliminazione dell'oggetto e invece no
-//     }
-// }
-
-// class Categoria {
-//     constructor(nome) {
-//         this.nome = nome;
-//         this.HTMLelement = this.renderizzaCategoria();
-//         // Per la renderizzazione dei materiali corrispondenti nella sezione materiali:
-//         this.HTMLelement.addEventListener("click", this.mostraMateriali);
-//     }
-
-//     renderizzaCategoria() {
-//         let item = document.createElement('div');
-//         item.classList.add("categoria");
-//         item.innerHTML = this.nome;
-//         divCategorie.appendChild(item);
-//         return item;
-//     }
-
-//     mostraMateriali() {
-//         // svuoto eventuali materiali
-//         divMateriali.innerHTML = "";
-//         // si rende necessario interrogare il DB, congiuntamente all'oggetto GameObject, per renderizzare i materiali appropriati
-//     }
-// }
-
 class Combination {
     constructor() {
         // l'elemento fondamentale è una lista di ID corrispondenti alle sostanze nel DB
@@ -173,7 +108,7 @@ class Combination {
         var query = 0;
         if (query) {
             // in caso positivo, verifica se il nuovo composto l'ho già scoperto (animazione se nuovo, via instanza)
-            // ...
+           
             // aggiorna il punteggio, l'esperienza o quello che è, nell'oggetto GameObject (verificando se la reazione è nuova)
             // ...
             // peraltro, i $ dovrebbero diminuire se la stessa reazione viene ripetuta
@@ -197,7 +132,7 @@ class GameObject {
         this.level = 0;
         this.experience = 0;
         this.credit = 0;
-        this.reaction_list = new Map(); // salva id e numero di volte con set(), recupera con get()
+        this.reaction_list = new Map(); // salva id e numero di volte di una data combinazione con set(), recupera con get()
         this.elements_list = [];
     }
 
