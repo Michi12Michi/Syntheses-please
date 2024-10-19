@@ -8,7 +8,6 @@ const originalElement = document.body.querySelector("div#materiali .materiale");
 // LOGICA DI GIOCO
 // 1) istanzio oggetto di gioco e combinazione
 var giocatore = new GameObject();
-var combinazione = new Combination();
 
 // 2) lettura dei dati dal db
 // ...... 2a) se non ci sono dati, bootstrappa il tutorial o l'intro o il cazzo che è
@@ -89,9 +88,7 @@ const moveElement = (e) => {
 const checkDropZone = (e) => {
     e.preventDefault();
     if (!activeElement) return;
-    // PROVA
-
-    // FINE PROVA
+    
     const itemRect = activeElement.getBoundingClientRect();
     const itemCenterX = itemRect.left + itemRect.width / 2;
     const itemCenterY = itemRect.top + itemRect.height / 2;
@@ -120,7 +117,7 @@ const checkDropZone = (e) => {
                     elementToRemove.remove();
                 }, 700);
                 // qui va gestito il combinatore
-                Combination.add_material(id);
+                //
 
             }
         }
@@ -155,7 +152,7 @@ function Categoria(id, img) {
 };
 
 function Materiali(id_cat) {
-    // va gestita la query che mi ritorna id e immagine di tutti i materiali in giocatore.elements_list
+    // va gestita la query che mi ritorna id e immagine di tutti i materiali in giocatore.material_list
     // appartenenti alla categoria con id_cat
     //
     // SELECT m.id, m.image FROM materials m JOIN material_category mc ON mc.material_id = m.id WHERE mc.category_id = id_cat ORDER BY m.id ASC;

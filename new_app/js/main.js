@@ -88,43 +88,6 @@ var events = {
     }
 };
 
-class Combination {
-    constructor() {
-        // l'elemento fondamentale è una lista di ID corrispondenti alle sostanze nel DB
-        this.elements_list = [];
-    }
-
-    add_material(material) {
-        if (this.elements_list.length < max_items_per_combination && this.elements_list.length > 1) {
-            this.elements_list.push(material);
-            // ci può stare una certa animazione (ad esempio un pop up che mostra che è stato aggiunto qualcosa)
-            this.check();
-        }
-    }
-
-    check() {
-        // la funzione deve controllare con una query se gli elementi, senza ordine alcuno, creano un nuovo composto
-        // suppongo che la query sia sempre la stessa
-        var query = 0;
-        if (query) {
-            // in caso positivo, verifica se il nuovo composto l'ho già scoperto (animazione se nuovo, via instanza)
-           
-            // aggiorna il punteggio, l'esperienza o quello che è, nell'oggetto GameObject (verificando se la reazione è nuova)
-            // ...
-            // peraltro, i $ dovrebbero diminuire se la stessa reazione viene ripetuta
-            this.empty();
-        } else {
-            if (this.elements_list.length == max_items_per_combination)
-                this.empty();
-        }
-    }
-
-    empty() {
-        this.elements_list = [];
-    }
-}
-
-
 // La classe Gameobject dovrebbe contenere i progressi di tutto il gioco (livello, esperienza, soldi, reazioni fatte, 
 // sostanze scoperte (le relative categorie sono istanziate dinamicamente all'avvio del gioco).
 class GameObject {
@@ -132,9 +95,60 @@ class GameObject {
         this.level = 0;
         this.experience = 0;
         this.credit = 0;
-        this.reaction_list = new Map(); // salva id e numero di volte di una data combinazione con set(), recupera con get()
-        this.elements_list = [];
+        this.karma = 0;
+        this.combination_done_list = new Map(); // salva id e numero di volte di una data combinazione con set(), recupera con get()
+        this.material_discovered_list = [];
+        this.material_to_combine_list = [];
     }
 
+    addMaterialToReactor(material) {
+        if (this.material_to_combine_list.length < max_items_per_combination && this.material_to_combine_list.length > 1) {
+            this.material_to_combine_list.push(material);
+            // ci può stare una certa animazione (ad esempio un pop up che mostra che è stato aggiunto qualcosa)
+            this.checkReactor();
+        }
+    }
 
+    emptyReactor() {
+        this.material_to_combine_list = [];
+    }
+
+    checkReactor() {
+        // la funzione deve controllare con una query se gli elementi, senza ordine alcuno, creano un nuovo composto
+        // suppongo che la query sia sempre la stessa
+        // NECESSITA INTERVENTO DI COMBY
+        // la query sottostante dovrebbe essere una sottoquery e raggruppa per id le combinazioni che hanno la lista reagenti giusta
+        // SELECT combination_id FROM combination_material WHERE material_id in (lista) AND product = 0 GROUP BY combination_id HAVING COUNT(material_id) = (lista)
+        var query = 0;
+        if (query) {
+            // supponendo di aver reperito id, price ed experience del prodotto e id della combinazione
+            let id_materiale = 1, price_materiale = 12, experience_materiale = 50, id_combinazione = 999;
+            // in caso la combinazione è positiva, verifica se ho già fatto questa reazione
+            // non ho bisogno di aggiornare la lista materiali nè l'esperienza, ma solo i soldi e la mappa reazioni
+            if (combination_done_list.has(id_combinazione)) {
+                // sarà stata fatta un certo numero di volte, per cui aggiorno i soldi e la Map
+                let times_reaction = this.combination_done_list.get(id_combinazione);
+                // guadagno originale(4-volte)/(2+volte^2) ----> come suggeriva alessandro
+                this.credit = this.credit + price_materiale*((4 - times_reaction)/(2 + Math.pow(times_reaction, 2)));
+                this.combination_done_list.set(id_combinazione, times_reaction + 1);
+            } else {
+                // se non ho mai fatto la reazione aggiorno tutti i parametri
+                this.combination_done_list.set(id_combinazione, 1);
+                this.credit = this.credit + price_materiale;
+                this.experience = this.experience + experience_materiale;
+                // ma devo a questo punto verificare se il composto non ce l'ho nella lista (se ce l'ho, pace)
+                if (!(this.material_discovered_list.has(id_materiale))) {
+                    this.material_discovered_list.push(id_materiale);
+                    // dovrebbe partire una animazione standard e devo passare immagine e descrizione del materiale
+
+                }
+            }
+           
+            // finalmente svuoto il reattore
+            this.empty();
+        } else {
+            if (this.material_to_combine_list.length == max_items_per_combination)
+                this.empty();
+        }
+    }
 }
