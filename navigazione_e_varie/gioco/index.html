@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Syntheses, please!</title>
+        <link rel="stylesheet" href="assets/onsenui/css/onsenui.css">
+        <link rel="stylesheet" href="assets/onsenui/css/onsen-css-components.css">
+        <script src="assets/onsenui/js/onsenui.min.js"></script>
+    </head>
+    <body>
+
+    <ons-page>
+        
+        <ons-tabbar swipeable position="auto"> <!-- TODO: popola man mano che vengono fuori pagine -->
+            <ons-tab page="laboratorio.html" label="Laboratorio" icon="ion-md-beaker">
+            </ons-tab>
+            <ons-tab page="richieste.html" label="Richieste" icon="ion-md-people">
+            </ons-tab>
+            <ons-tab page="mercato_nero.html" label="Mercato nero" icon="ion-md-cash">
+            </ons-tab>
+            <ons-tab page="diario.html" label="Diario" icon="ion-md-book">
+            </ons-tab>
+        </ons-tabbar>
+
+    </ons-page>
+
+    <!-- TODO: smista i template, ed eventuali js e css, in file omonimi -->
+
+    <template id="laboratorio.html">
+        <ons-page id="laboratorio">
+            <p style="text-align: center;">
+                Questa sarà la pagina principale, dove si gioca. Po' s ver.
+            </p>
+        </ons-page>
+    </template>
+
+
+
+    <template id="richieste.html">
+        <ons-page id="richieste">
+            <ons-toolbar>
+                <div class="center">Richieste</div>
+            </ons-toolbar>
+            
+            <ons-list>
+                <ons-list-header>La gente ha bisogno della tua chimica!</ons-list-header>
+                <!-- TODO: carica dinamicamente da DB -->
+                <ons-list-item tappable>
+                    <div class="left">
+                        <img class="list-item__thumbnail" src="https://placehold.co/40" alt="faccia personaggio">
+                    </div>
+                    <div class="center">
+                        <span class="list-item__title">Nome personaggio</span><span class="list-item__subtitle">Titolo quest</span>
+                    </div>
+                </ons-list-item>
+
+                <ons-list-item tappable>
+                    <div class="left">
+                        <img class="list-item__thumbnail" src="https://placehold.co/40" alt="faccia personaggio">
+                    </div>
+                    <div class="center">
+                        <span class="list-item__title">Nome personaggio</span><span class="list-item__subtitle">Titolo quest</span>
+                    </div>
+                </ons-list-item>
+
+                <ons-list-item tappable>
+                    <div class="left">
+                        <img class="list-item__thumbnail" src="https://placehold.co/40" alt="faccia personaggio">
+                    </div>
+                    <div class="center">
+                        <span class="list-item__title">Nome personaggio</span><span class="list-item__subtitle">Titolo quest</span>
+                    </div>
+                </ons-list-item>
+
+            </ons-list>
+            
+
+        </ons-page>
+    </template>
+
+
+
+    <template id="mercato_nero.html">
+        <ons-page id="mercato_nero">
+            <ons-toolbar>
+                <div class="center">Mercato nero</div>
+            </ons-toolbar>
+
+            <ons-list>
+                <ons-list-header>Acquistabili</ons-list-header>
+                <!-- TODO: carica dinamicamente da DB -->
+                <ons-list-item tappable>
+                    <div class="left">
+                        <img class="list-item__thumbnail" src="https://placehold.co/40" alt="materiale">
+                    </div>
+                    <div class="center">
+                        <span class="list-item__title">Nome comune materiale</span><span class="list-item__subtitle">Dettagli: prezzo, livello, nome IUPAC(?)</span>
+                    </div>
+                </ons-list-item>
+
+                <ons-list-item tappable>
+                    <div class="left">
+                        <img class="list-item__thumbnail" src="https://placehold.co/40" alt="materiale">
+                    </div>
+                    <div class="center">
+                        <span class="list-item__title">Nome comune materiale</span><span class="list-item__subtitle">Dettagli: prezzo, livello, nome IUPAC(?)</span>
+                    </div>
+                </ons-list-item>
+
+                <ons-list-item tappable>
+                    <div class="left">
+                        <img class="list-item__thumbnail" src="https://placehold.co/40" alt="materiale">
+                    </div>
+                    <div class="center">
+                        <span class="list-item__title">Nome comune materiale</span><span class="list-item__subtitle">Dettagli: prezzo, livello, nome IUPAC(?)</span>
+                    </div>
+                </ons-list-item>
+
+            </ons-list>
+
+        </ons-page>
+    </template>
+
+
+
+    <template id="diario.html">
+        <ons-page id="diario">
+            <ons-toolbar>
+                <div class="center">Diario</div>
+            </ons-toolbar>
+            <p style="text-align: center;">
+                Il diario, con le pagine sfogliabili tramite due bottoncini in basso a sinistra e destra.
+            </p>
+        </ons-page>
+    </template>
+
+
+
+    <script src="./js/main.js">
+    </script>
+
+</body>
+</html>
