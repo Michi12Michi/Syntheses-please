@@ -88,7 +88,7 @@ var events = {
     }
 };
 
-// La classe Gameobject dovrebbe contenere i progressi di tutto il gioco (livello, esperienza, soldi, reazioni fatte, 
+// La classe Gameobject dovrebbe contenere i progressi di tutto il gioco (livello, esperienza, soldi, reazioni fatte (id e quante volte in Map), 
 // sostanze scoperte (le relative categorie sono istanziate dinamicamente all'avvio del gioco).
 class GameObject {
     constructor() {
@@ -116,6 +116,9 @@ class GameObject {
     checkReactor() {
         // la funzione deve controllare con una query se gli elementi, senza ordine alcuno, creano un nuovo composto
         // suppongo che la query sia sempre la stessa
+        // ----------------------
+        // SERVE VERIFICARE SE ABBIAMO UN LIVELLO IDONEO?
+        // ----------------------
         // NECESSITA INTERVENTO DI COMBY
         // la query sottostante dovrebbe essere una sottoquery e raggruppa per id le combinazioni che hanno la lista reagenti giusta
         // SELECT combination_id FROM combination_material WHERE material_id in (lista) AND product = 0 GROUP BY combination_id HAVING COUNT(material_id) = (lista)
@@ -123,24 +126,36 @@ class GameObject {
         if (query) {
             // supponendo di aver reperito id, price ed experience del prodotto e id della combinazione
             let id_materiale = 1, price_materiale = 12, experience_materiale = 50, id_combinazione = 999;
-            // in caso la combinazione è positiva, verifica se ho già fatto questa reazione
+            // in caso la COMBINAZIONE RISULTI POSITIVA, verifica se ho già fatto questa reazione
             // non ho bisogno di aggiornare la lista materiali nè l'esperienza, ma solo i soldi e la mappa reazioni
+            // non ho bisogno di triggerare altro
             if (combination_done_list.has(id_combinazione)) {
                 // sarà stata fatta un certo numero di volte, per cui aggiorno i soldi e la Map
                 let times_reaction = this.combination_done_list.get(id_combinazione);
                 // guadagno originale(4-volte)/(2+volte^2) ----> come suggeriva alessandro
                 this.credit = this.credit + price_materiale*((4 - times_reaction)/(2 + Math.pow(times_reaction, 2)));
                 this.combination_done_list.set(id_combinazione, times_reaction + 1);
+                // dal momento che la tabella combinations ha un campo event_id, dovrei forse gestire la possibilità di un evento
+                // domanda seria: ma questo accade ogni volta che viene condotta la stessa reazione? è giusto come comportamento?
             } else {
                 // se non ho mai fatto la reazione aggiorno tutti i parametri
+                // a) aggiorno lista reazioni fatte
                 this.combination_done_list.set(id_combinazione, 1);
+                // b) aggiorno soldi ed esperienza
                 this.credit = this.credit + price_materiale;
                 this.experience = this.experience + experience_materiale;
-                // ma devo a questo punto verificare se il composto non ce l'ho nella lista (se ce l'ho, pace)
+                // c) verificare se il composto non ce l'ho nella lista
+                // non dovrei preoccuparmi del fatto che ce l'ho, perché ce l'ho già salvato
                 if (!(this.material_discovered_list.has(id_materiale))) {
+                    // QUI ENTRO SOLO SE IL COMPOSTO è STATO FATTO PER LA PRIMA VOLTA
                     this.material_discovered_list.push(id_materiale);
-                    // dovrebbe partire una animazione standard e devo passare immagine e descrizione del materiale
+                    // dovrebbe partire una animazione standard di scopertauaochefigo e devo passare immagine e descrizione del materiale
+                    // e dovrei anche verificare se appartiene ad una categoria che già ho sbloccato, no?
+                    // faccio una query su material_category?
+                    // in caso la categoria ce l'ho, sti cazzi, altrimenti devo chiamare Categoria(id_cat) per il rendering
 
+                    // qui dovrei capire se questo composto triggera un evento in particolare, quindi devo fare una 
+                    // query su materials per ottenere trigger_event
                 }
             }
            

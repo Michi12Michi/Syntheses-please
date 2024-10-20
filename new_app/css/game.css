@@ -127,8 +127,8 @@
     background-color: #ffffff;
 }
 
-.materiale img {
-    width: 60%;
+.materiale img, .materiale svg {
+    width: 100%;
     object-fit: contain;
 }
 

@@ -1,11 +1,12 @@
 const divLavoro = document.body.querySelector("div#lavoro");
 const divMateriali = document.body.querySelector("div#materiali");
 const divCategorie = document.body.querySelector("div#categorie");
-// seleziono solo un elemento da muovere (PROVA)(PROVA)(PROVA)
-const originalElement = document.body.querySelector("div#materiali .materiale");
+// seleziono gli elementi da muovere (PROVA)(PROVA)(PROVA) --> andrà applicato ai child prodotti in Categoria()
+const materialsToDrag = document.body.querySelectorAll("div#materiali .materiale");
 // (FINE PROVA)
 
 // LOGICA DI GIOCO
+// INIZIALIZZAZIONE 
 // 1) istanzio oggetto di gioco e combinazione
 var giocatore = new GameObject();
 
@@ -25,9 +26,14 @@ var giocatore = new GameObject();
 let indicatore_esperienza = document.querySelector("#esperienza span");
 let indicatore_livello = document.querySelector("#livello span");
 let indicatore_soldi = document.querySelector("#soldi span");
-indicatore_esperienza.innerHTML = "exp";
-indicatore_livello.innerHTML = "0";
-indicatore_soldi.innerHTML = "0";
+// ...... set dei valori
+indicatore_esperienza.innerHTML = giocatore.experience;
+indicatore_livello.innerHTML = giocatore.level;
+// TO DO:
+// noto il livello, posso tranquillamente gestire/inizializzare il blog
+indicatore_soldi.innerHTML = giocatore.credit;
+
+// tutto quanto visto sopra, idealmente e secondo il mio piccolo cervello, una volta finito tutto può essere calato nel costruttore
 
 // (QUESTO BLOCCO NON HA BISOGNO DI MANUTENZIONE (PER ORA))
 ////////////////////////////////////////////////////////////////////////
@@ -61,17 +67,32 @@ const makeDraggable = (element) => {
 };
 
 // questa va usata in un foreach su tutti i materiali ogni qualvolta viene renderizzata una categoria
-originalElement.addEventListener(events[deviceType].down, (e) => {
-    if (!moving) {
-        e.preventDefault();
-        const clonedElement = originalElement.cloneNode(true);
-        applyStyles(originalElement, clonedElement);
-        clonedElement.style.left = originalElement.getBoundingClientRect().left + "px";
-        clonedElement.style.top = originalElement.getBoundingClientRect().top + "px";
-        document.body.appendChild(clonedElement);
-        makeDraggable(clonedElement);
-        startDragging(e, clonedElement);
-    }
+// originalElement.addEventListener(events[deviceType].down, (e) => {
+//     if (!moving) {
+//         e.preventDefault();
+//         const clonedElement = originalElement.cloneNode(true);
+//         applyStyles(originalElement, clonedElement);
+//         clonedElement.style.left = originalElement.getBoundingClientRect().left + "px";
+//         clonedElement.style.top = originalElement.getBoundingClientRect().top + "px";
+//         document.body.appendChild(clonedElement);
+//         makeDraggable(clonedElement);
+//         startDragging(e, clonedElement);
+//     }
+// });
+
+materialsToDrag.forEach((material) => {
+    material.addEventListener(events[deviceType].down, (e) => {
+        if (!moving) {
+            e.preventDefault();
+            const clonedElement = material.cloneNode(true);
+            applyStyles(material, clonedElement);
+            clonedElement.style.left = material.getBoundingClientRect().left + "px";
+            clonedElement.style.top = material.getBoundingClientRect().top + "px";
+            document.body.appendChild(clonedElement);
+            makeDraggable(clonedElement);
+            startDragging(e, clonedElement);
+        }
+    });
 });
 
 const moveElement = (e) => {
@@ -134,7 +155,8 @@ document.addEventListener(events[deviceType].up, checkDropZone);
 // FINE UTILITIES PER DRAG AND DROP
 //
 
-// renderizza le categorie e appende eventlistener al click
+// renderizza le categorie e appende eventlistener al click --> serve in prima istanza a inizializzarle -> la sezione #materiali resta vuota,
+// nel senso che non ho previsto (né credo sia necessario) una popolazione di una categoria in particolare, di inizio
 function Categoria(id, img) {
     const cat_div = document.createElement("div");
     const hex_div = document.createElement("div");
@@ -152,12 +174,13 @@ function Categoria(id, img) {
 };
 
 function Materiali(id_cat) {
+    // SERVE SOLO A RENDERIZZARE I MATERIALI DI UNA CATEGORIA CON DATO id_cat
     // va gestita la query che mi ritorna id e immagine di tutti i materiali in giocatore.material_list
     // appartenenti alla categoria con id_cat
     //
     // SELECT m.id, m.image FROM materials m JOIN material_category mc ON mc.material_id = m.id WHERE mc.category_id = id_cat ORDER BY m.id ASC;
     //
-    // esempio di prova
+    // esempio-prototipo di prova
     let elementi = new Array(1,2,3,4);
     elementi.forEach(element => {
         const mat_div = document.createElement("div");
