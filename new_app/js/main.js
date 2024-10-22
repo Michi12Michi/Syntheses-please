@@ -1,6 +1,40 @@
 // ---------- UTILS ----------
 const max_items_per_combination = 5;
 
+// TODO: aggiungi TODO dove opportuno, così navighiamo velocemente. 
+
+/* TODO: flusso di coscienza, fammi sapere che ne pensi
+Esistono solo 4 eventi che scandiscono il passare del tempo nel gioco, tutti determinati 
+dall'interazione dell'utente col loop principale: 
+
+1 - combinazione riuscita (prima volta o ennesima, nessuna differenza in questo contesto);
+2 - acquisto nel negozio;
+3 - quest accettata;
+4 - passaggio al livello successivo (l'utente, quando ha i requisiti, può scegliere di farlo).
+
+Ogni volta che avviene una delle quattro cose scritte sopra, direi di far girare la stessa identica
+funzione OMNIFUNZIONE, così scriviamo il codice impegnativo una sola volta ed è molto più facile per test 
+e debug. Inoltre, evitiamo ripetizioni.
+
+Che dovrebbe fare questo codice nella OMNIFUNZIONE?
+
+In ordine: 
+1 - Gestire le quest (sempre nel game object, che salverà i dati JSON sul dispositivo), 
+quindi visualizzare le nuove disponibili e concludere quelle riuscite o fallite (si tratta di 
+controllare le condizioni di tutte le quest che abbiano come requisito il livello attuale del giocatore).
+Segue sblocco di materiali, aggiornamento exp e $.
+2 - Gestire il rendering degli acquistabili (1), dei materiali (2) e delle categorie (3) e in generale 
+delle statistiche a schermo (sempre exp, $, livello).
+
+Vorrei rimuovere completamente gli eventi, perché sono ridondanti per com'è organizzata ora la struttura
+delle quest. Sempre nella OMNIFUNZIONE, ci mettiamo il riconoscimento per quest speciali tipo GAME OVER
+che avranno una logica diversa da tutte le altre, ma saranno rarissime.
+
+Per quanto riguarda GameObject.checkReactor(), direi che va benissimo. Inoltre, se seguiamo il 
+ragionamento della OMNIFUNZIONE, checkReactor() è praticamente già pronta per funzionare. La query sql
+dovrebbe funzionare alla grande.
+*/
+
 // -> implementa la modalità schermo intero su più piattaforme
 var screen = document.documentElement;
 
@@ -117,7 +151,7 @@ class GameObject {
         // la funzione deve controllare con una query se gli elementi, senza ordine alcuno, creano un nuovo composto
         // suppongo che la query sia sempre la stessa
         // ----------------------
-        // SERVE VERIFICARE SE ABBIAMO UN LIVELLO IDONEO?
+        // SERVE VERIFICARE SE ABBIAMO UN LIVELLO IDONEO? // TODO: sì
         // ----------------------
         // NECESSITA INTERVENTO DI COMBY
         // la query sottostante dovrebbe essere una sottoquery e raggruppa per id le combinazioni che hanno la lista reagenti giusta
@@ -132,13 +166,13 @@ class GameObject {
             if (combination_done_list.has(id_combinazione)) {
                 // sarà stata fatta un certo numero di volte, per cui aggiorno i soldi e la Map
                 let times_reaction = this.combination_done_list.get(id_combinazione);
-                // guadagno originale(4-volte)/(2+volte^2) ----> come suggeriva alessandro
+                // guadagno originale(4-volte)/(2+volte^2) ----> come suggeriva alessandro // TODO: si dovrebbe applicare tenendo conto del numero di volte che si è fatto ricorso a questa combinazione o al numero di volte che si è generato un certo prodotto? (come nel mondo reale, nel secondo caso)
                 this.credit = this.credit + price_materiale*((4 - times_reaction)/(2 + Math.pow(times_reaction, 2)));
                 this.combination_done_list.set(id_combinazione, times_reaction + 1);
-                // dal momento che la tabella combinations ha un campo event_id, dovrei forse gestire la possibilità di un evento
+                // dal momento che la tabella combinations ha un campo event_id, dovrei forse gestire la possibilità di un evento? // TODO: sì, ma non qui, dall'altra parte dell'else
                 // domanda seria: ma questo accade ogni volta che viene condotta la stessa reazione? è giusto come comportamento?
             } else {
-                // se non ho mai fatto la reazione aggiorno tutti i parametri
+                // se non ho mai fatto la reazione aggiorno tutti i parametri // TODO: qui vedo gli eventi della combinazione
                 // a) aggiorno lista reazioni fatte
                 this.combination_done_list.set(id_combinazione, 1);
                 // b) aggiorno soldi ed esperienza
@@ -147,7 +181,7 @@ class GameObject {
                 // c) verificare se il composto non ce l'ho nella lista
                 // non dovrei preoccuparmi del fatto che ce l'ho, perché ce l'ho già salvato
                 if (!(this.material_discovered_list.has(id_materiale))) {
-                    // QUI ENTRO SOLO SE IL COMPOSTO è STATO FATTO PER LA PRIMA VOLTA
+                    // QUI ENTRO SOLO SE IL COMPOSTO è STATO FATTO PER LA PRIMA VOLTA // TODO: qui vedo gli eventi del nuovo materiale
                     this.material_discovered_list.push(id_materiale);
                     // dovrebbe partire una animazione standard di scopertauaochefigo e devo passare immagine e descrizione del materiale
                     // e dovrei anche verificare se appartiene ad una categoria che già ho sbloccato, no?
@@ -158,7 +192,7 @@ class GameObject {
                     // query su materials per ottenere trigger_event
                 }
             }
-           
+
             // finalmente svuoto il reattore
             this.empty();
         } else {
