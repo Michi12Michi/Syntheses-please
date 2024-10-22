@@ -1,9 +1,7 @@
 // ---------- UTILS ----------
 const max_items_per_combination = 5;
 
-// TODO: aggiungi TODO dove opportuno, così navighiamo velocemente. 
-
-/* TODO: flusso di coscienza, fammi sapere che ne pensi
+/* TODO: 
 Esistono solo 4 eventi che scandiscono il passare del tempo nel gioco, tutti determinati 
 dall'interazione dell'utente col loop principale: 
 
@@ -148,54 +146,60 @@ class GameObject {
     }
 
     checkReactor() {
-        // la funzione deve controllare con una query se gli elementi, senza ordine alcuno, creano un nuovo composto
-        // suppongo che la query sia sempre la stessa
-        // ----------------------
-        // SERVE VERIFICARE SE ABBIAMO UN LIVELLO IDONEO? // TODO: sì
-        // ----------------------
-        // NECESSITA INTERVENTO DI COMBY
-        // la query sottostante dovrebbe essere una sottoquery e raggruppa per id le combinazioni che hanno la lista reagenti giusta
-        // SELECT combination_id FROM combination_material WHERE material_id in (lista) AND product = 0 GROUP BY combination_id HAVING COUNT(material_id) = (lista)
-        var query = 0;
-        if (query) {
-            // supponendo di aver reperito id, price ed experience del prodotto e id della combinazione
-            let id_materiale = 1, price_materiale = 12, experience_materiale = 50, id_combinazione = 999;
-            // in caso la COMBINAZIONE RISULTI POSITIVA, verifica se ho già fatto questa reazione
-            // non ho bisogno di aggiornare la lista materiali nè l'esperienza, ma solo i soldi e la mappa reazioni
-            // non ho bisogno di triggerare altro
-            if (combination_done_list.has(id_combinazione)) {
-                // sarà stata fatta un certo numero di volte, per cui aggiorno i soldi e la Map
-                let times_reaction = this.combination_done_list.get(id_combinazione);
-                // guadagno originale(4-volte)/(2+volte^2) ----> come suggeriva alessandro // TODO: si dovrebbe applicare tenendo conto del numero di volte che si è fatto ricorso a questa combinazione o al numero di volte che si è generato un certo prodotto? (come nel mondo reale, nel secondo caso)
-                this.credit = this.credit + price_materiale*((4 - times_reaction)/(2 + Math.pow(times_reaction, 2)));
-                this.combination_done_list.set(id_combinazione, times_reaction + 1);
-                // dal momento che la tabella combinations ha un campo event_id, dovrei forse gestire la possibilità di un evento? // TODO: sì, ma non qui, dall'altra parte dell'else
-                // domanda seria: ma questo accade ogni volta che viene condotta la stessa reazione? è giusto come comportamento?
-            } else {
-                // se non ho mai fatto la reazione aggiorno tutti i parametri // TODO: qui vedo gli eventi della combinazione
-                // a) aggiorno lista reazioni fatte
-                this.combination_done_list.set(id_combinazione, 1);
-                // b) aggiorno soldi ed esperienza
-                this.credit = this.credit + price_materiale;
-                this.experience = this.experience + experience_materiale;
-                // c) verificare se il composto non ce l'ho nella lista
-                // non dovrei preoccuparmi del fatto che ce l'ho, perché ce l'ho già salvato
-                if (!(this.material_discovered_list.has(id_materiale))) {
-                    // QUI ENTRO SOLO SE IL COMPOSTO è STATO FATTO PER LA PRIMA VOLTA // TODO: qui vedo gli eventi del nuovo materiale
-                    this.material_discovered_list.push(id_materiale);
-                    // dovrebbe partire una animazione standard di scopertauaochefigo e devo passare immagine e descrizione del materiale
-                    // e dovrei anche verificare se appartiene ad una categoria che già ho sbloccato, no?
-                    // faccio una query su material_category?
-                    // in caso la categoria ce l'ho, sti cazzi, altrimenti devo chiamare Categoria(id_cat) per il rendering
+        // Controlla se gli elementi, senza ordine, creano un nuovo composto
+        const query_material_ids = this.material_to_combine_list.join(", ");
+        const query_material_length = String(this.material_to_combine_list.length);
+        // ottengo id combinazione e id materiale prodotto
+        var query_existing_combination = `SELECT cm1.combination_id, cm2.material_id AS material_id_with_product_1
+        FROM combination_material cm1
+        JOIN combination_material cm2 ON cm1.combination_id = cm2.combination_id
+        WHERE cm1.product = 0 AND cm1.material_id IN ${query_material_ids}
+        AND cm2.product = 1
+        /GROUP BY cm1.combination_id
+        HAVING COUNT(DISTINCT cm1.material_id) = ${query_material_length};`
+        if (query_existing_combination) {
+            // recupero blog_id e level_id dalla combinazione
+            let query_combination_properties = `SELECT blog_id, level_id FROM combinations c WHERE c.id = ...;` // TODO: INSERIRE ID COMBINAZIONE
+            // il controllo vero e proprio sugli esiti della combinazione parte dal valutare il livello attuale
+            if (0 <= this.level) { // TODO: INSERIRE IL LIVELLO DERIVANTE DALLA QUERY
+                // recupero tutte le proprietà del prodotto
+                let query_product_properties = `SELECT * FROM materials WHERE id = ...;`; // TODO: inserire id materiale prodotto
+                let id_materiale = 1, price_materiale = 12, experience_materiale = 50, id_combinazione = 999;
+                // verifica se ho già fatto questa reazione
+                // non ho bisogno di aggiornare la lista materiali nè l'esperienza, ma solo i soldi e la mappa reazioni
+                // non ho bisogno di triggerare altro
+                if (combination_done_list.has(id_combinazione)) {
+                    // sarà stata fatta un certo numero di volte, per cui aggiorno i soldi e la Map
+                    let times_reaction = this.combination_done_list.get(id_combinazione);
+                    // guadagno originale(4-volte)/(2+volte^2) ----> come suggeriva alessandro // TODO: si dovrebbe applicare tenendo conto del numero di volte che si è fatto ricorso a questa combinazione o al numero di volte che si è generato un certo prodotto? (come nel mondo reale, nel secondo caso)
+                    this.credit = this.credit + price_materiale*((4 - times_reaction)/(2 + Math.pow(times_reaction, 2)));
+                    this.combination_done_list.set(id_combinazione, times_reaction + 1);
+                } else {
+                    // se non ho mai fatto la reazione aggiorno tutti i parametri // TODO: qui vedo gli eventi della combinazione
+                    // a) aggiorno lista reazioni fatte
+                    this.combination_done_list.set(id_combinazione, 1);
+                    // b) aggiorno soldi ed esperienza
+                    this.credit = this.credit + price_materiale;
+                    this.experience = this.experience + experience_materiale;
+                    // c) verificare se il composto non ce l'ho nella lista
+                    // non dovrei preoccuparmi del fatto che ce l'ho, perché ce l'ho già salvato
+                    if (!(this.material_discovered_list.has(id_materiale))) {
+                        // QUI ENTRO SOLO SE IL COMPOSTO è STATO FATTO PER LA PRIMA VOLTA // TODO: qui vedo gli eventi del nuovo materiale
+                        this.material_discovered_list.push(id_materiale);
+                        // dovrebbe partire una animazione standard di scopertauaochefigo e devo passare immagine e descrizione del materiale
+                        // e dovrei anche verificare se appartiene ad una categoria che già ho sbloccato, no?
+                        // faccio una query su material_category?
+                        // in caso la categoria ce l'ho, sti cazzi, altrimenti devo chiamare Categoria(id_cat) per il rendering
 
-                    // qui dovrei capire se questo composto triggera un evento in particolare, quindi devo fare una 
-                    // query su materials per ottenere trigger_event
+                    }
                 }
+            } else {
+                console.log("Non hai livello coglioncello");
             }
-
-            // finalmente svuoto il reattore
+            // finalmente svuoto il reattore -> la combinazione è valida, anche in caso in cui non ci sia il livello.
             this.empty();
         } else {
+            // la combinazione non ha portato a frutti
             if (this.material_to_combine_list.length == max_items_per_combination)
                 this.empty();
         }

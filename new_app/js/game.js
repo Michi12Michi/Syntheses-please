@@ -6,8 +6,7 @@ const materialsToDrag = document.body.querySelectorAll("div#materiali .materiale
 // (FINE PROVA)
 
 // LOGICA DI GIOCO
-// INIZIALIZZAZIONE 
-// 1) istanzio oggetto di gioco e combinazione
+// 1) istanzio oggetto di gioco
 var giocatore = new GameObject();
 
 // 2) lettura dei dati dal db
@@ -20,6 +19,7 @@ var giocatore = new GameObject();
 //              ... SELECT DISTINCT c.id, c.image FROM categories c JOIN material_category mc ON mc.category_id = c.id WHERE mc.material_id IN (/* lista di id dei materiali */) ORDER BY c.id ASC;
 //              ... e per ognuno di essi chiama Categoria (già definita sotto)
 //              ... la quale renderizza la categoria e appende eventlistener per renderizzare i materiali al click (già def)
+
 
 
 // ...... 2z) gli indicatori vanno aggiornati
