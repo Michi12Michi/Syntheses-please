@@ -7,30 +7,23 @@
         <script src="assets/onsenui/js/onsenui.min.js"></script>
     </head>
     <body>
-    <ons-navigator id="navigator" page="loading.html"></ons-navigator>
-    
-    <template id="main.html">
-        <ons-page>
-            <ons-tabbar swipeable position="auto"> <!-- TODO: popola man mano che vengono fuori pagine -->
-                <ons-tab page="laboratorio.html" label="Laboratorio" icon="ion-md-beaker">
-                </ons-tab>
-                <ons-tab page="richieste.html" label="Richieste" icon="ion-md-people">
-                </ons-tab>
-                <ons-tab page="mercato_nero.html" label="Mercato nero" icon="ion-md-cash">
-                </ons-tab>
-                <ons-tab page="diario.html" label="Diario" icon="ion-md-book">
-                </ons-tab>
-            </ons-tabbar>
-        </ons-page>
-    </template>
+
+    <ons-page>
+        
+        <ons-tabbar swipeable position="auto"> <!-- TODO: popola man mano che vengono fuori pagine -->
+            <ons-tab page="laboratorio.html" label="Laboratorio" icon="ion-md-beaker">
+            </ons-tab>
+            <ons-tab page="richieste.html" label="Richieste" icon="ion-md-people">
+            </ons-tab>
+            <ons-tab page="mercato_nero.html" label="Mercato nero" icon="ion-md-cash">
+            </ons-tab>
+            <ons-tab page="diario.html" label="Diario" icon="ion-md-book">
+            </ons-tab>
+        </ons-tabbar>
+
+    </ons-page>
 
     <!-- TODO: smista i template, ed eventuali js e css, in file omonimi -->
-
-    <template id="loading.html">
-        <ons-page id="loading">
-            <p>Sto caricando</p>
-        </ons-page>
-    </template>
 
     <template id="laboratorio.html">
         <ons-page id="laboratorio">

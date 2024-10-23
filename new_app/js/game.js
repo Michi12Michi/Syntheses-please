@@ -9,6 +9,9 @@ const materialsToDrag = document.body.querySelectorAll("div#materiali .materiale
 // 1) istanzio oggetto di gioco
 var giocatore = new GameObject();
 
+// TODO: proposta -> i punti 2 e sottopunti a e b possono essere gestiti nel costruttore dell'oggetto?
+// 2c per le categorie e 2z possono essere racchiusi in una funzione render()
+
 // 2) lettura dei dati dal db
 // ...... 2a) se non ci sono dati, bootstrappa il tutorial o l'intro o il cazzo che è
 //              ..........................
@@ -33,7 +36,6 @@ indicatore_livello.innerHTML = giocatore.level;
 // noto il livello, posso tranquillamente gestire/inizializzare il blog
 indicatore_soldi.innerHTML = giocatore.credit;
 
-// tutto quanto visto sopra, idealmente e secondo il mio piccolo cervello, una volta finito tutto può essere calato nel costruttore
 
 // (QUESTO BLOCCO NON HA BISOGNO DI MANUTENZIONE (PER ORA))
 ////////////////////////////////////////////////////////////////////////

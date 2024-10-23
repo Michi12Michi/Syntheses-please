@@ -124,13 +124,40 @@ var events = {
 // sostanze scoperte (le relative categorie sono istanziate dinamicamente all'avvio del gioco).
 class GameObject {
     constructor() {
-        this.level = 0;
-        this.experience = 0;
-        this.credit = 0;
-        this.karma = 0;
-        this.combination_done_list = new Map(); // salva id e numero di volte di una data combinazione con set(), recupera con get()
-        this.material_discovered_list = [];
-        this.material_to_combine_list = [];
+        const savedData = localStorage.getItem("gameData");
+        if (savedData) {
+            const parsedData = JSON.parse(savedData);
+            this.level = parsedData.level;
+            this.experience = parsedData.experience;
+            this.credit = parsedData.credit;
+            this.karma = parsedData.karma;
+            this.combination_done_list = new Map(this.combination_done_list); 
+            this.quest_done_list = new Map(this.quest_done_list); 
+            this.material_discovered_list = parsedData.material_discovered_list;
+            this.material_to_combine_list = [];
+        } else {
+            this.level = 0;
+            this.experience = 0;
+            this.credit = 0;
+            this.karma = 0;
+            this.combination_done_list = new Map(); // salva id e numero di volte di una data combinazione con set(), recupera con get()
+            this.quest_done_list = new Map(); // salva id quest e booleano (o int 0/1)
+            this.material_discovered_list = [];
+            this.material_to_combine_list = [];
+        }
+    }
+
+    saveGameData() {
+        const dataToSave = {
+            level: this.level,
+            experience: this.experience,
+            credit: this.credit,
+            karma: this.karma,
+            combination_done_list: Array.from(this.combination_done_list),
+            quest_done_list: Array.from(this.quest_done_list),
+            material_discovered_list: this.material_discovered_list,
+        };
+        localStorage.setItem("gameData", JSON.stringify(dataToSave));
     }
 
     addMaterialToReactor(material) {
@@ -171,11 +198,11 @@ class GameObject {
                 if (combination_done_list.has(id_combinazione)) {
                     // sarà stata fatta un certo numero di volte, per cui aggiorno i soldi e la Map
                     let times_reaction = this.combination_done_list.get(id_combinazione);
-                    // guadagno originale(4-volte)/(2+volte^2) ----> come suggeriva alessandro // TODO: si dovrebbe applicare tenendo conto del numero di volte che si è fatto ricorso a questa combinazione o al numero di volte che si è generato un certo prodotto? (come nel mondo reale, nel secondo caso)
+                    // guadagno originale(4-volte)/(2+volte^2) ----> come suggeriva alessandro 
                     this.credit = this.credit + price_materiale*((4 - times_reaction)/(2 + Math.pow(times_reaction, 2)));
                     this.combination_done_list.set(id_combinazione, times_reaction + 1);
                 } else {
-                    // se non ho mai fatto la reazione aggiorno tutti i parametri // TODO: qui vedo gli eventi della combinazione
+                    // se non ho mai fatto la reazione aggiorno tutti i parametri* // TODO: qui vedo gli eventi della combinazione
                     // a) aggiorno lista reazioni fatte
                     this.combination_done_list.set(id_combinazione, 1);
                     // b) aggiorno soldi ed esperienza
@@ -187,10 +214,11 @@ class GameObject {
                         // QUI ENTRO SOLO SE IL COMPOSTO è STATO FATTO PER LA PRIMA VOLTA // TODO: qui vedo gli eventi del nuovo materiale
                         this.material_discovered_list.push(id_materiale);
                         // dovrebbe partire una animazione standard di scopertauaochefigo e devo passare immagine e descrizione del materiale
+                        // TODO: funzione discoverMaterial() -> si potrebbero passare tutte le proprietà, oppure solo l'id per recuperare con 
+                        // una query tutto il necessario*
                         // e dovrei anche verificare se appartiene ad una categoria che già ho sbloccato, no?
                         // faccio una query su material_category?
                         // in caso la categoria ce l'ho, sti cazzi, altrimenti devo chiamare Categoria(id_cat) per il rendering
-
                     }
                 }
             } else {
