@@ -5,10 +5,32 @@
         <link rel="stylesheet" href="assets/onsenui/css/onsenui.css">
         <link rel="stylesheet" href="assets/onsenui/css/onsen-css-components.css">
         <script src="assets/onsenui/js/onsenui.min.js"></script>
+        <script src="./js/loading.js"></script>
     </head>
     <body>
     <ons-navigator id="navigator" page="loading.html"></ons-navigator>
     
+    <!-- TODO: smista i template, ed eventuali js e css, in file omonimi -->
+
+    <template id="loading.html">
+        <ons-page id="loading">
+            <p>Sto caricando</p>
+        </ons-page>
+    </template>
+
+    <template id="menu.html">
+        <ons-page id="menu">
+            <ons-button onclick="initGame()">Entra</ons-button>
+            <ons-button onclick="readCredits()">Crediti</ons-button>
+        </ons-page>
+    </template>
+
+    <template id="credits.html">
+        <ons-page id="credits">
+            <p>Siamo tre coglioni</p>
+        </ons-page>
+    </template>
+
     <template id="main.html">
         <ons-page>
             <ons-tabbar swipeable position="auto"> <!-- TODO: popola man mano che vengono fuori pagine -->
@@ -24,14 +46,6 @@
         </ons-page>
     </template>
 
-    <!-- TODO: smista i template, ed eventuali js e css, in file omonimi -->
-
-    <template id="loading.html">
-        <ons-page id="loading">
-            <p>Sto caricando</p>
-        </ons-page>
-    </template>
-
     <template id="laboratorio.html">
         <ons-page id="laboratorio">
             <p style="text-align: center;">
@@ -39,8 +53,6 @@
             </p>
         </ons-page>
     </template>
-
-
 
     <template id="richieste.html">
         <ons-page id="richieste">
@@ -77,14 +89,9 @@
                         <span class="list-item__title">Nome personaggio</span><span class="list-item__subtitle">Titolo quest</span>
                     </div>
                 </ons-list-item>
-
             </ons-list>
-            
-
         </ons-page>
     </template>
-
-
 
     <template id="mercato_nero.html">
         <ons-page id="mercato_nero">
@@ -127,8 +134,6 @@
         </ons-page>
     </template>
 
-
-
     <template id="diario.html">
         <ons-page id="diario">
             <ons-toolbar>
@@ -140,10 +145,8 @@
         </ons-page>
     </template>
 
-
-
-    <script src="./js/main.js">
-    </script>
+    <!-- <script src="./js/main.js">
+    </script> -->
 
 </body>
 </html>

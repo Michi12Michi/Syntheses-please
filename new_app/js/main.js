@@ -130,18 +130,18 @@ class GameObject {
             this.level = parsedData.level;
             this.experience = parsedData.experience;
             this.credit = parsedData.credit;
-            this.karma = parsedData.karma;
-            this.combination_done_list = new Map(this.combination_done_list); 
-            this.quest_done_list = new Map(this.quest_done_list); 
+            this.combination_done_list = new Map(parsedData.combination_done_list); 
+            this.quest_done_list = new Map(parsedData.quest_done_list);
+            this.quest_active_list = parsedData.quest_active_list;
             this.material_discovered_list = parsedData.material_discovered_list;
             this.material_to_combine_list = [];
         } else {
             this.level = 0;
             this.experience = 0;
             this.credit = 0;
-            this.karma = 0;
             this.combination_done_list = new Map(); // salva id e numero di volte di una data combinazione con set(), recupera con get()
             this.quest_done_list = new Map(); // salva id quest e booleano (o int 0/1)
+            this.quest_active_list = [];
             this.material_discovered_list = [];
             this.material_to_combine_list = [];
         }
@@ -152,9 +152,9 @@ class GameObject {
             level: this.level,
             experience: this.experience,
             credit: this.credit,
-            karma: this.karma,
             combination_done_list: Array.from(this.combination_done_list),
             quest_done_list: Array.from(this.quest_done_list),
+            quest_active_list: this.quest_active_list,
             material_discovered_list: this.material_discovered_list,
         };
         localStorage.setItem("gameData", JSON.stringify(dataToSave));
