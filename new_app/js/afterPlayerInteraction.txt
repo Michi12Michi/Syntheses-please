@@ -1,0 +1,27 @@
+Esistono solo 4 eventi che scandiscono il passare del tempo nel gioco, tutti determinati 
+dall'interazione dell'utente col loop principale: 
+
+1 - combinazione riuscita (prima volta o ennesima, nessuna differenza in questo contesto);
+2 - acquisto nel negozio;
+3 - quest accettata o rifiutata;
+4 - passaggio al livello successivo (l'utente, quando ha i requisiti, può scegliere di farlo).
+
+Ogni volta che avviene una delle quattro cose scritte sopra, direi di far girare la stessa identica
+funzione afterPlayerInteraction(), così scriviamo il codice impegnativo una sola volta ed è molto più facile per test 
+e debug. Inoltre, evitiamo ripetizioni.
+
+Questa funzione è da intendere come tutto quello che accade TRA le interazioni dell'utente.
+È da lanciare anche all'avvio del gioco (la prima interazione dell'utente).
+
+Che dovrebbe fare questo codice nella afterPlayerInteraction()?
+
+In ordine: 
+1 - Gestire le quest (sempre nel game object, che salverà i dati JSON sul dispositivo), 
+quindi concludere quelle riuscite (si tratta di controllare le condizioni di tutte le 
+quest accettate) e visualizzare le nuove disponibili. Segue sblocco di materiali, aggiornamento 
+exp e $.
+2 - Gestire il rendering degli acquistabili (1), dei materiali (2) e delle categorie (3) e in generale 
+delle statistiche a schermo (sempre exp, $, livello).
+
+Serve il riconoscimento per quest speciali tipo GAME OVER che avranno una logica diversa da tutte 
+le altre, ma saranno rarissime.

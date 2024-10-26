@@ -1,38 +1,6 @@
 // ---------- UTILS ----------
 const max_items_per_combination = 5;
 
-/* TODO: 
-Esistono solo 4 eventi che scandiscono il passare del tempo nel gioco, tutti determinati 
-dall'interazione dell'utente col loop principale: 
-
-1 - combinazione riuscita (prima volta o ennesima, nessuna differenza in questo contesto);
-2 - acquisto nel negozio;
-3 - quest accettata;
-4 - passaggio al livello successivo (l'utente, quando ha i requisiti, può scegliere di farlo).
-
-Ogni volta che avviene una delle quattro cose scritte sopra, direi di far girare la stessa identica
-funzione OMNIFUNZIONE, così scriviamo il codice impegnativo una sola volta ed è molto più facile per test 
-e debug. Inoltre, evitiamo ripetizioni.
-
-Che dovrebbe fare questo codice nella OMNIFUNZIONE?
-
-In ordine: 
-1 - Gestire le quest (sempre nel game object, che salverà i dati JSON sul dispositivo), 
-quindi visualizzare le nuove disponibili e concludere quelle riuscite o fallite (si tratta di 
-controllare le condizioni di tutte le quest che abbiano come requisito il livello attuale del giocatore).
-Segue sblocco di materiali, aggiornamento exp e $.
-2 - Gestire il rendering degli acquistabili (1), dei materiali (2) e delle categorie (3) e in generale 
-delle statistiche a schermo (sempre exp, $, livello).
-
-Vorrei rimuovere completamente gli eventi, perché sono ridondanti per com'è organizzata ora la struttura
-delle quest. Sempre nella OMNIFUNZIONE, ci mettiamo il riconoscimento per quest speciali tipo GAME OVER
-che avranno una logica diversa da tutte le altre, ma saranno rarissime.
-
-Per quanto riguarda GameObject.checkReactor(), direi che va benissimo. Inoltre, se seguiamo il 
-ragionamento della OMNIFUNZIONE, checkReactor() è praticamente già pronta per funzionare. La query sql
-dovrebbe funzionare alla grande.
-*/
-
 // -> implementa la modalità schermo intero su più piattaforme
 var screen = document.documentElement;
 
@@ -147,6 +115,54 @@ class GameObject {
         }
     }
 
+    afterPlayerInteraction() { // istruzioni in ./afterPlayerInteraction.txt
+
+        // TODO: carica tutte le quest del livello dal DB
+
+        // TODO: controlla se c'è qualche materiale tra quelli scoperti che porta al game over o eccezioni varie
+        
+        // salva lo stato attuale del gioco (combinazioni e materiali scoperti, quest terminate)
+        let temp_combination_done_list = this.combination_done_list, temp_quest_done_list = this.quest_done_list, temp_material_discovered_list = this.material_discovered_list;
+    
+        // tra le quest accettate, chiudi positivamente quelle le cui condizioni sono raggiunte; le condizioni per chiuderle negativamente sono direttamente conseguenti attività dell'utente, come il passaggio di livello e il rifiuto. Verranno trattate separatamente
+        this.quest_active_list.forEach(element => {
+            // TODO: per ogni quest accettata controlla le condizioni di riuscita sul DB
+
+            // TODO: gestisci le conseguenze delle quest terminate positivamente (aggiorna $, materiali, exp)
+            
+        });
+
+        if (this.combination_done_list == temp_combination_done_list && this.quest_done_list == temp_quest_done_list  && this.material_discovered_list == temp_material_discovered_list) {
+            // quando terminano i cambiamenti, salva lo stato del gioco come JSON
+            this.saveGameData(); 
+
+            // TODO: gestisci tutti i rendering: dei dialoghi delle quest completate positivamente, delle quest attivabili o attive, dei materiali, delle categorie, degli acquistabili, di exp e $
+
+            this.checkNextLevel();
+        } else { 
+            // se lo stato del gioco è cambiato, riesegui questa funzione
+            this.afterPlayerInteraction();
+        }
+    }
+
+    checkNextLevel() {  // TODO: controlla l'esistenza nel DB delle condizioni per passare al livello successivo, se esiste (quest, materiali, esperienza) e esegue il rendering del tasto per il passaggio (o lo rimuove)
+
+        return false;
+    }
+
+    goToNextLevel() { // corrisponde al giocatore che clicca per decidere di avanzare di livello: fallisce tutte le quest attive e gestisce le conseguenze dirette (materiali aggiunti, modifica exp e $)
+        
+        // TODO: this.quest_active_list deve svuotarsi e tutti gli id di quest'ultima devono aggiungersi a this.quest_done_list con valore 0
+
+        // TODO: gestisci le conseguenze delle quest fallite (materiali, exp, $)
+        
+        // passa al livello successivo
+        this.level++;
+
+        // controllo degli avvenimenti successivi
+        this.afterPlayerInteraction();
+    }
+
     saveGameData() {
         const dataToSave = {
             level: this.level,
@@ -202,7 +218,7 @@ class GameObject {
                     this.credit = this.credit + price_materiale*((4 - times_reaction)/(2 + Math.pow(times_reaction, 2)));
                     this.combination_done_list.set(id_combinazione, times_reaction + 1);
                 } else {
-                    // se non ho mai fatto la reazione aggiorno tutti i parametri* // TODO: qui vedo gli eventi della combinazione
+                    // se non ho mai fatto la reazione aggiorno tutti i parametri*
                     // a) aggiorno lista reazioni fatte
                     this.combination_done_list.set(id_combinazione, 1);
                     // b) aggiorno soldi ed esperienza
@@ -211,7 +227,7 @@ class GameObject {
                     // c) verificare se il composto non ce l'ho nella lista
                     // non dovrei preoccuparmi del fatto che ce l'ho, perché ce l'ho già salvato
                     if (!(this.material_discovered_list.has(id_materiale))) {
-                        // QUI ENTRO SOLO SE IL COMPOSTO è STATO FATTO PER LA PRIMA VOLTA // TODO: qui vedo gli eventi del nuovo materiale
+                        // QUI ENTRO SOLO SE IL COMPOSTO è STATO FATTO PER LA PRIMA VOLTA 
                         this.material_discovered_list.push(id_materiale);
                         // dovrebbe partire una animazione standard di scopertauaochefigo e devo passare immagine e descrizione del materiale
                         // TODO: funzione discoverMaterial() -> si potrebbero passare tutte le proprietà, oppure solo l'id per recuperare con 
@@ -226,6 +242,7 @@ class GameObject {
             }
             // finalmente svuoto il reattore -> la combinazione è valida, anche in caso in cui non ci sia il livello.
             this.empty();
+            afterPlayerInteraction(); // controlla a cosa porteranno questi cambiamenti nello stato del gioco
         } else {
             // la combinazione non ha portato a frutti
             if (this.material_to_combine_list.length == max_items_per_combination)
