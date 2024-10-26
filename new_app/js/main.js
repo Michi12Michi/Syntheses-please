@@ -118,6 +118,7 @@ class GameObject {
     afterPlayerInteraction() { // istruzioni in ./afterPlayerInteraction.txt
 
         // TODO: carica tutte le quest del livello dal DB
+        // `SELECT `;
 
         // TODO: controlla se c'è qualche materiale tra quelli scoperti che porta al game over o eccezioni varie
         
@@ -127,9 +128,14 @@ class GameObject {
         // tra le quest accettate, chiudi positivamente quelle le cui condizioni sono raggiunte; le condizioni per chiuderle negativamente sono direttamente conseguenti attività dell'utente, come il passaggio di livello e il rifiuto. Verranno trattate separatamente
         this.quest_active_list.forEach(element => {
             // TODO: per ogni quest accettata controlla le condizioni di riuscita sul DB
-
-            // TODO: gestisci le conseguenze delle quest terminate positivamente (aggiorna $, materiali, exp)
-            
+            // query = `SELECT * FROM quests WHERE id = element;`
+            // TODO: l'esistenza del materiale obiettivo non va fatta nella lista temp, vero?
+            // if (this.material_discovered_list.includes(query.objective_material)) {
+                // TODO: gestisci le conseguenze delle quest terminate positivamente (aggiorna $, ***materiali***, exp)
+                // ***PS***: perché aggiungere un materiale? Lo fa già checkReactor(), vero?
+                // this.credit += ;
+                // this.experience += ;
+            //}
         });
 
         if (this.combination_done_list == temp_combination_done_list && this.quest_done_list == temp_quest_done_list  && this.material_discovered_list == temp_material_discovered_list) {
@@ -145,14 +151,22 @@ class GameObject {
         }
     }
 
-    checkNextLevel() {  // TODO: controlla l'esistenza nel DB delle condizioni per passare al livello successivo, se esiste (quest, materiali, esperienza) e esegue il rendering del tasto per il passaggio (o lo rimuove)
-
+    checkNextLevel() {  // TODO: controlla l'esistenza nel DB delle condizioni per passare al livello successivo, se esiste (quest, materiali***, esperienza) e esegue il rendering del tasto per il passaggio (o lo rimuove)
+        // query = `SELECT * FROM levels WHERE id = this.level + 1;`
+        // if (query) {
+            // PS***: perché controllare i materiali?
+            // if (query.required_experience <= this.experience && this.quest_done_list.get(query.quest_required) != null) return true
+        // }
         return false;
     }
 
     goToNextLevel() { // corrisponde al giocatore che clicca per decidere di avanzare di livello: fallisce tutte le quest attive e gestisce le conseguenze dirette (materiali aggiunti, modifica exp e $)
         
         // TODO: this.quest_active_list deve svuotarsi e tutti gli id di quest'ultima devono aggiungersi a this.quest_done_list con valore 0
+        // this.quest_active_list.forEach((element) => {
+            // this.quest_done_list.set(element, 0);
+        //});
+        // this.quest_active_list = [];
 
         // TODO: gestisci le conseguenze delle quest fallite (materiali, exp, $)
         

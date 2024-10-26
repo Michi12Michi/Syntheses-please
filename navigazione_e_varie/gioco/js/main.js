@@ -1,0 +1,1 @@
+// qui va dichiarata tutta la roba globale, come il GO e funzioni di popolamento e renderizzazione
