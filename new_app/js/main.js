@@ -1,92 +1,8 @@
-// ---------- UTILS ----------
+// PLUGIN CORDOVA
+// https://github.com/storesafe/cordova-sqlite-storage?tab=readme-ov-file
+
+// CONST
 const max_items_per_combination = 5;
-
-// -> implementa la modalità schermo intero su più piattaforme
-var screen = document.documentElement;
-
-function openFullscreen() {
-    if (screen.requestFullscreen) {
-    screen.requestFullscreen();
-    } else if (screen.webkitRequestFullscreen) { /* Safari */
-    screen.webkitRequestFullscreen();
-    } else if (screen.msRequestFullscreen) { /* IE11 */
-    screen.msRequestFullscreen();
-    }
-}
-
-// ROUTER
-function loadPage(page) {
-    fetch(`./${page}.html`)
-        .then(response => {
-            // Controlla se la risposta è OK
-            if (!response.ok) {
-                throw new Error(`Errore: ${response.statusText}`);
-            }
-            return response.text();
-        })
-        .then(html => {
-            // Aggiorna il contenuto di #app
-            document.getElementById('app').innerHTML = html;
-
-            // Rimuove file CSS e JS specifici
-            if (page === "menu") {
-                const existingScript = document.querySelector('script[data-page]');
-                if (existingScript) 
-                    existingScript.remove();
-                const existingCSS = document.querySelector("link[data-page]");
-                if (existingCSS)
-                    existingCSS.remove();
-            }
-            else {
-                const newScript = document.createElement("script");
-                const newCSS = document.createElement("link");
-                newScript.setAttribute("src", `./js/${page}.js`);
-                newScript.setAttribute("data-page", page);
-                newCSS.href = `./css/${page}.css`;
-                newCSS.rel = "stylesheet";
-                newCSS.setAttribute("data-page", page);
-                document.head.appendChild(newCSS);
-                document.body.appendChild(newScript);
-            }
-        })
-        .catch(error => {
-            console.error(`Errore nel caricamento della pagina: ${error}`);
-            document.getElementById('app').innerHTML = '<h1>Errore: pagina non trovata</h1>';
-        });
-}
-
-// -> verifica il tipo di dispositivo e istanzia eventi generici (per il drag and drop)
-let deviceType = "unknown";
-
-const isTouchDevice = () => {
-    return ('ontouchstart' in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0);
-};
-
-// Funzione per rilevare il tipo di dispositivo (mobile o desktop)
-const detectDeviceType = () => {
-    if (isTouchDevice()) {
-        deviceType = "mobile";
-    } else {
-        deviceType = "desktop";
-    }
-    console.log(deviceType);
-    return deviceType;
-};
-
-detectDeviceType();
-
-var events = {
-    desktop: {
-        down: "mousedown",
-        up: "mouseup",
-        move: "mousemove",
-    }, 
-    mobile: {
-        down: "touchstart",
-        up: "touchend",
-        move: "touchmove",
-    }
-};
 
 // La classe Gameobject dovrebbe contenere i progressi di tutto il gioco (livello, esperienza, soldi, reazioni fatte (id e quante volte in Map), 
 // sostanze scoperte (le relative categorie sono istanziate dinamicamente all'avvio del gioco).
@@ -129,10 +45,8 @@ class GameObject {
         this.quest_active_list.forEach(element => {
             // TODO: per ogni quest accettata controlla le condizioni di riuscita sul DB
             // query = `SELECT * FROM quests WHERE id = element;`
-            // TODO: l'esistenza del materiale obiettivo non va fatta nella lista temp, vero? No, la lista temporanea è di sola lettura e serve a conservare lo stato precedente il lancio di questa funzione, tutte le modifiche vanno fatte sulle liste non temp
             // if (this.material_discovered_list.includes(query.objective_material)) {
-                // TODO: gestisci le conseguenze delle quest terminate positivamente (aggiorna $, ***materiali***, exp)
-                // ***PS***: perché aggiungere un materiale? Lo fa già checkReactor(), vero? Non stai facendo il check di una combinazione qui, stai vedendo se una quest, in caso di successo, sblocca materiali (tabella quest_material)
+                // TODO: gestisci le conseguenze delle quest terminate positivamente (aggiorna $, materiali, exp)
                 // this.credit += ;
                 // this.experience += ;
             //}
@@ -144,31 +58,86 @@ class GameObject {
 
             // TODO: gestisci tutti i rendering: dei dialoghi delle quest completate positivamente, delle quest attivabili o attive, dei materiali, delle categorie, degli acquistabili, di exp e $
 
-            this.checkNextLevel();
+            this.checkNextLevel(); // TODO: esegue il rendering del tasto per il passaggio (true) - o lo rimuove se presente (false)
         } else { 
             // se lo stato del gioco è cambiato, riesegui questa funzione
             this.afterPlayerInteraction();
         }
     }
 
-    checkNextLevel() {  // TODO: controlla l'esistenza nel DB delle condizioni per passare al livello successivo, se esiste (quest, materiali***, esperienza) e esegue il rendering del tasto per il passaggio (o lo rimuove)
-        // query = `SELECT * FROM levels WHERE id = this.level + 1;`
-        // if (query) {
-            // PS***: perché controllare i materiali? Perché sono una delle condizioni per il passaggio di livello (tabella level_material)
-            // if (query.required_experience <= this.experience && this.quest_done_list.get(query.quest_required) != null) return true
-        // }
-        return false;
+    checkNextLevel() {  // controlla l'esistenza nel DB delle condizioni per passare al livello successivo, se esiste (quest, materiali, esperienza) e restituisce un booleano
+        const query_next_level = `
+            SELECT l.*, lm.material_id 
+            FROM levels l 
+            LEFT JOIN level_material lm ON l.number = lm.level_id 
+            WHERE l.number = ?
+        `;
+        const next_level = this.level + 1;
+
+        return new Promise((resolve) => {
+            window.sqlitePlugin.openDatabase({ name: "chimgio.db", location: "default" }, (db) => {
+                db.executeSql(query_next_level, [next_level], (rs) => {
+                    if (rs.rows.length > 0) {
+                        const level_info = rs.rows.item(0);
+                        
+                        // controlla se esperienza e quest sono sufficienti
+                        if (this.experience >= level_info.required_experience && this.quest_done_list.has(level_info.quest_required)) {
+    
+                            // controlla se tutti i materiali richiesti sono stati scoperti
+                            const required_materials = [];
+                            for (let i = 0; i < rs.rows.length; i++) {
+                                const materialId = rs.rows.item(i).material_id;
+                                if (materialId) required_materials.push(materialId);
+                            }
+    
+                            // verifica che ogni materiale richiesto sia nella lista dei materiali scoperti
+                            const all_materials_discovered = required_materials.every(materialId =>
+                                this.material_discovered_list.includes(materialId)
+                            );
+    
+                            if (all_materials_discovered) {
+                                resolve(true);
+                                return;
+                            }
+                        }
+                    }
+                    resolve(false);
+                });
+            });
+        });
     }
 
     goToNextLevel() { // corrisponde al giocatore che clicca per decidere di avanzare di livello: fallisce tutte le quest attive e gestisce le conseguenze dirette (materiali aggiunti, modifica exp e $)
+        window.sqlitePlugin.openDatabase({ name: "chimgio.db", location: "default" }, (db) => {
         
-        // TODO: this.quest_active_list deve svuotarsi e tutti gli id di quest'ultima devono aggiungersi a this.quest_done_list con valore 0
-        // this.quest_active_list.forEach((element) => {
-            // this.quest_done_list.set(element, 0);
-        //});
-        // this.quest_active_list = [];
-
-        // TODO: gestisci le conseguenze delle quest fallite (materiali, exp, $)
+            // svuota la lista delle quest attive e registra le quest fallite in `quest_done_list`
+            this.quest_active_list.forEach((questId) => {
+                this.quest_done_list.set(questId, 0); // 0 indica fallimento della quest
+                
+                // query per ottenere materiali legati alla quest fallita e il credito da aggiungere
+                const query_quest_material = `
+                    SELECT qm.material_id, q.money_added_failure 
+                    FROM quest_material qm 
+                    JOIN quests q ON qm.quest_id = q.id 
+                    WHERE qm.quest_id = ? AND qm.success = 0
+                `;
+                
+                db.executeSql(query_quest_material, [questId], (res) => {
+                    if (res.rows.length > 0) {
+                        // aggiorna i crediti in base alle penalità della quest fallita
+                        this.credit += res.rows.item(0).money_added_failure;
+    
+                        // aggiungi i materiali ottenuti dalle quest fallite alla lista material_discovered_list
+                        for (let i = 0; i < res.rows.length; i++) {
+                            const material_id = res.rows.item(i).material_id;
+                            if (!this.material_discovered_list.includes(material_id)) {
+                                this.material_discovered_list.push(material_id);
+                            }
+                        }
+                    }
+                });
+            });
+        });
         
         // passa al livello successivo
         this.level++;
