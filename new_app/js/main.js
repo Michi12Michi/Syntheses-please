@@ -129,10 +129,10 @@ class GameObject {
         this.quest_active_list.forEach(element => {
             // TODO: per ogni quest accettata controlla le condizioni di riuscita sul DB
             // query = `SELECT * FROM quests WHERE id = element;`
-            // TODO: l'esistenza del materiale obiettivo non va fatta nella lista temp, vero?
+            // TODO: l'esistenza del materiale obiettivo non va fatta nella lista temp, vero? No, la lista temporanea è di sola lettura e serve a conservare lo stato precedente il lancio di questa funzione, tutte le modifiche vanno fatte sulle liste non temp
             // if (this.material_discovered_list.includes(query.objective_material)) {
                 // TODO: gestisci le conseguenze delle quest terminate positivamente (aggiorna $, ***materiali***, exp)
-                // ***PS***: perché aggiungere un materiale? Lo fa già checkReactor(), vero?
+                // ***PS***: perché aggiungere un materiale? Lo fa già checkReactor(), vero? Non stai facendo il check di una combinazione qui, stai vedendo se una quest, in caso di successo, sblocca materiali (tabella quest_material)
                 // this.credit += ;
                 // this.experience += ;
             //}
@@ -154,7 +154,7 @@ class GameObject {
     checkNextLevel() {  // TODO: controlla l'esistenza nel DB delle condizioni per passare al livello successivo, se esiste (quest, materiali***, esperienza) e esegue il rendering del tasto per il passaggio (o lo rimuove)
         // query = `SELECT * FROM levels WHERE id = this.level + 1;`
         // if (query) {
-            // PS***: perché controllare i materiali?
+            // PS***: perché controllare i materiali? Perché sono una delle condizioni per il passaggio di livello (tabella level_material)
             // if (query.required_experience <= this.experience && this.quest_done_list.get(query.quest_required) != null) return true
         // }
         return false;
