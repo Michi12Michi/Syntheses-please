@@ -3,6 +3,7 @@
 
 // CONST
 const max_items_per_combination = 5;
+const max_unuseful_combinations = 3;
 
 // La classe Gameobject dovrebbe contenere i progressi di tutto il gioco (livello, esperienza, soldi, reazioni fatte (id e quante volte in Map), 
 // sostanze scoperte (le relative categorie sono istanziate dinamicamente all'avvio del gioco).
@@ -15,6 +16,7 @@ class GameObject {
             this.experience = parsedData.experience;
             this.credit = parsedData.credit;
             this.combination_done_list = new Map(parsedData.combination_done_list); 
+            this.unuseful_combinations = parsedData.unuseful_combinations;
             this.quest_done_list = new Map(parsedData.quest_done_list);
             this.quest_active_list = parsedData.quest_active_list;
             this.material_discovered_list = parsedData.material_discovered_list;
@@ -24,6 +26,7 @@ class GameObject {
             this.experience = 0;
             this.credit = 0;
             this.combination_done_list = new Map(); // salva id e numero di volte di una data combinazione con set(), recupera con get()
+            this.unuseful_combinations = 0;
             this.quest_done_list = new Map(); // salva id quest e booleano (o int 0/1)
             this.quest_active_list = [];
             this.material_discovered_list = [];
@@ -152,6 +155,7 @@ class GameObject {
             experience: this.experience,
             credit: this.credit,
             combination_done_list: Array.from(this.combination_done_list),
+            unuseful_combinations: this.unuseful_combinations,
             quest_done_list: Array.from(this.quest_done_list),
             quest_active_list: this.quest_active_list,
             material_discovered_list: this.material_discovered_list,
@@ -163,6 +167,7 @@ class GameObject {
         if (this.material_to_combine_list.length < max_items_per_combination && this.material_to_combine_list.length > 1) {
             this.material_to_combine_list.push(material);
             // ci può stare una certa animazione (ad esempio un pop up che mostra che è stato aggiunto qualcosa)
+            // TODO: Alessandro suggeriva la renderizzazione di una reazione
             this.checkReactor();
         }
     }
@@ -194,53 +199,80 @@ class GameObject {
                     const successful_combination_id = res.rows.item(0).combination_id;
                     // recupero blog_id e level_id dalla combinazione
                     const query_combination_properties = `SELECT blog_id, level_id FROM combinations c WHERE c.id = ?;`
-                    db.executeSql(query_combination_properties, [successful_combination_id], (matRes) => {
-                        const at_which_level = matRes.rows.item(0).level_id;
-                        const which_blog_id = matRes.rows.item(0).blog_id;
-                        // il controllo vero e proprio sugli esiti della combinazione parte dal valutare il livello attuale
-                        if (at_which_level <= this.level) {
-                            
-                            
-                            let query_product_properties = `SELECT * FROM materials WHERE id = ...;`; // TODO: inserire id materiale prodotto
-                            let id_materiale = 1, price_materiale = 12, experience_materiale = 50, id_combinazione = 999;
-                            // verifica se ho già fatto questa reazione
-                            // non ho bisogno di aggiornare la lista materiali nè l'esperienza, ma solo i soldi e la mappa reazioni
-                            // non ho bisogno di triggerare altro
-                            if (combination_done_list.has(id_combinazione)) {
-                                // sarà stata fatta un certo numero di volte, per cui aggiorno i soldi e la Map
-                                let times_reaction = this.combination_done_list.get(id_combinazione);
-                                // guadagno originale(4-volte)/(2+volte^2) ----> come suggeriva alessandro 
-                                this.credit = this.credit + price_materiale*((4 - times_reaction)/(2 + Math.pow(times_reaction, 2)));
-                                this.combination_done_list.set(id_combinazione, times_reaction + 1);
-                            } else {
-                                // se non ho mai fatto la reazione aggiorno tutti i parametri*
-                                // a) aggiorno lista reazioni fatte
-                                this.combination_done_list.set(id_combinazione, 1);
-                                // b) aggiorno soldi ed esperienza
-                                this.credit = this.credit + price_materiale;
-                                this.experience = this.experience + experience_materiale;
-                                // c) verificare se il composto non ce l'ho nella lista
-                                // non dovrei preoccuparmi del fatto che ce l'ho, perché ce l'ho già salvato
-                                if (!(this.material_discovered_list.has(id_materiale))) {
-                                    // QUI ENTRO SOLO SE IL COMPOSTO è STATO FATTO PER LA PRIMA VOLTA 
-                                    this.material_discovered_list.push(id_materiale);
-                                    // dovrebbe partire una animazione standard di scopertauaochefigo e devo passare immagine e descrizione del materiale
-                                    // TODO: funzione discoverMaterial() -> si potrebbero passare tutte le proprietà, oppure solo l'id per recuperare con 
-                                    // una query tutto il necessario*
-                                    // e dovrei anche verificare se appartiene ad una categoria che già ho sbloccato, no?
-                                    // faccio una query su material_category?
-                                    // in caso la categoria ce l'ho, sti cazzi, altrimenti devo chiamare Categoria(id_cat) per il rendering
-                                }
+                    db.executeSql(query_combination_properties, [successful_combination_id], (combPropsRes) => {
+                        const level_required_for_combination = combPropsRes.rows.item(0).level_id;
+                        const which_blog_id = combPropsRes.rows.item(0).blog_id;
+                        // TODO: a che serve ottenere il blog_id?
+                        // 
+                        // CONTROLLO LIVELLO RICHIESTO PER LA COMBINAZIONE (CHE RISULTA VALIDA, IN OGNI CASO)
+                        //
+                        if (level_required_for_combination <= this.level) {
+                            // PROCEDO A RECUPERARE LE INFORMAZIONI SUI MATERIALI PRODOTTI
+                            const placeholder = new Array(res.rows.length).fill("?").join(", ");
+                            var produced_materials_id = new Array();
+                            for (let i = 0; i < res.rows.length; i++) {
+                                produced_materials_id.push(res.rows.item(i).material_id)
                             }
+                            const query_product_properties = `SELECT * FROM materials WHERE id IN (${produced_materials_id});`;
+                            // SELEZIONO LE PROPRIETà DEI PRODOTTI OTTENUTI E MI REGOLO SUGLI EFFETTI
+                            db.executeSql(query_product_properties, [], (prodPropsRes) => {
+                                // verifica se ho già fatto questa reazione
+                                // non ho bisogno di aggiornare la lista materiali nè l'esperienza, ma solo i soldi e la mappa reazioni
+                                // non ho bisogno di triggerare altro
+                                // calcolo il guadagno totale e l'esperienza totale
+                                var total_earn_from_combination = 0, total_experience = 0;
+                                for (let j = 0; j < prodPropsRes.rows.length; j++) {
+                                    total_earn_from_combination += prodPropsRes.rows.item(i).price;
+                                    total_experience += prodPropsRes.rows.item(i).experience;
+                                }
+                                if (this.combination_done_list.has(successful_combination_id)) {
+                                    // sarà stata fatta un certo numero di volte, per cui aggiorno i soldi e la Map
+                                    let times_reaction = this.combination_done_list.get(successful_combination_id);
+                                    // aggiorno il credito
+                                    this.credit = this.credit + (total_earn_from_combination/prodPropsRes.rows.length)*((4 - times_reaction)/(2 + Math.pow(times_reaction, 2)));
+                                    this.combination_done_list.set(successful_combination_id, times_reaction + 1);
+                                } else {
+                                    // se non ho mai fatto la reazione aggiorno tutti i parametri*
+                                    // a) aggiorno lista reazioni fatte
+                                    this.combination_done_list.set(successful_combination_id, 1);
+                                    // b) aggiorno soldi ed esperienza (sommo solo il totale)
+                                    this.credit = this.credit + total_earn_from_combination;
+                                    this.experience = this.experience + total_experience;
+                                    // c) verificare se i composti non sono nella lista this.material_discovered_list
+                                    // se ci sono non me ne preoccupo
+                                    // per oguno dei composti scoperti
+                                    produced_materials_id.forEach(material => {
+                                        if (!(this.material_discovered_list.has(material))) {
+                                            // QUI ENTRO SOLO SE IL COMPOSTO è STATO FATTO PER LA PRIMA VOLTA 
+                                            this.material_discovered_list.push(material);
+                                            // dovrebbe partire una animazione standard di scopertauaochefigo e devo passare immagine e descrizione del materiale
+                                            // TODO: funzione discoverMaterial() -> si potrebbero passare tutte le proprietà, oppure solo l'id per recuperare con 
+                                            // una query tutto il necessario*
+                                            // e dovrei anche verificare se appartiene ad una categoria che già ho sbloccato, no?
+                                            // faccio una query su material_category?
+                                            // in caso la categoria ce l'ho, sti cazzi, altrimenti devo chiamare Categoria(id_cat) per il rendering
+                                        }
+                                    });
+                                }
+                            });
+                            
+                        } else {
+                            // NON VIENE SODDISFATTA LA CONDIZIONE DI LIVELLO RICHIESTA PER LA COMBINAZIONE
+                            alert("Non hai le palle esatte");
                         }
+                        // finalmente svuoto il reattore -> la combinazione è valida, anche in caso in cui non ci sia il livello.
+                        this.empty();
+                        this.unuseful_combinations = 0;
+                        afterPlayerInteraction(); // controlla a cosa porteranno questi cambiamenti nello stato del gioco
                     });
-                    
-                    // finalmente svuoto il reattore -> la combinazione è valida, anche in caso in cui non ci sia il livello.
-                    this.empty();
-                    afterPlayerInteraction(); // controlla a cosa porteranno questi cambiamenti nello stato del gioco
                 } else {
                     // la combinazione non ha portato a frutti
                     if (this.material_to_combine_list.length == max_items_per_combination)
+                        this.unuseful_combinations++;
+                        
+                        if (this.unuseful_combinations >= max_unuseful_combinations) {
+                            // TODO: GESTIRE IL CASO IN CUI CI SIANO STATE TOT COMBINAZIONI INFRUTTUOSE
+                        }
                         this.empty();
                 }
             });
