@@ -4,8 +4,8 @@
         <title>Syntheses, please!</title>
         <link rel="stylesheet" href="assets/onsenui/css/onsenui.css">
         <link rel="stylesheet" href="assets/onsenui/css/onsen-css-components.css">
+        <link rel="stylesheet" href="./css/main.css">
         <script src="assets/onsenui/js/onsenui.min.js"></script>
-        <script src="./js/loading.js"></script>
     </head>
     <body>
     <ons-navigator id="navigator" page="loading.html"></ons-navigator>
@@ -15,15 +15,28 @@
     <!-- sezione dedicata al caricamento -->
     <template id="loading.html">
         <ons-page id="loading">
-            <p>Sto caricando</p>
+            <ons-row>
+                <ons-col vertical-align="center">
+                    <div class="loading-div">
+                        <img src="https://picsum.photos/400" alt=""/>
+                        <p id="funfact"></p>
+                    </div>
+                </ons-col>
+            </ons-row>
         </ons-page>
     </template>
 
     <!-- sezione dedicata al main menu -->
     <template id="menu.html">
         <ons-page id="menu">
-            <ons-button onclick="initGame()">Entra</ons-button>
-            <ons-button onclick="readCredits()">Crediti</ons-button>
+            <ons-row>
+                <ons-col vertical-align="center">
+                    <div class="menu-div">
+                        <ons-button modifier="cta" onclick="initGame()">Entra</ons-button>
+                        <ons-button modifier="cta" onclick="readCredits()">Crediti</ons-button>
+                    </div>
+                </ons-col>
+            </ons-row>
         </ons-page>
     </template>
 
@@ -147,8 +160,7 @@
         </ons-page>
     </template>
 
-    <!-- <script src="./js/main.js">
-    </script> -->
+    <script src="./js/main.js"></script>
 
 </body>
 </html>

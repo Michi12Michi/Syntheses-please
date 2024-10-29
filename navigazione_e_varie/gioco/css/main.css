@@ -1,0 +1,56 @@
+/* SEZIONE UTILS */
+
+/* SEZIONE PAGINA CARICAMENTO */
+#loading ons-row {
+    background-color: #ffde22;
+    height: 100vh;
+}
+
+#loading ons-col {
+    display: flex;
+    justify-content: center;
+}
+
+.loading-div {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.loading-div img {
+    border-radius: 50%;
+    animation: rotation 6s linear infinite;
+    margin-bottom: 5%;
+}
+
+@keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* SEZIONE MENU */
+#menu ons-row {
+    background-color: #ffde22;
+    height: 100%;
+}
+
+#menu ons-col {
+    display: flex;
+    justify-content: center;
+}
+
+#menu .menu-div {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+/* SEZIONE CREDITI */
+
+/* SEZIONE GIOCO */
