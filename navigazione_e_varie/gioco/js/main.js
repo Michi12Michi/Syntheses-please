@@ -1,3 +1,5 @@
+var signal = 0;
+
 document.addEventListener("init", function(event) {
     // recupero un fun fact dal db e renderizzo
     if (event.target.id === "loading") {
@@ -12,12 +14,12 @@ document.addEventListener("init", function(event) {
         // TODO: si dovrebbe istanziare il game object
         // simulo un grossolano caricamento
         setTimeout(() => {
-            // a resetPage va allegato un segnale (dati esistenti/non esistenti) affinché siano renderizzati i giusti buttons
+            // a resetPage va allegato un segnale globale (dati esistenti/non esistenti) affinché siano renderizzati i giusti buttons
             document.querySelector("#navigator").resetToPage("menu.html", {data: {continue: true}});
         }, 10000); 
     } else if (event.target.id === "menu") {
         // recupero il segnale
-        const signal = event.target.data.continue;
+        signal = event.target.data.continue
         if (signal == true) {
             // crea ed appende un pulsante "riprendi gioco" con la sua logica
             var continue_btn = document.createElement("ons-button");
@@ -25,7 +27,7 @@ document.addEventListener("init", function(event) {
             continue_btn.setAttribute("modifier", "cta");
             continue_btn.textContent = "Riprendi";
             // TODO: appendere event listener per chiamare al click la ripresa del gioco
-            div_to_append.insertBefore(continue_btn, div_to_append.firstChild);
+            div_to_append.insertAfter(continue_btn, div_to_append.firstChild);
             // TODO: appendere pulsante per resettare i dati salvati e iniziare da capo
             // la logica del pulsante nuovo gioco deve cambiare
         }
@@ -40,6 +42,6 @@ function readCredits() {
     document.querySelector("#navigator").pushPage("credits.html");
 }
 
-function backToMenu() {
-    document.querySelector("#navigator").popPage("menu.html");
-}
+// function backToMenu() {
+//     document.querySelector("#navigator").popPage("menu.html", {data: {continue: signal}});
+// }

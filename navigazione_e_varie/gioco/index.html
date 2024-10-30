@@ -8,7 +8,7 @@
         <script src="assets/onsenui/js/onsenui.min.js"></script>
     </head>
     <body>
-    <ons-navigator id="navigator" page="loading.html"></ons-navigator>
+    <ons-navigator id="navigator" page="loading.html" animation="fade"></ons-navigator>
     
     <!-- TODO: smista i template, ed eventuali js e css, in file omonimi -->
 
@@ -18,7 +18,9 @@
             <ons-row>
                 <ons-col vertical-align="center">
                     <div class="loading-div">
+                        <!-- TODO inserire logo -->
                         <img src="https://picsum.photos/400" alt=""/>
+                        <!-- il funfact è pescato dal db -->
                         <p id="funfact"></p>
                     </div>
                 </ons-col>
@@ -32,6 +34,7 @@
             <ons-row>
                 <ons-col vertical-align="center">
                     <div class="menu-div">
+                        <!-- TODO inserire logo -->
                         <ons-button modifier="cta" onclick="initGame()">Entra</ons-button>
                         <ons-button modifier="cta" onclick="readCredits()">Crediti</ons-button>
                     </div>
@@ -40,9 +43,18 @@
         </ons-page>
     </template>
 
+    <!-- sezione dedicata ai credits (sono letti dal db) -->
     <template id="credits.html">
         <ons-page id="credits">
-            <p>Siamo tre coglioni</p>
+            <ons-row>
+                <ons-col vertical-align="center">
+                    <div class="credits-div">
+                        <!-- TODO tutto temporaneo-->
+                        <p>Siamo tre coglioni</p>
+                        <ons-back-button modifier="cta">Back</ons-back-button>
+                    </div>
+                </ons-col>
+            </ons-row>
         </ons-page>
     </template>
 
