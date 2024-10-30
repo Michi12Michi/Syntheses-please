@@ -13,6 +13,7 @@ class GameObject {
         if (savedData) {
             const parsedData = JSON.parse(savedData);
             this.level = parsedData.level;
+            this.like = parsedData.like;
             this.experience = parsedData.experience;
             this.credit = parsedData.credit;
             this.combination_done_list = new Map(parsedData.combination_done_list); 
@@ -23,6 +24,7 @@ class GameObject {
             this.material_to_combine_list = [];
         } else {
             this.level = 0;
+            this.like = 0;
             this.experience = 0;
             this.credit = 0;
             this.combination_done_list = new Map(); // salva id e numero di volte di una data combinazione con set(), recupera con get()
@@ -34,25 +36,110 @@ class GameObject {
         }
     }
 
-    afterPlayerInteraction() { // istruzioni in ./afterPlayerInteraction.txt
-
-        // TODO: carica tutte le quest del livello dal DB
-        // `SELECT `;
-
-        // TODO: controlla se c'è qualche materiale tra quelli scoperti che porta al game over o eccezioni varie
+    gameOver(material_name) { // il nome comune del materiale rappresenta il tipo di finale
+        switch (material_name) {
+            case "esplosione":
+                alert("BOOM!");
+                break;
         
+            default:
+                alert("GAME OVER!");
+                break;
+        }
+    }
+
+    afterPlayerInteraction() { // istruzioni in ./afterPlayerInteraction.txt
+        // controlla l'esistenza di materiali che portano al game over
+        const query_game_over = `
+            SELECT *
+            FROM materials
+            WHERE iupac_name LIKE '%gameover%'
+        `;
+
+        window.sqlitePlugin.openDatabase({ name: "chimgio.db", location: "default" }, (db) => {
+            db.executeSql(query_game_over, [], (rs) => {
+                if (rs.rows.length > 0) {
+                    rs.rows.forEach((row) => {
+                        // controlla se l'ID del materiale è in `material_discovered_list`
+                        if (this.material_discovered_list.has(row.id)) {
+                            gameOver(row.common_name);
+                            return;
+                        }
+                    });
+                }
+            });
+        });
+
+        // carica tutte le quest del livello dal DB, cioè tutte le righe nella tabella quest in cui level_when_active == this.level. Salva solo gli id delle righe ottenute in this.quest_active_list (prima svuota l'array)
+        const query_quests_for_level = `
+            SELECT id
+            FROM quest
+            WHERE level_when_active = ?
+        `;
+
+        window.sqlitePlugin.openDatabase({ name: "chimgio.db", location: "default" }, (db) => {
+            db.executeSql(query_quests_for_level, [this.level], (rs) => {
+                // svuota l'array prima di aggiungere le nuove quest
+                this.quest_active_list = [];
+
+                // aggiunge gli ID delle quest al livello attuale in `quest_active_list`
+                for (let i = 0; i < rs.rows.length; i++) {
+                    const questId = rs.rows.item(i).id;
+                    this.quest_active_list.push(questId);
+                }
+            });
+        });
+
         // salva lo stato attuale del gioco (combinazioni e materiali scoperti, quest terminate)
         let temp_combination_done_list = this.combination_done_list, temp_quest_done_list = this.quest_done_list, temp_material_discovered_list = this.material_discovered_list;
     
+        const query_quest_conditions = `
+            SELECT *
+            FROM quests
+            WHERE id = ?
+        `;
+
         // tra le quest accettate, chiudi positivamente quelle le cui condizioni sono raggiunte; le condizioni per chiuderle negativamente sono direttamente conseguenti attività dell'utente, come il passaggio di livello e il rifiuto. Verranno trattate separatamente
-        this.quest_active_list.forEach(element => {
-            // TODO: per ogni quest accettata controlla le condizioni di riuscita sul DB
-            // const query = `SELECT * FROM quests WHERE id = element;`
-            // if (this.material_discovered_list.includes(query.objective_material)) {
-                // TODO: gestisci le conseguenze delle quest terminate positivamente (aggiorna $, materiali, exp)
-                // this.credit += ;
-                // this.experience += ;
-            //}
+        this.quest_active_list.forEach((questId) => {        
+            // apertura del database e recupero delle informazioni per ogni quest attiva
+            window.sqlitePlugin.openDatabase({ name: "chimgio.db", location: "default" }, (db) => {
+                db.executeSql(query_quest_conditions, [questId], (rs) => {
+                    if (rs.rows.length > 0) {
+                        const quest = rs.rows.item(0);
+        
+                        // verifica delle condizioni di riuscita della quest
+                        const isMaterialDiscovered = this.material_discovered_list.includes(quest.objective_material);
+                        const isCreditInRange = this.credit >= quest.minimum_money_required && this.credit <= quest.maximum_money_required;
+                        const isLikeInRange = this.like >= quest.minimum_like_required && this.like <= quest.maximum_like_required;
+        
+                        if (isMaterialDiscovered && isCreditInRange && isLikeInRange) { // qui si accede se le condizioni sono raggiunte
+                            // aggiornamento delle proprietà in base al successo della quest
+                            this.like += quest.like_added_success;
+                            this.credit += quest.money_added_success;
+                            this.experience += quest.experience_added;
+        
+                            // recupera i nuovi materiali scoperti con join tra 'quest_material' e 'materials'
+                            const query_new_materials = `
+                                SELECT m.id
+                                FROM quest_material qm
+                                JOIN materials m ON qm.material_id = m.id
+                                WHERE qm.quest_id = ? AND qm.success = 1
+                            `;
+        
+                            db.executeSql(query_new_materials, [questId], (rsMaterials) => {
+                                for (let i = 0; i < rsMaterials.rows.length; i++) {
+                                    const materialId = rsMaterials.rows.item(i).id;
+                                    
+                                    // aggiungi il materiale scoperto solo se non è già presente nella lista
+                                    if (!this.material_discovered_list.includes(materialId)) {
+                                        this.material_discovered_list.push(materialId);
+                                    }
+                                }
+                            });
+                        }
+                    }
+                });
+            });
         });
 
         if (this.combination_done_list == temp_combination_done_list && this.quest_done_list == temp_quest_done_list  && this.material_discovered_list == temp_material_discovered_list) {
@@ -119,7 +206,7 @@ class GameObject {
                 
                 // query per ottenere materiali legati alla quest fallita e il credito da aggiungere
                 const query_quest_material = `
-                    SELECT qm.material_id, q.money_added_failure 
+                    SELECT qm.material_id, q.money_added_failure, q.like_added_failure 
                     FROM quest_material qm 
                     JOIN quests q ON qm.quest_id = q.id 
                     WHERE qm.quest_id = ? AND qm.success = 0
@@ -129,6 +216,7 @@ class GameObject {
                     if (res.rows.length > 0) {
                         // aggiorna i crediti in base alle penalità della quest fallita
                         this.credit += res.rows.item(0).money_added_failure;
+                        this.like += res.rows.item(0).like_added_failure;
     
                         // aggiungi i materiali ottenuti dalle quest fallite alla lista material_discovered_list
                         for (let i = 0; i < res.rows.length; i++) {
@@ -152,6 +240,7 @@ class GameObject {
     saveGameData() {
         const dataToSave = {
             level: this.level,
+            like: this.like,
             experience: this.experience,
             credit: this.credit,
             combination_done_list: Array.from(this.combination_done_list),
@@ -202,7 +291,7 @@ class GameObject {
                     db.executeSql(query_combination_properties, [successful_combination_id], (combPropsRes) => {
                         const level_required_for_combination = combPropsRes.rows.item(0).level_id;
                         const which_blog_id = combPropsRes.rows.item(0).blog_id;
-                        // TODO: a che serve ottenere il blog_id?
+                        // TODO: a che serve ottenere il blog_id? Per puntare alla pagina di diario che descrive quella tipologia di reazioni
                         // 
                         // CONTROLLO LIVELLO RICHIESTO PER LA COMBINAZIONE (CHE RISULTA VALIDA, IN OGNI CASO)
                         //
