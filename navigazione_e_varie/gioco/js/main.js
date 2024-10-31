@@ -1,8 +1,10 @@
-var signal = 0;
+const max_available_slots = 3;
+const occupied_slots = 2;
+// localStorage.length;
 
 document.addEventListener("init", function(event) {
     // recupero un fun fact dal db e renderizzo
-    if (event.target.id === "loading") {
+    if (event.target.id === "menu") {
         // window.sqlitePlugin.openDatabase({name: "chimgio.db", location: "default" }, (db) => {
         //     const fun_fact_query = `SELECT * FROM fun_facts ORDER BY RANDOM() LIMIT 1;`
         //     db.executeSql(fun_fact_query, [], (res) => {
@@ -11,37 +13,43 @@ document.addEventListener("init", function(event) {
         //         }
         //     });
         // });
-        // TODO: si dovrebbe istanziare il game object
-        // simulo un grossolano caricamento
-        setTimeout(() => {
-            // a resetPage va allegato un segnale globale (dati esistenti/non esistenti) affinché siano renderizzati i giusti buttons
-            document.querySelector("#navigator").resetToPage("menu.html", {data: {continue: true}});
-        }, 10000); 
-    } else if (event.target.id === "menu") {
-        // recupero il segnale
-        signal = event.target.data.continue
-        if (signal == true) {
-            // crea ed appende un pulsante "riprendi gioco" con la sua logica
+        // inizializzo i pulsanti sulla base di eventuali dati salvati
+        const div_to_append_to = document.querySelector("#menu .menu-div ons-button").parentNode;
+        const credits_btn = document.querySelector("#menu .menu-div ons-button");
+        if (occupied_slots) {
             var continue_btn = document.createElement("ons-button");
-            var div_to_append = document.querySelector("#menu .menu-div");
             continue_btn.setAttribute("modifier", "cta");
-            continue_btn.textContent = "Riprendi";
-            // TODO: appendere event listener per chiamare al click la ripresa del gioco
-            div_to_append.insertAfter(continue_btn, div_to_append.firstChild);
-            // TODO: appendere pulsante per resettare i dati salvati e iniziare da capo
-            // la logica del pulsante nuovo gioco deve cambiare
-        }
+            continue_btn.textContent = "Riprendi partita";
+            continue_btn.addEventListener("click", function() {selectSlot(occupied_slots);});
+            div_to_append_to.insertBefore(continue_btn, credits_btn);
+            if (occupied_slots < max_available_slots) {
+                var start_btn = document.createElement("ons-button");
+                start_btn.setAttribute("modifier", "cta");
+                start_btn.textContent = "Nuova partita";
+                start_btn.addEventListener("click", function() {initGame(occupied_slots+1);});
+                div_to_append_to.insertBefore(start_btn, credits_btn);
+            }
+        } else {
+            var start_btn = document.createElement("ons-button");
+            start_btn.setAttribute("modifier", "cta");
+            start_btn.textContent = "Nuova partita";
+            start_btn.addEventListener("click", function() {initGame(1);});
+            div_to_append_to.insertBefore(start_btn, credits_btn);
+        }  
     }
 });
 
-function initGame() {
+// inizia il gioco passando lo slot
+function initGame(slot) {
+    // TODO: inizializza il GO
+    
     document.querySelector("#navigator").pushPage("main.html");
+}
+
+function selectSlot() {
+    document.querySelector("#navigator").pushPage("slots.html");
 }
 
 function readCredits() {
     document.querySelector("#navigator").pushPage("credits.html");
 }
-
-// function backToMenu() {
-//     document.querySelector("#navigator").popPage("menu.html", {data: {continue: signal}});
-// }

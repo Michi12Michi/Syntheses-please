@@ -4,6 +4,7 @@
 // CONST
 const max_items_per_combination = 5;
 const max_unuseful_combinations = 3;
+const max_slots = 3;
 
 // La classe Gameobject dovrebbe contenere i progressi di tutto il gioco (livello, esperienza, soldi, reazioni fatte (id e quante volte in Map), 
 // sostanze scoperte (le relative categorie sono istanziate dinamicamente all'avvio del gioco).
