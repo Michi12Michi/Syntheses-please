@@ -31,9 +31,7 @@
                 <div class="center">Credits</div>
             </ons-toolbar>
             <div class="credits-div">
-                
             </div>
-            <script src="./js/credits.js"></script>
         </ons-page>
     </template>
 
@@ -44,15 +42,13 @@
                 <div class="center">Memory slot selection</div>
             </ons-toolbar>
             <div class="slots-div">
-                
             </div>
-            <script src="./js/slots.js"></script>
         </ons-page>
     </template>
 
     <template id="main.html">
         <ons-page>
-            <ons-tabbar swipeable position="auto"> <!-- TODO: popola man mano che vengono fuori pagine -->
+            <ons-tabbar position="bottom"> <!-- TODO: popola man mano che vengono fuori pagine -->
                 <ons-tab page="laboratorio.html" label="Laboratorio" icon="ion-md-beaker">
                 </ons-tab>
                 <ons-tab page="richieste.html" label="Richieste" icon="ion-md-people">
@@ -67,8 +63,10 @@
 
     <template id="laboratorio.html">
         <ons-page id="laboratorio">
-            <div>
-                <p>prova</p>
+            <div class="lab-div">
+                <div class="lab-categories"></div>
+                <div class="lab-materials"></div>
+                <div class="lab-work"></div>
             </div>
         </ons-page>
     </template>
