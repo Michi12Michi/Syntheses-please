@@ -159,42 +159,42 @@ document.addEventListener(events[deviceType].up, checkDropZone);
 
 // renderizza le categorie e appende eventlistener al click --> serve in prima istanza a inizializzarle -> la sezione #materiali resta vuota,
 // nel senso che non ho previsto (né credo sia necessario) una popolazione di una categoria in particolare, di inizio
-function Categoria(id, img) {
-    const cat_div = document.createElement("div");
-    const hex_div = document.createElement("div");
-    const inner_div = document.createElement("div");
-    cat_div.classList.add("categoria");
-    cat_div.classList.add("p-0");
-    hex_div.classList.add("hexagon");
-    inner_div.classList.add("inner");
-    cat_div.setAttribute("data-categoriaid", id);
-    cat_div.appendChild(hex_div).appendChild(inner_div).innerHTML = img;
-    cat_div.addEventListener(events[deviceType].down, function() {
-        Materiali(id);
-    });
-    divCategorie.appendChild(cat_div);
-};
+// function Categoria(id, img) {
+//     const cat_div = document.createElement("div");
+//     const hex_div = document.createElement("div");
+//     const inner_div = document.createElement("div");
+//     cat_div.classList.add("categoria");
+//     cat_div.classList.add("p-0");
+//     hex_div.classList.add("hexagon");
+//     inner_div.classList.add("inner");
+//     cat_div.setAttribute("data-categoriaid", id);
+//     cat_div.appendChild(hex_div).appendChild(inner_div).innerHTML = img;
+//     cat_div.addEventListener(events[deviceType].down, function() {
+//         Materiali(id);
+//     });
+//     divCategorie.appendChild(cat_div);
+// };
 
-function Materiali(id_cat) {
-    // SERVE SOLO A RENDERIZZARE I MATERIALI DI UNA CATEGORIA CON DATO id_cat
-    // va gestita la query che mi ritorna id e immagine di tutti i materiali in giocatore.material_list
-    // appartenenti alla categoria con id_cat
-    //
-    // SELECT m.id, m.image FROM materials m JOIN material_category mc ON mc.material_id = m.id WHERE mc.category_id = id_cat ORDER BY m.id ASC;
-    //
-    // esempio-prototipo di prova
-    let elementi = new Array(1,2,3,4);
-    elementi.forEach(element => {
-        const mat_div = document.createElement("div");
-        const hex_div = document.createElement("div");
-        const inner_div = document.createElement("div");
-        mat_div.classList.add("materiale");
-        mat_div.classList.add("p-0");
-        mat_div.setAttribute("data-materialeid", element);
-        hex_div.classList.add("hexagon");
-        inner_div.classList.add("inner");
-        mat_div.appendChild(hex_div).appendChild(inner_div).innerHTML = "sto cazzo"; // mettere immagine
-        // manca da aggiungere eventlistener per il trasporto
-        divMateriali.appendChild(mat_div);
-    });
-};
+// function Materiali(id_cat) {
+//     // SERVE SOLO A RENDERIZZARE I MATERIALI DI UNA CATEGORIA CON DATO id_cat
+//     // va gestita la query che mi ritorna id e immagine di tutti i materiali in giocatore.material_list
+//     // appartenenti alla categoria con id_cat
+//     //
+//     // SELECT m.id, m.image FROM materials m JOIN material_category mc ON mc.material_id = m.id WHERE mc.category_id = id_cat ORDER BY m.id ASC;
+//     //
+//     // esempio-prototipo di prova
+//     let elementi = new Array(1,2,3,4);
+//     elementi.forEach(element => {
+//         const mat_div = document.createElement("div");
+//         const hex_div = document.createElement("div");
+//         const inner_div = document.createElement("div");
+//         mat_div.classList.add("materiale");
+//         mat_div.classList.add("p-0");
+//         mat_div.setAttribute("data-materialeid", element);
+//         hex_div.classList.add("hexagon");
+//         inner_div.classList.add("inner");
+//         mat_div.appendChild(hex_div).appendChild(inner_div).innerHTML = "sto cazzo"; // mettere immagine
+//         // manca da aggiungere eventlistener per il trasporto
+//         divMateriali.appendChild(mat_div);
+//     });
+// };

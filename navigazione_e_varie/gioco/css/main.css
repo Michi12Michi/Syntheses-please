@@ -75,19 +75,86 @@
     height: 70%;
 }
 
-#laboratorio .lab-categories {
+#laboratorio .lab-categories, #laboratorio .lab-materials {
+    position: relative;
     display: flex;
+    align-items: center;
     width: 100%;
     height: 15%;
     overflow-x: scroll;
+}
+
+#laboratorio .lab-categories {
     background-color: rgb(50, 166, 205);
 }
 
 #laboratorio .lab-materials {
+    background-color: antiquewhite;
+}
+
+.material, .category {
+    position: relative;
     display: flex;
-    flex-wrap: nowrap;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 80%;
+    border-radius: 50%;
+    aspect-ratio: 1/1;
+}
+
+.material {
+    background-color: #FF6600;
+}
+
+.category {
+    background-color: rgb(255, 255, 0);
+}
+
+.hexagon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    clip-path: polygon(50% 0%, 93.3% 25%, 93.3% 75%, 50% 100%, 6.7% 75%, 6.7% 25%);
+    height: 100%;
     width: 100%;
-    height: 15%;
-    overflow-x: scroll;
-    background-color: rgb(224, 65, 50);
+}
+
+.material .hexagon {
+    background-color: #1500ff;
+}
+
+.category .hexagon {
+    background-color: red;
+}
+
+.inner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 80%;
+    aspect-ratio: 1/1;
+    border-radius: 50%;
+    background-color: #ffffff;
+}
+
+.material svg, .category svg {
+    width: 100%;
+    object-fit: contain;
+}
+
+.disappearing {
+    animation: disappear 0.5s cubic-bezier(0.6, 0, 0.4, 1);
+    animation-fill-mode: forwards;
+}
+
+@keyframes disappear {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(0);
+        opacity: 0;
+    }
 }
