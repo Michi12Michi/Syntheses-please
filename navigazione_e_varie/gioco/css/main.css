@@ -158,3 +158,12 @@
         opacity: 0;
     }
 }
+
+/* MODAL SCOPERTA ELEMENTO  */
+
+#discover div {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

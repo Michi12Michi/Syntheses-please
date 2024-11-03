@@ -53,7 +53,7 @@ document.addEventListener("init", function(event) {
 
 // inizia il gioco 
 function initGame(slot) {
-    // TODO: inizializza il GO passando lo slot (stringa da appendere alla dicitura Slot quando instanzio il GO)
+    // TODO: inizializza il GO passando lo slot (stringa 1, 2, 3 da appendere alla dicitura Slot quando instanzio il GO)
     // var player = new GameObject(slot)
     document.querySelector("#navigator").pushPage("main.html");
 }
@@ -67,34 +67,25 @@ function readCredits() {
 }
 
 function renderSlots(slots) {
-    // TODO: leggere i dati degli slots: nome livello, crediti, esperienza, etc
-    // TODO: si potrebbe anche usare dei modal di conferma cancellazione dello slot (aggiunti via eventlistener sul fab)
+    // renderizza info salienti per ciascuno slot pieno
     if (slots) {
         document.querySelector("#slots .slots-div").innerHTML = "";
         for (let j = 0; j < slots; j++) {
+            // const parsedSlotData = JSON.parse(localStorage.get(`Slot${j+1}`));
+            // const slot_level = parsedSlotData.level;
+            // const slot_exp = parsedSlotData.experience;
+            // const slot_credit = parsedSlotData.credit;
             let card = document.createElement("ons-card");
-            let title = document.createElement("div");
-            title.classList.add("title");
-            title.innerHTML = j+1;
-            let content = document.createElement("div");
-            content.classList.add("content");
-            let continue_button = document.createElement("ons-fab");
-            continue_button.innerHTML = `<i class="fa fa-play"></i>`;
-            continue_button.addEventListener("click", function() {
-                initGame(j+1);
-            });
-            let delete_button = document.createElement("ons-fab");
-            delete_button.innerHTML = `<i class="fa fa-trash"></i>`;
-            delete_button.addEventListener("click", function() {
-                // TODO: cancellare il relativo oggetto in localstorage
-                --occupied_slots;
-                renderSlots(occupied_slots);
-            });
-            content.appendChild(continue_button);
-            content.appendChild(delete_button);
-            
-            card.appendChild(title);
-            card.appendChild(content);
+            card.innerHTML = `
+            <div class="title">Slot #${j+1}</div>
+            <div class="content">
+                <ons-fab onclick="initGame(${j+1})">
+                    <i class="fa fa-play"></i>
+                </ons-fab>
+                <ons-fab onclick="deleteConfirm(${j+1})">
+                    <i class="fa fa-trash"></i>
+                </ons-fab>
+            </div>`;
             document.querySelector("#slots .slots-div").appendChild(card);
         }
     } else {
@@ -106,3 +97,14 @@ function renderSlots(slots) {
 function backToMenu() {
     document.querySelector("#navigator").resetToPage("menu.html");
 }
+
+const deleteConfirm = function(to_delete) {
+    ons.notification.confirm('Sei sicuro?', {buttonLabels: ["no", "sine"], title: "Comba"}).then(function(index) {
+        // 0 annulla, 1 cancella
+        if (index) {
+            --occupied_slots;
+            // localStorage.setItem(`Slot${to_delete}`) = null;
+        }
+        renderSlots(occupied_slots);
+    })
+};

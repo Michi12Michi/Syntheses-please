@@ -123,12 +123,21 @@ document.querySelectorAll("div.material").forEach((material) => {
             applyStyles(material, clonedElement);
             clonedElement.style.left = material.getBoundingClientRect().left + "px";
             clonedElement.style.top = material.getBoundingClientRect().top + "px";
-            document.body.appendChild(clonedElement);
+            document.querySelector("#laboratorio").appendChild(clonedElement);
             makeDraggable(clonedElement);
             startDragging(e, clonedElement);
         }
     });
 });
 
-document.addEventListener(events[deviceType].move, moveElement, {passive: "false"});
-document.addEventListener(events[deviceType].up, checkDropZone);
+document.addEventListener(events[deviceType].move, (e) => {
+    if (moving) {
+        moveElement(e);
+    }
+}, {passive: "false"});
+
+document.addEventListener(events[deviceType].up, (e) => {
+    if (moving) {
+        checkDropZone(e);
+    }
+});

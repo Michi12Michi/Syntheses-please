@@ -37,3 +37,16 @@ function Materiali(id_cat, disc_mat_list) { // renderizza i materiali della cate
         divMateriali.appendChild(mat_div);
     });
 };
+
+function discoverMaterial(material_name, img, descrption) {
+    var modal = document.querySelector("#laboratorio #discover");
+    // TODO: inserire tutti gli elementi nel contenuto del modal
+    modal.innerHTML = `<div><p style="color: antiquewhite;">Ciao</p></div>`;
+    modal.show();
+    setTimeout(() => {
+        modal.addEventListener("click", function() {
+            modal.hide();
+            modal.innerHTML = "";
+        });
+    }, 4000);
+}

@@ -6,11 +6,9 @@ const max_items_per_combination = 5;
 const max_unuseful_combinations = 3;
 const max_slots = 3;
 
-// La classe Gameobject dovrebbe contenere i progressi di tutto il gioco (livello, esperienza, soldi, reazioni fatte (id e quante volte in Map), 
-// sostanze scoperte (le relative categorie sono istanziate dinamicamente all'avvio del gioco).
 class GameObject {
-    constructor() {
-        const savedData = localStorage.getItem("gameData");
+    constructor(slot) {
+        const savedData = localStorage.getItem(`Slot${slot}`);
         if (savedData) {
             const parsedData = JSON.parse(savedData);
             this.level = parsedData.level;
@@ -23,6 +21,7 @@ class GameObject {
             this.quest_active_list = parsedData.quest_active_list;
             this.material_discovered_list = parsedData.material_discovered_list;
             this.material_to_combine_list = [];
+            this.slot = slot;
         } else {
             this.level = 0;
             this.like = 0;
@@ -34,6 +33,7 @@ class GameObject {
             this.quest_active_list = [];
             this.material_discovered_list = [];
             this.material_to_combine_list = [];
+            this.slot = slot;
         }
     }
 
@@ -250,7 +250,7 @@ class GameObject {
             quest_active_list: this.quest_active_list,
             material_discovered_list: this.material_discovered_list,
         };
-        localStorage.setItem("gameData", JSON.stringify(dataToSave));
+        localStorage.setItem(`Slot${this.slot}`, JSON.stringify(dataToSave));
     }
 
     addMaterialToReactor(material) {
@@ -298,7 +298,6 @@ class GameObject {
                         //
                         if (level_required_for_combination <= this.level) {
                             // PROCEDO A RECUPERARE LE INFORMAZIONI SUI MATERIALI PRODOTTI
-                            const placeholder = new Array(res.rows.length).fill("?").join(", ");
                             var produced_materials_id = new Array();
                             for (let i = 0; i < res.rows.length; i++) {
                                 produced_materials_id.push(res.rows.item(i).material_id)
@@ -306,9 +305,7 @@ class GameObject {
                             const query_product_properties = `SELECT * FROM materials WHERE id IN (${produced_materials_id});`;
                             // SELEZIONO LE PROPRIETà DEI PRODOTTI OTTENUTI E MI REGOLO SUGLI EFFETTI
                             db.executeSql(query_product_properties, [], (prodPropsRes) => {
-                                // verifica se ho già fatto questa reazione
-                                // non ho bisogno di aggiornare la lista materiali nè l'esperienza, ma solo i soldi e la mappa reazioni
-                                // non ho bisogno di triggerare altro
+                                // se ho già fatto questa reazione non ho bisogno di aggiornare lista materiali nè l'esperienza, ma solo i soldi e la mappa reazioni
                                 // calcolo il guadagno totale e l'esperienza totale
                                 var total_earn_from_combination = 0, total_experience = 0;
                                 for (let j = 0; j < prodPropsRes.rows.length; j++) {
@@ -325,21 +322,20 @@ class GameObject {
                                     // se non ho mai fatto la reazione aggiorno tutti i parametri*
                                     // a) aggiorno lista reazioni fatte
                                     this.combination_done_list.set(successful_combination_id, 1);
-                                    // b) aggiorno soldi ed esperienza (sommo solo il totale)
+                                    // b) aggiorno soldi ed esperienza (sommo il totale)
                                     this.credit = this.credit + total_earn_from_combination;
                                     this.experience = this.experience + total_experience;
                                     // c) verificare se i composti non sono nella lista this.material_discovered_list
                                     // se ci sono non me ne preoccupo
                                     // per oguno dei composti scoperti
-                                    produced_materials_id.forEach(material => {
-                                        if (!(this.material_discovered_list.has(material))) {
+                                    prodPropsRes.rows.item.forEach(material => {
+                                        if (!(this.material_discovered_list.has(material.id))) {
                                             // QUI ENTRO SOLO SE IL COMPOSTO è STATO FATTO PER LA PRIMA VOLTA 
-                                            this.material_discovered_list.push(material);
-                                            // dovrebbe partire una animazione standard di scopertauaochefigo e devo passare immagine e descrizione del materiale
-                                            // TODO: funzione discoverMaterial() -> si potrebbero passare tutte le proprietà, oppure solo l'id per recuperare con 
-                                            // una query tutto il necessario*
-                                            // e dovrei anche verificare se appartiene ad una categoria che già ho sbloccato, no?
-                                            // faccio una query su material_category?
+                                            this.material_discovered_list.push(material.id);
+                                            // discoverMaterial(material.id, material.iupac_name, material.description, material.image)
+                                            
+                                            // TODO: dovrei anche verificare se appartiene ad una categoria che già ho sbloccato, no?
+                                            // 
                                             // in caso la categoria ce l'ho, sti cazzi, altrimenti devo chiamare Categoria(id_cat) per il rendering
                                         }
                                     });
@@ -348,11 +344,11 @@ class GameObject {
                             
                         } else {
                             // NON VIENE SODDISFATTA LA CONDIZIONE DI LIVELLO RICHIESTA PER LA COMBINAZIONE
-                            alert("Non hai le palle esatte");
+                            // nulla, il vuoto del porco di dio
                         }
                         // finalmente svuoto il reattore -> la combinazione è valida, anche in caso in cui non ci sia il livello.
                         this.empty();
-                        this.unuseful_combinations = 0;
+                        this.unuseful_combinations = 0; // azzero le combinazioni inutili
                         afterPlayerInteraction(); // controlla a cosa porteranno questi cambiamenti nello stato del gioco
                     });
                 } else {
@@ -361,7 +357,8 @@ class GameObject {
                         this.unuseful_combinations++;
                         
                         if (this.unuseful_combinations >= max_unuseful_combinations) {
-                            // TODO: GESTIRE IL CASO IN CUI CI SIANO STATE TOT COMBINAZIONI INFRUTTUOSE
+                            // LOL
+                            this.credit -= 100000000000000;
                         }
                         this.empty();
                 }
