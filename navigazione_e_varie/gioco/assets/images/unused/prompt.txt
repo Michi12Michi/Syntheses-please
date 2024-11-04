@@ -1,0 +1,3 @@
+https://deepai.org/machine-learning-model/text2img
+
+Create a coloured image of a chemistry lab viewed from the perspective of a camera positioned inside a laboratory fume hood. The camera should not be visible; it's only the point of view. Make the image in a comic style. The image should lose focus and fade to uniform grey at the edges.
