@@ -332,7 +332,7 @@ class GameObject {
                                         if (!(this.material_discovered_list.has(material.id))) {
                                             // QUI ENTRO SOLO SE IL COMPOSTO è STATO FATTO PER LA PRIMA VOLTA 
                                             this.material_discovered_list.push(material.id);
-                                            // discoverMaterial(material.id, material.iupac_name, material.description, material.image)
+                                            // discoverMaterial(material.iupac_name, material.description, material.image)
                                             
                                             // TODO: dovrei anche verificare se appartiene ad una categoria che già ho sbloccato, no?
                                             // 
@@ -357,6 +357,8 @@ class GameObject {
                         this.unuseful_combinations++;
                         
                         if (this.unuseful_combinations >= max_unuseful_combinations) {
+                            // reset variabile contatore
+                            this.unuseful_combinations = 0;
                             // LOL
                             this.credit -= 100000000000000;
                         }
