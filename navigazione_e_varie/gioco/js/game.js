@@ -50,8 +50,6 @@ class GameObject {
 
     afterPlayerInteraction() { // istruzioni in ./afterPlayerInteraction.txt
 
-        alert("già siamo qua");
-
         // controlla l'esistenza di materiali che portano al game over
         const query_game_over = `
             SELECT *
@@ -59,7 +57,7 @@ class GameObject {
             WHERE iupac_name LIKE '%gameover%'
         `;
 
-        window.sqlitePlugin.openDatabase({ name: "chimgio.db", location: "default" }, (db) => {
+        window.sqlitePlugin.openDatabase({ name: "../assets/chimgio.db", location: "default" }, (db) => {
             db.executeSql(query_game_over, [], (rs) => {
                 if (rs.rows.length > 0) {
                     rs.rows.forEach((row) => {
@@ -80,7 +78,7 @@ class GameObject {
             WHERE level_when_active = ?
         `;
 
-        window.sqlitePlugin.openDatabase({ name: "chimgio.db", location: "default" }, (db) => {
+        window.sqlitePlugin.openDatabase({ name: "../assets/chimgio.db", location: "default" }, (db) => {
             db.executeSql(query_quests_for_level, [this.level], (rs) => {
                 // svuota l'array prima di aggiungere le nuove quest
                 this.quest_active_list = [];
@@ -92,6 +90,8 @@ class GameObject {
                 }
             });
         });
+
+        alert(JSON.stringify(this.quest_active_list));
 
         // salva lo stato attuale del gioco (combinazioni e materiali scoperti, quest terminate)
         let temp_combination_done_list = this.combination_done_list, temp_quest_done_list = this.quest_done_list, temp_material_discovered_list = this.material_discovered_list;
@@ -105,7 +105,7 @@ class GameObject {
         // tra le quest accettate, chiudi positivamente quelle le cui condizioni sono raggiunte; le condizioni per chiuderle negativamente sono direttamente conseguenti attività dell'utente, come il passaggio di livello e il rifiuto. Verranno trattate separatamente
         this.quest_active_list.forEach((questId) => {        
             // apertura del database e recupero delle informazioni per ogni quest attiva
-            window.sqlitePlugin.openDatabase({ name: "chimgio.db", location: "default" }, (db) => {
+            window.sqlitePlugin.openDatabase({ name: "../assets/chimgio.db", location: "default" }, (db) => {
                 db.executeSql(query_quest_conditions, [questId], (rs) => {
                     if (rs.rows.length > 0) {
                         const quest = rs.rows.item(0);
@@ -169,7 +169,7 @@ class GameObject {
         const next_level = this.level + 1;
 
         return new Promise((resolve) => {
-            window.sqlitePlugin.openDatabase({ name: "chimgio.db", location: "default" }, (db) => {
+            window.sqlitePlugin.openDatabase({ name: "../assets/chimgio.db", location: "default" }, (db) => {
                 db.executeSql(query_next_level, [next_level], (rs) => {
                     if (rs.rows.length > 0) {
                         const level_info = rs.rows.item(0);
@@ -202,7 +202,7 @@ class GameObject {
     }
 
     goToNextLevel() { // corrisponde al giocatore che clicca per decidere di avanzare di livello: fallisce tutte le quest attive e gestisce le conseguenze dirette (materiali aggiunti, modifica exp e $)
-        window.sqlitePlugin.openDatabase({ name: "chimgio.db", location: "default" }, (db) => {
+        window.sqlitePlugin.openDatabase({ name: "../assets/chimgio.db", location: "default" }, (db) => {
         
             // svuota la lista delle quest attive e registra le quest fallite in `quest_done_list`
             this.quest_active_list.forEach((questId) => {
@@ -285,7 +285,7 @@ class GameObject {
                                                 GROUP BY cm1.combination_id
                                                 HAVING COUNT(*) = ?);`;
         
-        window.sqlitePlugin.openDatabase({ name: "chimgio.db", location: "default" }, (db) => {
+        window.sqlitePlugin.openDatabase({ name: "../assets/chimgio.db", location: "default" }, (db) => {
             db.executeSql(query_existing_combination, [this.material_to_combine_list, this.material_to_combine_list.length], (res) => {
                 // megablocco risultato positivo con eventuali più elementi
                 if (res.rows.length > 0) {
@@ -381,7 +381,7 @@ function renderCategories(array_ids) { // renderizza le categorie nell'apposito 
                                 JOIN material_category mc ON c.id = mc.category_id
                                 WHERE mc.material_id in (${placeholder})
                                 ORDER BY c.id;`;
-    window.sqlitePlugin.openDatabase({name: "chimgio.db", location: "default"}, (db) => {
+    window.sqlitePlugin.openDatabase({name: "../assets/chimgio.db", location: "default"}, (db) => {
         db.executeSql(query_categories, [array_ids], (res) => {
             if (res.rows.length > 0) {
                 for (let j=0; j < res.rows.length; j++) {
@@ -410,7 +410,7 @@ function renderMaterials(id_cat, mat_list) { // renderizza i materiali della cat
                                 WHERE mc.category_id = ${id_cat}
                                 AND m.id IN (${placeholder})
                                 ORDER BY m.id;`;
-    window.sqlitePlugin.openDatabase({name: "chimgio.db", location: "default"}, (db) => {
+    window.sqlitePlugin.openDatabase({name: "../assets/chimgio.db", location: "default"}, (db) => {
         db.executeSql(query_materials, [mat_list], (res) => {
             if (res.rows.length > 0) {
                 for (let j=0; j < res.rows.length; j++) {

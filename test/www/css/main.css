@@ -1,0 +1,189 @@
+/* SEZIONE UTILS */
+
+/* BARRE OVERFLOW
+::-webkit-scrollbar {
+    height: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: rgba(100, 100, 255, 0.5);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+ BARRE OVERFLOW */
+
+
+/* SEZIONE MENU */
+#menu .page__background {
+    background-color: #ffde22;
+}
+
+#menu .page__content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#menu .menu-div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%
+}
+
+/* #menu img {
+    width: 20%;
+} */
+
+#menu ons-button {
+    width: 50%;
+    margin: 1% 0% 1% 0%;
+    text-align: center;
+}
+
+#menu #fun-fact {
+    width: 50%;
+    font-weight: 700;
+    text-align: center;
+}
+
+/* SEZIONE CREDITI */
+
+#credits .page__background {
+    background-color: #ffde22;
+}
+
+/* SEZIONE SLOTS */
+/* TODO: stilizzare ogni componente della card */
+#slots .page__background {
+    background-color: #ffde22;
+}
+
+#slots .page__content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#slots .slots-div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%
+}
+
+/* SEZIONE GIOCO */
+#laboratorio .lab-div {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background-color: #47456c; /* continuum cappa */
+    background-image: url('../assets/images/bckg.png'); /* cappa */
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+#laboratorio .lab-work {
+    position: relative;
+    display: flex;
+    width: 100%;
+    height: 70%;
+}
+
+#laboratorio .lab-categories, #laboratorio .lab-materials {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 15%;
+    overflow-x: scroll;
+}
+
+#laboratorio .lab-categories {
+    /*background-color: rgba(27, 27, 25, 0.397);*/
+}
+
+#laboratorio .lab-materials {
+    /*background-color: rgba(255, 238, 0, 0.150);*/
+}
+
+.material, .category {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 80%;
+    border-radius: 50%;
+    aspect-ratio: 1/1;
+}
+
+.material {
+    background-color: #FF6600;
+}
+
+.category {
+    background-color: rgb(255, 255, 0);
+}
+
+.hexagon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    clip-path: polygon(50% 0%, 93.3% 25%, 93.3% 75%, 50% 100%, 6.7% 75%, 6.7% 25%);
+    height: 100%;
+    width: 100%;
+}
+
+.material .hexagon {
+    background-color: #1500ff;
+}
+
+.category .hexagon {
+    background-color: red;
+}
+
+.inner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 80%;
+    aspect-ratio: 1/1;
+    border-radius: 50%;
+    background-color: #ffffff;
+}
+
+.material svg, .category svg {
+    width: 100%;
+    object-fit: contain;
+}
+
+.disappearing {
+    animation: disappear 0.5s cubic-bezier(0.6, 0, 0.4, 1);
+    animation-fill-mode: forwards;
+}
+
+@keyframes disappear {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(0);
+        opacity: 0;
+    }
+}
+
+/* MODAL SCOPERTA ELEMENTO  */
+
+#discover div {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

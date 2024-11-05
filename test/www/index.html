@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="Content-Security-Policy" content="default-src *; style-src * 'unsafe-inline'; media-src *; img-src * data:; script-src * 'unsafe-inline';">
+        <meta name="format-detection" content="telephone=no">
+        <meta name="msapplication-tap-highlight" content="no">
+        <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
+        <meta name="color-scheme" content="light dark">
+        <title>Syntheses, please!</title>
+        <link rel="stylesheet" href="assets/onsenui/css/onsenui.css">
+        <link rel="stylesheet" href="assets/onsenui/css/onsen-css-components.css">
+        <link rel="stylesheet" href="./css/main.css">
+        <script src="assets/onsenui/js/onsenui.min.js"></script>
+    </head>
+    <body>
+    <ons-navigator id="navigator" page="menu.html" animation="fade"></ons-navigator>
+
+    
+    <template id="menu.html">
+        <ons-page id="menu">
+            <div class="menu-div">
+                <!-- TODO inserire logo -->
+                <!-- <img src="https://picsum.photos/300" alt=""/> -->
+                <p id="fun-fact">Odi et amo. Quare id faciam, fortasse requiris.
+                    Nescio, sed fieri sentio et excrucior.</p>
+                <ons-button modifier="cta" onclick="readCredits()">Crediti</ons-button>
+            </div>
+        </ons-page>
+    </template>
+
+    <template id="credits.html">
+        <ons-page id="credits">
+            <ons-toolbar>
+                <ons-back-button class="left">Back</ons-back-button>
+                <div class="center">Credits</div>
+            </ons-toolbar>
+            <div class="credits-div">
+            </div>
+        </ons-page>
+    </template>
+
+    <template id="slots.html">
+        <ons-page id="slots">
+            <ons-toolbar>
+                <ons-back-button class="left">Back</ons-back-button>
+                <div class="center">Memory slot selection</div>
+            </ons-toolbar>
+            <div class="slots-div">
+            </div>
+        </ons-page>
+    </template>
+
+    <template id="main.html">
+        <ons-page>
+            <ons-tabbar position="bottom" swipeable> <!-- TODO: popola man mano che vengono fuori pagine -->
+                <ons-tab page="laboratorio.html" label="Laboratorio" icon="ion-md-beaker">
+                </ons-tab>
+                <ons-tab page="richieste.html" label="Richieste" icon="ion-md-people">
+                </ons-tab>
+                <ons-tab page="mercato_nero.html" label="Mercato nero" icon="ion-md-cash">
+                </ons-tab>
+                <ons-tab page="diario.html" label="Diario" icon="ion-md-book">
+                </ons-tab>
+            </ons-tabbar>
+            <script src="./js/utils.js"></script>
+        </ons-page>
+        
+    </template>
+
+    <template id="laboratorio.html">
+        <ons-page id="laboratorio">
+            <div class="lab-div">
+                <div class="lab-categories"></div>
+                <div class="lab-materials"></div>
+                <div class="lab-work"></div>
+            </div>
+            <ons-modal id="discover"></ons-modal>
+        </ons-page>
+        
+    </template>
+
+    <template id="richieste.html">
+        <ons-page id="richieste">
+            <ons-toolbar>
+                <div class="center">Richieste</div>
+            </ons-toolbar>
+            
+            <ons-list>
+                <ons-list-header>La gente ha bisogno della tua chimica!</ons-list-header>
+                <!-- TODO: carica dinamicamente da DB -->
+                <ons-list-item tappable>
+                    <div class="left">
+                        <img class="list-item__thumbnail" src="https://placehold.co/40" alt="faccia personaggio">
+                    </div>
+                    <div class="center">
+                        <span class="list-item__title">Nome personaggio</span><span class="list-item__subtitle">Titolo quest</span>
+                    </div>
+                </ons-list-item>
+
+                <ons-list-item tappable>
+                    <div class="left">
+                        <img class="list-item__thumbnail" src="https://placehold.co/40" alt="faccia personaggio">
+                    </div>
+                    <div class="center">
+                        <span class="list-item__title">Nome personaggio</span><span class="list-item__subtitle">Titolo quest</span>
+                    </div>
+                </ons-list-item>
+
+                <ons-list-item tappable>
+                    <div class="left">
+                        <img class="list-item__thumbnail" src="https://placehold.co/40" alt="faccia personaggio">
+                    </div>
+                    <div class="center">
+                        <span class="list-item__title">Nome personaggio</span><span class="list-item__subtitle">Titolo quest</span>
+                    </div>
+                </ons-list-item>
+            </ons-list>
+        </ons-page>
+    </template>
+
+    <template id="mercato_nero.html">
+        <ons-page id="mercato_nero">
+            <ons-toolbar>
+                <div class="center">Mercato nero</div>
+            </ons-toolbar>
+
+            <ons-list>
+                <ons-list-header>Acquistabili</ons-list-header>
+                <!-- TODO: carica dinamicamente da DB -->
+                <ons-list-item tappable>
+                    <div class="left">
+                        <img class="list-item__thumbnail" src="https://placehold.co/40" alt="materiale">
+                    </div>
+                    <div class="center">
+                        <span class="list-item__title">Nome comune materiale</span><span class="list-item__subtitle">Dettagli: prezzo, livello, nome IUPAC(?)</span>
+                    </div>
+                </ons-list-item>
+
+                <ons-list-item tappable>
+                    <div class="left">
+                        <img class="list-item__thumbnail" src="https://placehold.co/40" alt="materiale">
+                    </div>
+                    <div class="center">
+                        <span class="list-item__title">Nome comune materiale</span><span class="list-item__subtitle">Dettagli: prezzo, livello, nome IUPAC(?)</span>
+                    </div>
+                </ons-list-item>
+
+                <ons-list-item tappable>
+                    <div class="left">
+                        <img class="list-item__thumbnail" src="https://placehold.co/40" alt="materiale">
+                    </div>
+                    <div class="center">
+                        <span class="list-item__title">Nome comune materiale</span><span class="list-item__subtitle">Dettagli: prezzo, livello, nome IUPAC(?)</span>
+                    </div>
+                </ons-list-item>
+
+            </ons-list>
+
+        </ons-page>
+    </template>
+
+    <template id="diario.html">
+        <ons-page id="diario">
+            <ons-toolbar>
+                <div class="center">Diario</div>
+            </ons-toolbar>
+            <p style="text-align: center;">
+                Il diario, con le pagine sfogliabili tramite due bottoncini in basso a sinistra e destra.
+            </p>
+        </ons-page>
+    </template>
+
+    <script src="cordova.js"></script>
+    <script src="./js/main.js"></script>
+    <script src="./js/game.js"></script>
+</body>
+</html>

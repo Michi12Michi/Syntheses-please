@@ -4,7 +4,7 @@ var occupied_slots = 2; // TODO: in realtà è localStorage.length; almeno non f
 
 document.addEventListener("init", function(event) {
     // recupero un fun fact dal db... 
-    // window.sqlitePlugin.openDatabase({name: "chimgio.db", location: "default" }, (db) => {
+    // window.sqlitePlugin.openDatabase({name: "../assets/chimgio.db", location: "default" }, (db) => {
         //     const fun_fact_query = `SELECT * FROM fun_facts ORDER BY RANDOM() LIMIT 1;`
         //     db.executeSql(fun_fact_query, [], (res) => {
         //         if (res.rows.length > 0) {
@@ -42,7 +42,7 @@ document.addEventListener("init", function(event) {
         renderSlots(occupied_slots);
     } else if (event.target.id === "credits") {
         // TODO: renderizza e stilizza la sezione crediti
-        // window.sqlitePlugin.openDatabase({name: "chimgio.db", location: "default" }, (db) => {
+        // window.sqlitePlugin.openDatabase({name: "../assets/chimgio.db", location: "default" }, (db) => {
         //     const credits_query = `SELECT * FROM credits;`
         //     db.executeSql(credits_query, [], (res) => {
         //         if (res.rows.length > 0) {
