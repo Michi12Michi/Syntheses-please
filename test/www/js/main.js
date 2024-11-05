@@ -1,11 +1,28 @@
 const max_available_slots = 3;
 var occupied_slots = 2; // TODO: in realtà è localStorage.length; almeno non finché non finisce il test
+var db = null;
 // DIO PORCO
 
-// TODO: se la piattaforma è browser crea un db sqlite al volo in memoria, altrimenti procedi normalmente
+document.addEventListener('deviceready', onDeviceReady, false);
 
-function onDeviceReady() {
-    console.log("Dispositivo pronto per cordova");
+function onDeviceReady() { // TODO: perché non facciamo questo controllo nel gameobject? Perché forse può servire già prima il DB (crediti, funfact)
+    const platform = cordova.platformId;
+    
+    if (platform === "browser") {
+        // crea il database in memoria
+        db = window.sqlitePlugin.openDatabase({
+            name: 'chimgio.db',
+            location: "default"
+        });
+        initializeDatabase(db); // inizializza tabelle e dati
+    } else if (platform === "android" || platform === "ios") {
+        // apre il database dagli assets
+        db = window.sqlitePlugin.openDatabase({
+            name: 'chimgio.db',
+            location: "default",
+            createFromLocation: 1
+        });
+    }
 }
 
 document.addEventListener("init", function(event) {
@@ -34,14 +51,14 @@ document.addEventListener("init", function(event) {
                 var start_btn = document.createElement("ons-button");
                 start_btn.setAttribute("modifier", "cta");
                 start_btn.textContent = "Nuova partita";
-                start_btn.addEventListener("click", function() {initGame(occupied_slots+1);});
+                start_btn.addEventListener("click", function() {initGame(occupied_slots+1, db);});
                 div_to_append_to.insertBefore(start_btn, credits_btn);
             }
         } else {
             var start_btn = document.createElement("ons-button");
             start_btn.setAttribute("modifier", "cta");
             start_btn.textContent = "Nuova partita";
-            start_btn.addEventListener("click", function() {initGame(1);});
+            start_btn.addEventListener("click", function() {initGame(1, db);});
             div_to_append_to.insertBefore(start_btn, credits_btn);
         }  
     } else if (event.target.id === "slots") {
@@ -62,9 +79,9 @@ document.addEventListener("init", function(event) {
 });
 
 // inizia il gioco 
-function initGame(slot) {
+function initGame(slot, db) {
     // inizializza il GO passando lo slot (stringa 1, 2, 3 da appendere alla dicitura Slot quando instanzio il GO)
-    var g_obj = new GameObject(slot);
+    var g_obj = new GameObject(slot, db);
 
     document.querySelector("#navigator").pushPage("main.html");
 
