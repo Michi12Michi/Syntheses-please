@@ -135,6 +135,7 @@ class GameObject {
                                         this.material_discovered_list.push(materialId);
                                     }
                                 }
+                                // TODO: 
                             });
                         }
                     }
@@ -414,8 +415,20 @@ function renderMaterials(id_cat, mat_list) { // renderizza i materiali della cat
                     mat_div.classList.add("material");
                     mat_div.setAttribute("data-materialid", res.rows.item(j).id);
                     mat_div.innerHTML = `<div class="hexagon"><div class="inner">${res.rows.item(j).image}</div></div>`;
-                    // TODO: aggiungere eventlistener per il trasporto
                     divMateriali.appendChild(mat_div);
+                    // aggiungo eventlistener per il trasporto
+                    mat_div.addEventListener(events[deviceType].down, (e) => {
+                        if (!moving) {
+                            e.preventDefault();
+                            const clonedElement = material.cloneNode(true);
+                            applyStyles(material, clonedElement);
+                            clonedElement.style.left = material.getBoundingClientRect().left + "px";
+                            clonedElement.style.top = material.getBoundingClientRect().top + "px";
+                            document.querySelector("#laboratorio").appendChild(clonedElement);
+                            makeDraggable(clonedElement);
+                            startDragging(e, clonedElement);
+                        }
+                    });
                 }
             }
         });
@@ -435,3 +448,4 @@ function discoverMaterial(material_name, img, descrption) {
         });
     }, 4000);
 }
+

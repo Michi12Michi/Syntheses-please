@@ -3,16 +3,18 @@ var occupied_slots = 2; // TODO: in realtà è localStorage.length; almeno non f
 // DIO PORCO
 
 document.addEventListener("init", function(event) {
-    // recupero un fun fact dal db e renderizzo
-    if (event.target.id === "menu") {
-        // window.sqlitePlugin.openDatabase({name: "chimgio.db", location: "default" }, (db) => {
+    // recupero un fun fact dal db... 
+    // window.sqlitePlugin.openDatabase({name: "chimgio.db", location: "default" }, (db) => {
         //     const fun_fact_query = `SELECT * FROM fun_facts ORDER BY RANDOM() LIMIT 1;`
         //     db.executeSql(fun_fact_query, [], (res) => {
         //         if (res.rows.length > 0) {
-        //             document.querySelector("#funfact").innerHTML(res);
+        //             const fun_fact = res.rows.item(0).?;
         //         }
         //     });
         // });
+    if (event.target.id === "menu") {
+        // ... e renderizzo sempre lo stesso
+        // document.querySelector("#funfact").innerHTML(fun_fact);
         // inizializzo i pulsanti sulla base di eventuali dati salvati
         const div_to_append_to = document.querySelector("#menu .menu-div ons-button").parentNode;
         const credits_btn = document.querySelector("#menu .menu-div ons-button");
@@ -44,7 +46,9 @@ document.addEventListener("init", function(event) {
         //     const credits_query = `SELECT * FROM credits;`
         //     db.executeSql(credits_query, [], (res) => {
         //         if (res.rows.length > 0) {
-        //             
+        //             for (let j = 0; j < res.rows.length; j++) {
+        //                  document.querySelector(".credits-div").innerHTML += `<p>res.rows.item(j)</p>`;
+        //              }
         //         }
         //     });
         // });
@@ -54,7 +58,7 @@ document.addEventListener("init", function(event) {
 // inizia il gioco 
 function initGame(slot) {
     // TODO: inizializza il GO passando lo slot (stringa 1, 2, 3 da appendere alla dicitura Slot quando instanzio il GO)
-    // var player = new GameObject(slot)
+    // var Gobj = new GameObject(slot)
     document.querySelector("#navigator").pushPage("main.html");
 }
 
@@ -103,7 +107,7 @@ const deleteConfirm = function(to_delete) {
         // 0 annulla, 1 cancella
         if (index) {
             --occupied_slots;
-            // localStorage.setItem(`Slot${to_delete}`) = null;
+            localStorage.setItem(`Slot${to_delete}`) = null;
         }
         renderSlots(occupied_slots);
     })

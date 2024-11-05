@@ -74,7 +74,7 @@ const moveElement = (e) => {
     }
 };
 
-const checkDropZone = (e) => {
+const checkDropZone = (e, GObj) => {
     e.preventDefault();
     if (!activeElement) return;
     
@@ -99,15 +99,13 @@ const checkDropZone = (e) => {
             if (itemCenterX > combinatorRect.left && itemCenterX < combinatorRect.right && itemCenterY > combinatorRect.top && itemCenterY < combinatorRect.bottom) {
                 // recupero l'id 
                 var id = activeElement.getAttribute("data-materialid");
-                console.log(id);
                 activeElement.classList.add("disappearing");
                 const elementToRemove = activeElement;
                 setTimeout(() => {
                     elementToRemove.remove();
                 }, 700);
-                // TODO: qui va gestito il combinatore, deve essere collegato a addMaterialToReactor del GO
-                
-
+                // qui va gestito il combinatore > collegato a addMaterialToReactor del GO
+                GObj.addMaterialToReactor(id);
             }
         }
     }
@@ -115,20 +113,22 @@ const checkDropZone = (e) => {
     activeElement = null;
 };
 
-document.querySelectorAll("div.material").forEach((material) => {
-    material.addEventListener(events[deviceType].down, (e) => {
-        if (!moving) {
-            e.preventDefault();
-            const clonedElement = material.cloneNode(true);
-            applyStyles(material, clonedElement);
-            clonedElement.style.left = material.getBoundingClientRect().left + "px";
-            clonedElement.style.top = material.getBoundingClientRect().top + "px";
-            document.querySelector("#laboratorio").appendChild(clonedElement);
-            makeDraggable(clonedElement);
-            startDragging(e, clonedElement);
-        }
-    });
-});
+// LA FUNZIONALITA' E' STATA GIA' TRASFERITA DENTRO LA FUNZIONE renderMaterials() (nel file game.js)
+
+// document.querySelectorAll("div.material").forEach((material) => {
+//     material.addEventListener(events[deviceType].down, (e) => {
+//         if (!moving) {
+//             e.preventDefault();
+//             const clonedElement = material.cloneNode(true);
+//             applyStyles(material, clonedElement);
+//             clonedElement.style.left = material.getBoundingClientRect().left + "px";
+//             clonedElement.style.top = material.getBoundingClientRect().top + "px";
+//             document.querySelector("#laboratorio").appendChild(clonedElement);
+//             makeDraggable(clonedElement);
+//             startDragging(e, clonedElement);
+//         }
+//     });
+// });
 
 document.addEventListener(events[deviceType].move, (e) => {
     if (moving) {
@@ -138,6 +138,6 @@ document.addEventListener(events[deviceType].move, (e) => {
 
 document.addEventListener(events[deviceType].up, (e) => {
     if (moving) {
-        checkDropZone(e);
+        checkDropZone(e, GObj);
     }
 });
