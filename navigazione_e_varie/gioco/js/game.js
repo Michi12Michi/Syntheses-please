@@ -49,6 +49,9 @@ class GameObject {
     }
 
     afterPlayerInteraction() { // istruzioni in ./afterPlayerInteraction.txt
+
+        alert("già siamo qua");
+
         // controlla l'esistenza di materiali che portano al game over
         const query_game_over = `
             SELECT *

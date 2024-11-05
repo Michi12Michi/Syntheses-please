@@ -57,9 +57,12 @@ document.addEventListener("init", function(event) {
 
 // inizia il gioco 
 function initGame(slot) {
-    // TODO: inizializza il GO passando lo slot (stringa 1, 2, 3 da appendere alla dicitura Slot quando instanzio il GO)
-    // var Gobj = new GameObject(slot)
+    // inizializza il GO passando lo slot (stringa 1, 2, 3 da appendere alla dicitura Slot quando instanzio il GO)
+    var g_obj = new GameObject(slot);
+
     document.querySelector("#navigator").pushPage("main.html");
+
+    g_obj.afterPlayerInteraction();
 }
 
 function selectSlot() {
