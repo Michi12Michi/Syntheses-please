@@ -1,33 +1,10 @@
 const max_available_slots = 3;
 var occupied_slots = 2; // TODO: in realtà è localStorage.length; almeno non finché non finisce il test
-var db = null;
 // DIO PORCO
-
-document.addEventListener('deviceready', onDeviceReady, false);
-
-function onDeviceReady() { // TODO: perché non facciamo questo controllo nel gameobject? Perché forse può servire già prima il DB (crediti, funfact)
-    const platform = cordova.platformId;
-    
-    if (platform === "browser") {
-        // crea il database in memoria
-        db = window.sqlitePlugin.openDatabase({
-            name: 'chimgio.db',
-            location: "default"
-        });
-        initializeDatabase(db); // inizializza tabelle e dati
-    } else if (platform === "android" || platform === "ios") {
-        // apre il database dagli assets
-        db = window.sqlitePlugin.openDatabase({
-            name: 'chimgio.db',
-            location: "default",
-            createFromLocation: 1
-        });
-    }
-}
 
 document.addEventListener("init", function(event) {
     // recupero un fun fact dal db... 
-    // window.sqlitePlugin.openDatabase({name: "chimgio.db", location: 1, createFromLocation: 1 }, (db) => {
+    // window.sqlitePlugin.openDatabase({name: "../assets/chimgio.db", location: "default" }, (db) => {
         //     const fun_fact_query = `SELECT * FROM fun_facts ORDER BY RANDOM() LIMIT 1;`
         //     db.executeSql(fun_fact_query, [], (res) => {
         //         if (res.rows.length > 0) {
@@ -51,21 +28,21 @@ document.addEventListener("init", function(event) {
                 var start_btn = document.createElement("ons-button");
                 start_btn.setAttribute("modifier", "cta");
                 start_btn.textContent = "Nuova partita";
-                start_btn.addEventListener("click", function() {initGame(occupied_slots+1, db);});
+                start_btn.addEventListener("click", function() {initGame(occupied_slots+1);});
                 div_to_append_to.insertBefore(start_btn, credits_btn);
             }
         } else {
             var start_btn = document.createElement("ons-button");
             start_btn.setAttribute("modifier", "cta");
             start_btn.textContent = "Nuova partita";
-            start_btn.addEventListener("click", function() {initGame(1, db);});
+            start_btn.addEventListener("click", function() {initGame(1);});
             div_to_append_to.insertBefore(start_btn, credits_btn);
         }  
     } else if (event.target.id === "slots") {
         renderSlots(occupied_slots);
     } else if (event.target.id === "credits") {
         // TODO: renderizza e stilizza la sezione crediti
-        // window.sqlitePlugin.openDatabase({name: "chimgio.db", location: 1, createFromLocation: 1 }, (db) => {
+        // window.sqlitePlugin.openDatabase({name: "../assets/chimgio.db", location: "default" }, (db) => {
         //     const credits_query = `SELECT * FROM credits;`
         //     db.executeSql(credits_query, [], (res) => {
         //         if (res.rows.length > 0) {
@@ -79,12 +56,10 @@ document.addEventListener("init", function(event) {
 });
 
 // inizia il gioco 
-function initGame(slot, db) {
+function initGame(slot) {
     // inizializza il GO passando lo slot (stringa 1, 2, 3 da appendere alla dicitura Slot quando instanzio il GO)
-    var g_obj = new GameObject(slot, db);
-
+    var g_obj = new GameObject(slot);
     document.querySelector("#navigator").pushPage("main.html");
-
     g_obj.afterPlayerInteraction();
 }
 
@@ -133,7 +108,7 @@ const deleteConfirm = function(to_delete) {
         // 0 annulla, 1 cancella
         if (index) {
             --occupied_slots;
-            localStorage.setItem(`Slot${to_delete}`) = null;
+            localStorage.setItem(`Slot${to_delete}`, null);
         }
         renderSlots(occupied_slots);
     })

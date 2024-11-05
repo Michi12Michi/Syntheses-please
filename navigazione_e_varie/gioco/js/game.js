@@ -46,6 +46,8 @@ class GameObject {
                 alert("GAME OVER!");
                 break;
         }
+        // chiamo la schermata di fine gioco
+        // endGame();
     }
 
     afterPlayerInteraction() { // istruzioni in ./afterPlayerInteraction.txt
@@ -452,3 +454,11 @@ function discoverMaterial(material_name, img, descrption) {
     }, 4000);
 }
 
+function endGame() {
+    let end_div = document.querySelector("#laboratorio #endgame");
+
+    // cancello i dati nello slot corrente
+    localStorage.setItem(`Slot${this.slot}`, null);
+    // alla fine ritorno alla home
+    document.querySelector("#navigator").resetToPage("menu.html");
+}

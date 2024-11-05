@@ -74,7 +74,7 @@ const moveElement = (e) => {
     }
 };
 
-const checkDropZone = (e, GObj) => {
+const checkDropZone = (e, g_obj) => {
     e.preventDefault();
     if (!activeElement) return;
     
@@ -105,7 +105,7 @@ const checkDropZone = (e, GObj) => {
                     elementToRemove.remove();
                 }, 700);
                 // qui va gestito il combinatore > collegato a addMaterialToReactor del GO
-                GObj.addMaterialToReactor(id);
+                g_obj.addMaterialToReactor(id);
             }
         }
     }
@@ -138,6 +138,6 @@ document.addEventListener(events[deviceType].move, (e) => {
 
 document.addEventListener(events[deviceType].up, (e) => {
     if (moving) {
-        checkDropZone(e, GObj);
+        checkDropZone(e, g_obj);
     }
 });

@@ -1,0 +1,16 @@
+Ho controllato il giro e sembra tutto okay.
+
+Ho aggiunto il render (reset) delle categorie anche in afterPlayerInteraction (riga 144), ma temo sia necessario farlo anche dopo
+aver controllato le quest (se sì, aggiungi direttamente "renderCategories(this.material_discovered_list);")
+
+Ho implementato una funzione di render semplice per la schermata di fine gioco, con le statistiche al momento della chiusura
+
+...
+
+Quello che manca, adesso, è gestire ALMENO il rendering delle quest, la schermata di passaggio livello (e pensiamoci bene*) e la gestione del market, lasciando in sospeso il rendering della reazione e il blog.**
+
+*idealmente dovrebbe apparire la schermata una sola volta, immagino, perché se parto da una condizione in cui POSSO passare di livello e 
+rifiuto personalmente mi seccherebbe tantissimo dover di nuovo rivedere la schermata. Anche se questa penso sia la soluzione più
+semplice da implementare
+
+Idee?**

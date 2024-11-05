@@ -59,9 +59,7 @@ document.addEventListener("init", function(event) {
 function initGame(slot) {
     // inizializza il GO passando lo slot (stringa 1, 2, 3 da appendere alla dicitura Slot quando instanzio il GO)
     var g_obj = new GameObject(slot);
-
     document.querySelector("#navigator").pushPage("main.html");
-
     g_obj.afterPlayerInteraction();
 }
 
@@ -110,7 +108,7 @@ const deleteConfirm = function(to_delete) {
         // 0 annulla, 1 cancella
         if (index) {
             --occupied_slots;
-            localStorage.setItem(`Slot${to_delete}`) = null;
+            localStorage.setItem(`Slot${to_delete}`, null);
         }
         renderSlots(occupied_slots);
     })
