@@ -1,31 +1,18 @@
 {
-  "name": "io.cordova.hellocordova",
-  "displayName": "HelloCordova",
+  "name": "synthpls-cap",
   "version": "1.0.0",
-  "description": "A sample Apache Cordova application that responds to the deviceready event.",
+  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [
-    "ecosystem:cordova"
-  ],
-  "author": "Apache Cordova Team",
-  "license": "Apache-2.0",
-  "devDependencies": {
-    "cordova-android": "^13.0.0",
-    "cordova-browser": "^7.0.0",
-    "cordova-plugin-sqlite-2": "^1.0.7",
-    "cordova-sqlite-ext": "^6.0.0"
-  },
-  "cordova": {
-    "platforms": [
-      "browser",
-      "android"
-    ],
-    "plugins": {
-      "cordova-plugin-sqlite-2": {},
-      "cordova-sqlite-ext": {}
-    }
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@capacitor-community/sqlite": "^6.0.2",
+    "@capacitor/cli": "^6.1.2",
+    "@capacitor/core": "^6.1.2",
+    "jeep-sqlite": "^2.8.0"
   }
 }

@@ -93,8 +93,6 @@ class GameObject {
             });
         });
 
-        alert(JSON.stringify(this.quest_active_list));
-
         // salva lo stato attuale del gioco (combinazioni e materiali scoperti, quest terminate)
         let temp_combination_done_list = this.combination_done_list, temp_quest_done_list = this.quest_done_list, temp_material_discovered_list = this.material_discovered_list;
     

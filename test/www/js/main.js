@@ -1,8 +1,30 @@
+import { CapacitorSQLite } from 'https://cdn.skypack.dev/@capacitor-community/sqlite';
+
+
+
+var db = null;
 const max_available_slots = 3;
 var occupied_slots = 2; // TODO: in realtà è localStorage.length; almeno non finché non finisce il test
 // DIO PORCO
 
+async function openDatabase() {
+    try {
+        const db = await CapacitorSQLite.open({
+            database: "chimgio.db",
+            encrypted: false,
+            mode: "no-encryption",
+        });
+        console.log("Database aperto con successo");
+        return db;
+    } catch (error) {
+        console.error("Errore nell'apertura del database:", error);
+    }
+}
+
 document.addEventListener("init", function(event) {
+    
+    db = openDatabase();
+    
     // recupero un fun fact dal db... 
     // window.sqlitePlugin.openDatabase({name: "../assets/chimgio.db", location: "default" }, (db) => {
         //     const fun_fact_query = `SELECT * FROM fun_facts ORDER BY RANDOM() LIMIT 1;`
