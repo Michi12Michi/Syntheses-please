@@ -15,10 +15,13 @@
 }
  BARRE OVERFLOW */
 
+:root {
+    --BACKGROUND-MENU: #ffde22;
+}
 
 /* SEZIONE MENU */
 #menu .page__background {
-    background-color: #ffde22;
+    background-color: var(--BACKGROUND-MENU);
 }
 
 #menu .page__content {
@@ -44,22 +47,34 @@
     text-align: center;
 }
 
+@media screen and (width > 768px) {
+    #menu ons-button {
+        width: 33%;
+    }
+    #menu fun-fact {
+        width: 33%;
+    }
+}
+
 #menu #fun-fact {
     width: 50%;
     font-weight: 700;
     text-align: center;
+    text-shadow: 1px 1px rgb(202, 202, 202);
+    font-size: large;
 }
 
 /* SEZIONE CREDITI */
 
 #credits .page__background {
-    background-color: #ffde22;
+    background-color: var(--BACKGROUND-MENU);
 }
+
 
 /* SEZIONE SLOTS */
 /* TODO: stilizzare ogni componente della card */
 #slots .page__background {
-    background-color: #ffde22;
+    background-color: var(--BACKGROUND-MENU);
 }
 
 #slots .page__content {
@@ -73,6 +88,27 @@
     flex-direction: column;
     align-items: center;
     width: 100%
+}
+
+#slots .card {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+}
+
+#slots .card .title {
+    text-align: center;
+}
+
+#slots .card .content {
+    display: flex;
+    justify-content: center;
+}
+
+@media screen and (width > 768px) {
+    #slots .card {
+        width: 33%;
+    }
 }
 
 /* SEZIONE GIOCO */
@@ -104,13 +140,13 @@
     overflow-x: scroll;
 }
 
-#laboratorio .lab-categories {
-    /*background-color: rgba(27, 27, 25, 0.397);*/
-}
+/* #laboratorio .lab-categories {
+    /*background-color: rgba(27, 27, 25, 0.397);
+}*/
 
-#laboratorio .lab-materials {
-    /*background-color: rgba(255, 238, 0, 0.150);*/
-}
+/* #laboratorio .lab-materials {
+    /*background-color: rgba(255, 238, 0, 0.150);
+} */
 
 .material, .category {
     position: relative;

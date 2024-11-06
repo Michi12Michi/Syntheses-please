@@ -1,7 +1,6 @@
 import { CapacitorSQLite } from 'https://cdn.skypack.dev/@capacitor-community/sqlite';
 
 
-
 var db = null;
 const max_available_slots = 3;
 var occupied_slots = 2; // TODO: in realtà è localStorage.length; almeno non finché non finisce il test
@@ -85,6 +84,17 @@ function initGame(slot) {
     g_obj.afterPlayerInteraction();
 }
 
+const deleteConfirm = function(to_delete) {
+    ons.notification.confirm('Sei sicuro?', {buttonLabels: ["no", "sine"], title: "Comba"}).then(function(index) {
+        // 0 annulla, 1 cancella
+        if (index) {
+            --occupied_slots;
+            localStorage.setItem(`Slot${to_delete}`, null);
+        }
+        renderSlots(occupied_slots);
+    })
+};
+
 function selectSlot() {
     document.querySelector("#navigator").pushPage("slots.html");
 }
@@ -124,14 +134,3 @@ function renderSlots(slots) {
 function backToMenu() {
     document.querySelector("#navigator").resetToPage("menu.html");
 }
-
-const deleteConfirm = function(to_delete) {
-    ons.notification.confirm('Sei sicuro?', {buttonLabels: ["no", "sine"], title: "Comba"}).then(function(index) {
-        // 0 annulla, 1 cancella
-        if (index) {
-            --occupied_slots;
-            localStorage.setItem(`Slot${to_delete}`, null);
-        }
-        renderSlots(occupied_slots);
-    })
-};
