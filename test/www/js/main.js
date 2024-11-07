@@ -1,4 +1,4 @@
-import { CapacitorSQLite } from 'https://cdn.skypack.dev/@capacitor-community/sqlite';
+// import { CapacitorSQLite } from 'https://cdn.skypack.dev/@capacitor-community/sqlite';
 
 
 var db = null;
@@ -6,23 +6,23 @@ const max_available_slots = 3;
 var occupied_slots = 2; // TODO: in realtà è localStorage.length; almeno non finché non finisce il test
 // DIO PORCO
 
-async function openDatabase() {
-    try {
-        const db = await CapacitorSQLite.open({
-            database: "chimgio.db",
-            encrypted: false,
-            mode: "no-encryption",
-        });
-        console.log("Database aperto con successo");
-        return db;
-    } catch (error) {
-        console.error("Errore nell'apertura del database:", error);
-    }
-}
+// async function openDatabase() {
+//     try {
+//         const db = await CapacitorSQLite.open({
+//             database: "chimgio.db",
+//             encrypted: false,
+//             mode: "no-encryption",
+//         });
+//         console.log("Database aperto con successo");
+//         return db;
+//     } catch (error) {
+//         console.error("Errore nell'apertura del database:", error);
+//     }
+// }
 
 document.addEventListener("init", function(event) {
     
-    db = openDatabase();
+    // db = openDatabase();
     
     // recupero un fun fact dal db... 
     // window.sqlitePlugin.openDatabase({name: "../assets/chimgio.db", location: "default" }, (db) => {
@@ -81,7 +81,7 @@ function initGame(slot) {
     // inizializza il GO passando lo slot (stringa 1, 2, 3 da appendere alla dicitura Slot quando instanzio il GO)
     var g_obj = new GameObject(slot);
     document.querySelector("#navigator").pushPage("main.html");
-    g_obj.afterPlayerInteraction();
+    // g_obj.afterPlayerInteraction();
 }
 
 const deleteConfirm = function(to_delete) {

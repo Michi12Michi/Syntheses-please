@@ -22,17 +22,18 @@ class GameObject {
             this.material_to_combine_list = [];
             this.slot = slot;
         } else {
-            this.level = 0;
+            this.level = 1;
             this.like = 0;
             this.experience = 0;
             this.credit = 0;
-            this.combination_done_list = new Map(); // salva id e numero di volte di una data combinazione con set(), recupera con get()
+            this.combination_done_list = new Map(); // salva id e numero di volte di una data combinazione
             this.unuseful_combinations = 0;
             this.quest_done_list = new Map(); // salva id quest e booleano (o int 0/1)
             this.quest_active_list = [];
             this.material_discovered_list = [];
             this.material_to_combine_list = [];
             this.slot = slot;
+            // 
         }
     }
 
@@ -232,6 +233,7 @@ class GameObject {
                         }
                     }
                 });
+                renderCategories(this.material_discovered_list);
             });
         });
         
