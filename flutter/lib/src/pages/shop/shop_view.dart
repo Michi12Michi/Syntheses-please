@@ -108,7 +108,7 @@ class ShopView extends StatelessWidget {
                                                     padding: const EdgeInsets.symmetric(horizontal: 24.0),
                                                   ),
                                                   onPressed: () {
-                                                    // TODO: viewModel.purchaseMaterial(material);
+                                                    viewModel.purchaseMaterial(material);
                                                     Navigator.of(modalSheetContext).pop();
                                                   },
                                                   child: const Text('Conferma'),

@@ -4,7 +4,7 @@ import 'dart:convert';
 import '../../utils/app_database.dart';
 import '../../utils/app_database_shared.dart' as database;
 
-// QUI AVVIENE TUTTA LA GESTIONE DELLA LOGICA DELLA PAGINA DEL DIARIO
+// QUI AVVIENE TUTTA LA GESTIONE DELLA LOGICA DELLA PAGINA DELLE QUEST
 
 class QuestsModel with ChangeNotifier {
 

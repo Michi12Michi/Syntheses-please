@@ -14,6 +14,7 @@ class LaboratoryModel with ChangeNotifier {
   String _partitaData = "Dati non trovati";
   String _numeroPartita = "0";
   List<database.Material> _materials = [];
+  List<database.Material> _newMaterials = [];
   final List<database.Material> _materialsToCombine = [];
   List<database.Category> _categories = [];
   List<database.Quest> _quests = [];
@@ -22,6 +23,7 @@ class LaboratoryModel with ChangeNotifier {
   // listeners
   Map<String, dynamic> get partitaMap => _partitaMap;
   List<database.Material> get materials => _materials;
+  List<database.Material> get newMaterials => _newMaterials;
   List<database.Category> get categories => _categories;
   List<database.Quest> get quests => _quests;
   bool get isLoading => _isLoading;
@@ -37,18 +39,31 @@ class LaboratoryModel with ChangeNotifier {
   }
 
   Future<void> afterPlayerInteraction() async {
-    // TODO: 
-
-    savePartita();
-
-    notifyListeners();
+    // TODO: quest eccetera
+    
+    savePartita();    
   }
 
   Future<void> checkCombination() async {
-    // TODO: 
+    final db = await openDatabase();
 
-    afterPlayerInteraction();
+    _newMaterials = await db.getCombinationProducts(_partitaMap["level"], _materialsToCombine);
 
+    // aggiungi a _partitaMap["material_discovered_list"], se non sono già presenti nella lista, tutti gli id dei materiali appena prodotti
+    for (var materialeSingolo in _newMaterials) {
+      if (!_partitaMap["material_discovered_list"].contains(materialeSingolo.id)) {
+        _partitaMap["material_discovered_list"].add(materialeSingolo.id);
+      }
+    }
+
+    // carica lista categorie correlate da DB
+    _categories = await db.getConnectedCategories(_partitaMap["material_discovered_list"]);
+
+    notifyListeners();
+
+    _materialsToCombine.clear();
+
+    //afterPlayerInteraction() non viene chiamata direttamente da questa funzione, ma dopo che il giocatore avrà preso visione dei materiali eventualmente sbloccati
   }
 
   Future<void> loadPartita(String numeroPartita) async {

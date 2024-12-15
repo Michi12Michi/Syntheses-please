@@ -303,7 +303,7 @@ abstract class SharedAppDatabase extends _$SharedAppDatabase {
       'JOIN levels ON materials.level = levels.id '
       'JOIN material_category ON materials.id = material_id '
       'JOIN categories ON categories.id = category_id '
-      'WHERE levels.number = $primoLivello AND categories.purchasable = 0',
+      'WHERE levels.number <= $primoLivello AND categories.purchasable = 0',
       readsFrom: {materials, levels, materialCategories, categories},
     ).map((row) => row.read<int>('id')).get();
   }
@@ -346,6 +346,41 @@ abstract class SharedAppDatabase extends _$SharedAppDatabase {
           price: row.read<double?>('price'),
           temporary: row.read<bool>('temporary'),
         )).get());
+  }
+
+  Future<List<Material>> getCombinationProducts(dynamic numeroLivello, List<Material> listaMateriali) {
+    final intNumeroLivello = numeroLivello as int;
+    final materialIds = listaMateriali.map((material) => material.id).toList();
+
+    return (customSelect(
+      '''
+      SELECT m.* 
+      FROM materials AS m
+      JOIN combination_material AS cm ON cm.material_id = m.id AND cm.product = 1
+      JOIN combinations AS c ON c.id = cm.combination_id
+      LEFT JOIN levels AS l ON c.level_id = l.id
+      WHERE (l.number <= ? OR c.level_id IS NULL) -- Include combinazioni senza level_id
+      AND NOT EXISTS (
+        SELECT 1
+        FROM combination_material AS cm2
+        WHERE cm2.combination_id = c.id
+        AND cm2.product = 0
+        AND cm2.material_id NOT IN (${materialIds.join(',')}) -- Controlla corrispondenza materiali richiesti
+      )
+      ''',
+      variables: [Variable.withInt(intNumeroLivello)],
+      readsFrom: {combinations, materials, levels, combinationMaterials},
+    ).map((row) => Material(
+          id: row.read<int>('id'),
+          image: row.read<String?>('image'),
+          description: row.read<String?>('description'),
+          commonName: row.read<String>('common_name'),
+          iupacName: row.read<String?>('iupac_name'),
+          experience: row.read<double>('experience'),
+          price: row.read<double?>('price'),
+          temporary: row.read<bool>('temporary'),
+        ))
+        .get());
   }
 
   // CATEGORIES

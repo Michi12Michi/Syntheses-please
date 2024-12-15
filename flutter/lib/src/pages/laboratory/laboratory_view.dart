@@ -5,6 +5,7 @@ import '../shop/shop_view.dart';
 import '../blog/blog_view.dart';
 import '../quests/quests_view.dart';
 import '../../utils/common_widgets.dart';
+import 'package:wolt_modal_sheet/wolt_modal_sheet.dart';
 
 class LaboratoryView extends StatelessWidget {
   const LaboratoryView({super.key, required this.numeroPartita});
@@ -28,6 +29,69 @@ class LaboratoryView extends StatelessWidget {
                 child: CircularProgressIndicator(),
               );
             }
+
+            // Controllo per mostrare il modal quando `newMaterials` è popolato NEW MATERIALS MODAL
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (viewModel.newMaterials.isNotEmpty) {
+                // Mostra il WoltModalSheet
+                WoltModalSheet.show(
+                  context: context,
+                  modalTypeBuilder: (_) => WoltModalType.dialog(),
+                  pageListBuilder: (modalSheetContext) => [
+                    SliverWoltModalSheetPage(
+                      pageTitle: const Text(
+                        'Nuovi Materiali Disponibili!',
+                        textAlign: TextAlign.center,
+                      ),
+                      mainContentSliversBuilder: (context) => [
+                        SliverList(
+                          delegate: SliverChildListDelegate(
+                            viewModel.newMaterials.map((material) {
+                              return Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    // Immagine del materiale
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(16.0),
+                                      child: buildSvgImage(material.image),
+                                    ),
+                                    const SizedBox(height: 16),
+                                    // Dettagli del materiale
+                                    Text(
+                                      material.commonName,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Text(
+                                      'Prezzo: ${material.price} monete',
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 16),
+                                  ],
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ).then((_) {
+                  // Chiamata alla funzione quando il modal viene chiuso
+                  viewModel.newMaterials.clear();
+                  viewModel.afterPlayerInteraction();
+                });
+              }
+            });
 
             return Stack(
               alignment: Alignment.topLeft,
@@ -304,7 +368,7 @@ class LaboratoryView extends StatelessWidget {
                                     color: Colors.white,
                                   ),
                                   onPressed: () {
-                                    // TODO: viewModel.checkCombination();
+                                    viewModel.checkCombination();
                                   },
                                 ),
                               ),
