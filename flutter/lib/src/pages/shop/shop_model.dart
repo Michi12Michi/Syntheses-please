@@ -24,13 +24,19 @@ class ShopModel with ChangeNotifier {
     return materialiScoperti.contains(materiale.id) ? true : false;
   }
 
-  Future<void> purchaseMaterial(database.Material materialeDaComprare) async {
+  Future<void> purchaseMaterial(int indice) async {
 
-    // TODO: condizioni di acquisto e modifiche a soldi e esperienza
+    int materialeDaComprare = _purchasableMaterials[indice].id;
+
+    // TODO: modifiche a soldi e esperienza
     // aggiungi a _partitaMap["material_discovered_list"], se non è già presente nella lista, il materiale appena comprato
-    if (!_partitaMap["material_discovered_list"].contains(materialeDaComprare.id)) {
-      _partitaMap["material_discovered_list"].add(materialeDaComprare.id);
+    if (!_partitaMap["material_discovered_list"].contains(materialeDaComprare)) {
+      _partitaMap["material_discovered_list"].add(materialeDaComprare);
     }
+
+    savePartita();
+
+    notifyListeners();
 
     // afterPlayerInteraction() verrà lanciato quando si tornerà alla pagina del laboratorio, con controllo delle quest ecc.
   }
@@ -58,12 +64,12 @@ class ShopModel with ChangeNotifier {
     }
 
     // aggiungi a _purchasableMaterials, se non sono già presenti nella lista, tutti i materiali acquistabili
-    final List<database.Material> purchasable = await db.getAllMaterialsPurchasable();
+    List<database.Material> purchasable = await db.getAllMaterialsPurchasable();
+
+    _purchasableMaterials.clear();
 
     for (var material in purchasable) {
-      if (!_purchasableMaterials.contains(material)) {
-        _purchasableMaterials.add(material);
-      }
+      _purchasableMaterials.add(material);
     }
 
     notifyListeners();

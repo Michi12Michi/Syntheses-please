@@ -298,21 +298,19 @@ abstract class SharedAppDatabase extends _$SharedAppDatabase {
 
   Future<List<int>> getMaterialsIdByLevelNumber(int primoLivello) {
     return customSelect(
-      'SELECT materials.id '
+      'SELECT materials.id as mid '
       'FROM materials '
-      'JOIN levels ON materials.level = levels.id '
-      'JOIN material_category ON materials.id = material_id '
-      'JOIN categories ON categories.id = category_id '
-      'WHERE levels.number <= $primoLivello AND categories.purchasable = 0',
-      readsFrom: {materials, levels, materialCategories, categories},
-    ).map((row) => row.read<int>('id')).get();
+      'LEFT JOIN levels ON materials.level = levels.id '
+      'WHERE levels.number <= $primoLivello ', // AND categories.purchasable = 0
+      readsFrom: {materials, levels},
+    ).map((row) => row.read<int>('mid')).get();
   }
 
   Future<List<Material>> getAllMaterialsPurchasable() {
     return (customSelect(
-      'SELECT * '
-      'FROM materials '
-      'JOIN material_category ON materials.id = material_id '
+      'SELECT m.* '
+      'FROM materials AS m '
+      'JOIN material_category ON m.id = material_id '
       'JOIN categories ON categories.id = category_id '
       'WHERE categories.purchasable = 1 ',
       readsFrom: {materials, materialCategories, categories},
@@ -349,7 +347,8 @@ abstract class SharedAppDatabase extends _$SharedAppDatabase {
   }
 
   Future<List<Material>> getCombinationProducts(dynamic numeroLivello, List<Material> listaMateriali) {
-    final intNumeroLivello = numeroLivello as int;
+    //final intNumeroLivello = numeroLivello as int;
+    final intNumeroLivello = 100000000;
     final materialIds = listaMateriali.map((material) => material.id).toList();
 
     return (customSelect(

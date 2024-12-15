@@ -45,17 +45,17 @@ class ShopView extends StatelessWidget {
                   ),
                   itemCount: viewModel.purchasableMaterials.length,
                   itemBuilder: (context, index) {
-                    final material = viewModel.purchasableMaterials[index];
+                    //final material = viewModel.purchasableMaterials[index];
                     return GestureDetector(
                       onTap: () {
-                        if (viewModel.checkIfMaterialPurchased(material)) {
+                        if (!viewModel.checkIfMaterialPurchased(viewModel.purchasableMaterials[index])) {
                           WoltModalSheet.show(
                             context: context,
                             modalTypeBuilder: (_) => WoltModalType.dialog(),
                             pageListBuilder: (modalSheetContext) => [
                               SliverWoltModalSheetPage(
                                 pageTitle: Text(
-                                  'Acquista ${material.commonName}',
+                                  'Acquista ${viewModel.purchasableMaterials[index].commonName}',
                                   textAlign: TextAlign.center,
                                   ),
                                 mainContentSliversBuilder: (context) => [
@@ -69,12 +69,12 @@ class ShopView extends StatelessWidget {
                                             // Immagine del materiale
                                             ClipRRect(
                                               borderRadius: BorderRadius.circular(16.0),
-                                              child: buildSvgImage(material.image),
+                                              child: buildSvgImage(viewModel.purchasableMaterials[index].image),
                                             ),
                                             const SizedBox(height: 16),
                                             // Dettagli del materiale
                                             Text(
-                                              'Prezzo: ${material.price} monete',
+                                              'Prezzo: ${viewModel.purchasableMaterials[index].price} monete',
                                               style: const TextStyle(
                                                 fontSize: 18,
                                                 fontWeight: FontWeight.bold,
@@ -82,7 +82,7 @@ class ShopView extends StatelessWidget {
                                             ),
                                             const SizedBox(height: 8),
                                             Text(
-                                              material.commonName,
+                                              viewModel.purchasableMaterials[index].commonName,
                                               textAlign: TextAlign.center,
                                               style: const TextStyle(fontSize: 16),
                                             ),
@@ -108,7 +108,7 @@ class ShopView extends StatelessWidget {
                                                     padding: const EdgeInsets.symmetric(horizontal: 24.0),
                                                   ),
                                                   onPressed: () {
-                                                    viewModel.purchaseMaterial(material);
+                                                    viewModel.purchaseMaterial(index);
                                                     Navigator.of(modalSheetContext).pop();
                                                   },
                                                   child: const Text('Conferma'),
@@ -132,7 +132,7 @@ class ShopView extends StatelessWidget {
                         children: [
                           ClipRRect(
                             borderRadius: BorderRadius.circular(16.0),
-                            child: buildSvgImage(material.image),
+                            child: buildSvgImage(viewModel.purchasableMaterials[index].image),
                           ),
                           Container(
                             decoration: BoxDecoration(
@@ -142,7 +142,7 @@ class ShopView extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            material.commonName,
+                            viewModel.purchasableMaterials[index].commonName,
                             textAlign: TextAlign.center,
                             style: const TextStyle(
                               fontWeight: FontWeight.w700,
@@ -151,7 +151,7 @@ class ShopView extends StatelessWidget {
                             ),
                           ),
                           Visibility(
-                            visible: !viewModel.checkIfMaterialPurchased(material),
+                            visible: viewModel.checkIfMaterialPurchased(viewModel.purchasableMaterials[index]),
                             child: Text(
                               "Già presente nell'inventario.",
                               textAlign: TextAlign.center,

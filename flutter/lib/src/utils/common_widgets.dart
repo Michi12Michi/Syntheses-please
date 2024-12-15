@@ -55,6 +55,9 @@ class MaterialFeedbackWidget extends StatelessWidget {
 Widget buildSvgImage(String? svgString) {
   // Usa emptySvg come fallback
   String svgToRender = svgString ?? emptySvg;
+  svgToRender = svgToRender.replaceAll('<text ', '<text style="font:normal normal normal 200px \'Arial\'" ');
+  svgToRender = svgToRender.replaceAll('font-style="normal" font-weight="bold" font-size="240px" font-family="Arial"', '');
+  svgToRender = svgToRender.replaceAll('font-style="normal" font-weight="bold" font-size="320px" font-family="Arial"', '');
 
   try {
     // Tenta di fare il parsing dell'SVG come XML per verificare se è valido
@@ -71,6 +74,7 @@ Widget buildSvgImage(String? svgString) {
 
   // Restituisce l'immagine valida o il fallback
   return SvgPicture.string(
+    //colorFilter: ColorFilter.linearToSrgbGamma(),
     svgToRender,
     width: 40,
     height: 40,

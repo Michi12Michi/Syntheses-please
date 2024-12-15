@@ -30,6 +30,8 @@ class LaboratoryView extends StatelessWidget {
               );
             }
 
+            //WidgetsBinding.
+
             // Controllo per mostrare il modal quando `newMaterials` è popolato NEW MATERIALS MODAL
             WidgetsBinding.instance.addPostFrameCallback((_) {
               if (viewModel.newMaterials.isNotEmpty) {
