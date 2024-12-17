@@ -1,4 +1,7 @@
-2024/12/15-19:37:08.519 49cc Reusing MANIFEST C:\Users\calic\AppData\Local\Temp\flutter_tools.e0e16bdd\flutter_tools_chrome_device.dcbcf9ba\Default\shared_proto_db/MANIFEST-000001
-2024/12/15-19:37:08.520 49cc Recovering log #4
-2024/12/15-19:37:08.521 49cc Reusing old log C:\Users\calic\AppData\Local\Temp\flutter_tools.e0e16bdd\flutter_tools_chrome_device.dcbcf9ba\Default\shared_proto_db/000004.log 
-2024/12/15-19:37:08.521 49cc Delete type=0 #3
+2024/12/17-12:44:00.930 4e4c Reusing MANIFEST C:\Users\calic\AppData\Local\Temp\flutter_tools.85b7aeba\flutter_tools_chrome_device.43caf652\Default\shared_proto_db/MANIFEST-000001
+2024/12/17-12:44:00.931 4e4c Recovering log #4
+2024/12/17-12:44:00.932 4e4c Reusing old log C:\Users\calic\AppData\Local\Temp\flutter_tools.85b7aeba\flutter_tools_chrome_device.43caf652\Default\shared_proto_db/000004.log 
+2024/12/17-12:44:00.932 4e4c Delete type=0 #3
+2024/12/17-12:44:14.878 2f34 Level-0 table #8: started
+2024/12/17-12:44:14.881 2f34 Level-0 table #8: 136696 bytes OK
+2024/12/17-12:44:14.882 2f34 Delete type=0 #4
