@@ -1,1 +1,0 @@
- C:\\repositories\\Syntheses-please\\flutter\\.dart_tool\\flutter_gen\\gen_l10n\\app_localizations_en.dart C:\\repositories\\Syntheses-please\\flutter\\.dart_tool\\flutter_gen\\gen_l10n\\app_localizations.dart:  C:\\repositories\\Syntheses-please\\flutter\\l10n.yaml C:\\repositories\\Syntheses-please\\flutter\\lib/src/localization\\app_en.arb
