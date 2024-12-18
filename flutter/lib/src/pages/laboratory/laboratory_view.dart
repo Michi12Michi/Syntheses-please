@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'laboratory_model.dart';
-import '../shop/shop_view.dart';
+//import '../shop/shop_view.dart';
 import '../blog/blog_view.dart';
 import '../quests/quests_view.dart';
 import '../../utils/common_widgets.dart';
@@ -227,7 +227,7 @@ class LaboratoryView extends StatelessWidget {
                                     color: Color.fromARGB(255, 255, 255, 255),
                                     iconSize: 24,
                                   ),
-                                  IconButton(
+                                  /*IconButton(
                                     icon: Icon(Icons.shopping_bag_outlined),
                                     onPressed: () {
                                       if (context.mounted) {
@@ -236,7 +236,7 @@ class LaboratoryView extends StatelessWidget {
                                     },
                                     color: Color.fromARGB(255, 255, 255, 255),
                                     iconSize: 24,
-                                  ),
+                                  ),*/
                                   IconButton(
                                     icon: Icon(Icons.person_pin_rounded),
                                     onPressed: () {
