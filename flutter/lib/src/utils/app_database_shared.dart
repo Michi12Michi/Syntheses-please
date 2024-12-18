@@ -301,7 +301,7 @@ abstract class SharedAppDatabase extends _$SharedAppDatabase {
       'SELECT materials.id as mid '
       'FROM materials '
       'LEFT JOIN levels ON materials.level = levels.id '
-      'WHERE levels.number <= $primoLivello ', // AND categories.purchasable = 0
+      'WHERE levels.number <= $primoLivello ',
       readsFrom: {materials, levels},
     ).map((row) => row.read<int>('mid')).get();
   }
@@ -351,6 +351,7 @@ abstract class SharedAppDatabase extends _$SharedAppDatabase {
     final intNumeroLivello = 100000000;
     final materialIds = listaMateriali.map((material) => material.id).toList();
 
+    // TODO: questa query dovrebbe controllare che la lista dei materiali in argomento faccia parte di una specifica combinazione e abbia attributo product 0 e, nel caso, selezionare i materiali con product 1 facenti parte di quella stessa combinazione
     return (customSelect(
       '''
       SELECT m.* 
@@ -358,28 +359,28 @@ abstract class SharedAppDatabase extends _$SharedAppDatabase {
       JOIN combination_material AS cm ON cm.material_id = m.id AND cm.product = 1
       JOIN combinations AS c ON c.id = cm.combination_id
       LEFT JOIN levels AS l ON c.level_id = l.id
-      WHERE (l.number <= ? OR c.level_id IS NULL) -- Include combinazioni senza level_id
-      AND NOT EXISTS (
-        SELECT 1
-        FROM combination_material AS cm2
-        WHERE cm2.combination_id = c.id
-        AND cm2.product = 0
-        AND cm2.material_id NOT IN (${materialIds.join(',')}) -- Controlla corrispondenza materiali richiesti
+      WHERE c.id IN (
+        SELECT c.id
+        FROM combinations AS c
+        JOIN combination_material AS cm ON c.id = cm.combination_id
+        WHERE cm.material_id IN (${materialIds.join(',')}) AND cm.product = 0
+        GROUP BY c.id
+        HAVING COUNT(cm.material_id) = ${materialIds.length}
       )
+      AND (l.number <= ? OR c.level_id IS NULL)
       ''',
       variables: [Variable.withInt(intNumeroLivello)],
       readsFrom: {combinations, materials, levels, combinationMaterials},
     ).map((row) => Material(
-          id: row.read<int>('id'),
-          image: row.read<String?>('image'),
-          description: row.read<String?>('description'),
-          commonName: row.read<String>('common_name'),
-          iupacName: row.read<String?>('iupac_name'),
-          experience: row.read<double>('experience'),
-          price: row.read<double?>('price'),
-          temporary: row.read<bool>('temporary'),
-        ))
-        .get());
+      id: row.read<int>('id'),
+      image: row.read<String?>('image'),
+      description: row.read<String?>('description'),
+      commonName: row.read<String>('common_name'),
+      iupacName: row.read<String?>('iupac_name'),
+      experience: row.read<double>('experience'),
+      price: row.read<double?>('price'),
+      temporary: row.read<bool>('temporary'),
+    )).get());
   }
 
   // CATEGORIES
