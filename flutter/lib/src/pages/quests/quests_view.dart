@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 //import '../../utils/common_widgets.dart';
 import 'quests_model.dart';
 
+// TODO: mostra solo le vecchie quest in una versione molto dettagliata
+
 class QuestsView extends StatelessWidget {
   const QuestsView({super.key, required this.numeroPartita});
 

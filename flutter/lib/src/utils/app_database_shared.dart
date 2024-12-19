@@ -351,6 +351,7 @@ abstract class SharedAppDatabase extends _$SharedAppDatabase {
     final intNumeroLivello = 100000000; // WARN: considerare se effettuare controllo o meno
     final materialIds = listaMateriali.map((material) => material.id).toList();
 
+    // serve che questa query restituisca materiali con product = 1 solo se la select dei materiali con product = 0 che appartengono a una stessa combinazione sono esattamente quelli passati come argomento della funzione, ad es.: alla funzione arrivano i materiali con id 1, 3 e 5; se c'è una combinazione con materiali 1,3,5 e 7, la select non doeve restituire i prodotti! Deve funzionare solo se i materiali di partenza sono esattamente quelli necessari per ottenere la combinazione. Forse da spezzettare
     return (customSelect(
       '''
       SELECT m.* 
@@ -367,6 +368,12 @@ abstract class SharedAppDatabase extends _$SharedAppDatabase {
         HAVING COUNT(DISTINCT cm.material_id) = ${materialIds.length} AND COUNT(cm.material_id) = ${materialIds.length}
       )
       AND (l.number <= ? OR c.level_id IS NULL)
+      AND NOT EXISTS (
+        SELECT 1
+        FROM combinations AS c2
+        JOIN combination_material AS cm2 ON c2.id = cm2.combination_id
+        WHERE c2.id = c.id AND cm2.material_id NOT IN (${materialIds.join(',')}) AND cm2.product = 0
+      )
       ''',
       variables: [Variable.withInt(intNumeroLivello)],
       readsFrom: {combinations, materials, levels, combinationMaterials},

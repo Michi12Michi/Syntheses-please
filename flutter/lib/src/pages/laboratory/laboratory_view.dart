@@ -215,35 +215,59 @@ class LaboratoryView extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 mainAxisSize: MainAxisSize.max,
                                 children: [
-                                  IconButton(
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey,
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        Text(
+                                          "Cash: ${viewModel.partitaMap["credit"]}",
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                        Text(
+                                          "Esperienza: ${viewModel.partitaMap["experience"]}",
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                        Text(
+                                          "Livello: ${viewModel.partitaMap["level"]}",
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  ElevatedButton.icon(
                                     icon: Icon(Icons.book),
                                     onPressed: () {
                                       if (context.mounted) {
                                         Navigator.restorablePushNamed(context, BlogView.routeName, arguments: <String, dynamic> {"numeroPartita": numeroPartita, "blogId": 1});
                                       }
                                     },
-                                    color: Color.fromARGB(255, 255, 255, 255),
-                                    iconSize: 24,
+                                    label: Text("Diario", style: TextStyle(color: Colors.white)),
+                                    style: ElevatedButton.styleFrom(
+                                      foregroundColor: Colors.black, 
+                                      backgroundColor: Color.fromARGB(129, 123, 123, 123),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                    ),
                                   ),
-                                  /*IconButton(
-                                    icon: Icon(Icons.shopping_bag_outlined),
-                                    onPressed: () {
-                                      if (context.mounted) {
-                                        Navigator.restorablePushNamed(context, ShopView.routeName, arguments: <String, dynamic> {"numeroPartita": numeroPartita});
-                                      }
-                                    },
-                                    color: Color.fromARGB(255, 255, 255, 255),
-                                    iconSize: 24,
-                                  ),*/
-                                  IconButton(
+                                  ElevatedButton.icon(
                                     icon: Icon(Icons.person_pin_rounded),
                                     onPressed: () {
                                       if (context.mounted) {
                                         Navigator.restorablePushNamed(context, QuestsView.routeName, arguments: <String, dynamic> {"numeroPartita": numeroPartita});
                                       }
                                     },
-                                    color: Color.fromARGB(255, 255, 255, 255),
-                                    iconSize: 24,
+                                    label: Text("Agenda", style: TextStyle(color: Colors.white)),
+                                    style: ElevatedButton.styleFrom(
+                                      foregroundColor: Colors.black, 
+                                      backgroundColor: Color.fromARGB(129, 123, 123, 123),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                    ),
                                   ),
                                 ],
                               ),

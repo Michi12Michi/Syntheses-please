@@ -62,8 +62,6 @@ class LaboratoryModel with ChangeNotifier {
     // carica lista categorie correlate da DB
     _categories = await db.getConnectedCategories(_partitaMap["material_discovered_list"]);
 
-    notifyListeners();
-
     if (newMaterials.isNotEmpty) { // svuota _materialsToCombine se sono stati prodotti materiali
       _materialsToCombine.clear();
     } else { // altrimenti aggiorna il contatore di penalità
@@ -78,6 +76,8 @@ class LaboratoryModel with ChangeNotifier {
         }
       }
     }
+
+    notifyListeners();
 
     //afterPlayerInteraction() non viene chiamata direttamente da questa funzione, ma dopo che il giocatore avrà preso visione dei materiali eventualmente sbloccati
   }
