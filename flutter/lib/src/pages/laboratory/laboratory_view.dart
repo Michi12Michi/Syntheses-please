@@ -223,7 +223,7 @@ class LaboratoryView extends StatelessWidget {
                                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                       children: [
                                         Text(
-                                          "Cash: ${viewModel.partitaMap["credit"]}",
+                                          "Livello: ${viewModel.partitaMap["level"]}",
                                           style: TextStyle(color: Colors.white),
                                         ),
                                         Text(
@@ -231,7 +231,7 @@ class LaboratoryView extends StatelessWidget {
                                           style: TextStyle(color: Colors.white),
                                         ),
                                         Text(
-                                          "Livello: ${viewModel.partitaMap["level"]}",
+                                          "Cash: ${viewModel.partitaMap["credit"]}",
                                           style: TextStyle(color: Colors.white),
                                         ),
                                       ],
