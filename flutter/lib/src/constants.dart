@@ -14,3 +14,5 @@ const emptySvg = '<?xml version="1.0" encoding="utf-8"?>'
 '</svg>"';
 
 const int primoLivelloNumero = 1; // necessariamente hardcoded, ma abbastanza scontato
+const int punizioneFallimentoCombinazione = 50;
+const int maxFallimenti = 3;

@@ -68,11 +68,11 @@ class LaboratoryModel with ChangeNotifier {
       _materialsToCombine.clear();
     } else { // altrimenti aggiorna il contatore di penalità
       _contatorePenalita++;
-      if (_contatorePenalita  >= 3) { // dopo 3 fallimenti, punisci
+      if (_contatorePenalita  >= maxFallimenti) { // dopo x fallimenti, punisci
         _contatorePenalita = 0;
         _materialsToCombine.clear();
         // esegui penalità
-        _partitaMap["credit"] -= 50;
+        _partitaMap["credit"] -= punizioneFallimentoCombinazione;
         if (_partitaMap["credit"] < 0) {
           _partitaMap["credit"] = 0;
         }
