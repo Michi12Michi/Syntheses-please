@@ -30,9 +30,7 @@ class LaboratoryView extends StatelessWidget {
               );
             }
 
-            //WidgetsBinding.
-
-            // Controllo per mostrare il modal quando `newMaterials` è popolato NEW MATERIALS MODAL
+            // Controllo per mostrare il modal quando 'newMaterials' è popolato NEW MATERIALS MODAL
             WidgetsBinding.instance.addPostFrameCallback((_) {
               if (viewModel.newMaterials.isNotEmpty) {
                 // Mostra il WoltModalSheet
@@ -88,7 +86,7 @@ class LaboratoryView extends StatelessWidget {
                     ),
                   ],
                 ).then((_) {
-                  // Chiamata alla funzione quando il modal viene chiuso
+                  // chiamata quando il modal dei nuovi materiali prodotti viene chiuso
                   viewModel.newMaterials.clear();
                   viewModel.afterPlayerInteraction();
                 });

@@ -4,7 +4,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'pages/menu.dart';
 import 'pages/laboratory/laboratory_view.dart';
-import 'pages/shop/shop_view.dart';
+// import 'pages/shop/shop_view.dart';
 import 'pages/blog/blog_view.dart';
 import 'pages/quests/quests_view.dart';
 import 'pages/credits.dart';
@@ -82,13 +82,13 @@ class MyApp extends StatelessWidget {
                     } catch (error) {
                       return const MenuView();
                     }
-                  case ShopView.routeName:
+                  /* case ShopView.routeName:
                     try {
                       Map<String, dynamic> argomenti = routeSettings.arguments as Map<String, dynamic>;
                       return ShopView(numeroPartita: argomenti["numeroPartita"] ?? "");
                     } catch (error) {
                       return const MenuView();
-                    }
+                    } */
                   case QuestsView.routeName:
                     try {
                       Map<String, dynamic> argomenti = routeSettings.arguments as Map<String, dynamic>;

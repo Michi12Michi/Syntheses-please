@@ -18,6 +18,7 @@ class LaboratoryModel with ChangeNotifier {
   final List<database.Material> _materialsToCombine = [];
   List<database.Category> _categories = [];
   List<database.Quest> _quests = [];
+  int _contatorePenalita = 0;
   Map<String, dynamic> _partitaMap = {"level":1,"like":0,"experience":0,"credit":0,"combination_done_list":{},"unuseful_combinations":0,"quest_done_list":{},"quest_active_list":[],"material_discovered_list":[] ,"last_save":"18:20:00 - 05/12/91"};
 
   // listeners
@@ -49,10 +50,12 @@ class LaboratoryModel with ChangeNotifier {
 
     _newMaterials = await db.getCombinationProducts(_partitaMap["level"], _materialsToCombine);
 
-    // aggiungi a _partitaMap["material_discovered_list"], se non sono già presenti nella lista, tutti gli id dei materiali appena prodotti
+    // aggiungi a _partitaMap["material_discovered_list"], se non sono già presenti nella lista, tutti gli id dei materiali appena prodotti. Aggiorna crediti e esperienza
     for (var materialeSingolo in _newMaterials) {
       if (!_partitaMap["material_discovered_list"].contains(materialeSingolo.id)) {
         _partitaMap["material_discovered_list"].add(materialeSingolo.id);
+        _partitaMap["credit"] += materialeSingolo.price;
+        _partitaMap["experience"] += materialeSingolo.experience;
       }
     }
 
@@ -61,7 +64,20 @@ class LaboratoryModel with ChangeNotifier {
 
     notifyListeners();
 
-    _materialsToCombine.clear();
+    if (newMaterials.isNotEmpty) { // svuota _materialsToCombine se sono stati prodotti materiali
+      _materialsToCombine.clear();
+    } else { // altrimenti aggiorna il contatore di penalità
+      _contatorePenalita++;
+      if (_contatorePenalita  >= 3) { // dopo 3 fallimenti, punisci
+        _contatorePenalita = 0;
+        _materialsToCombine.clear();
+        // esegui penalità
+        _partitaMap["credit"] -= 50;
+        if (_partitaMap["credit"] < 0) {
+          _partitaMap["credit"] = 0;
+        }
+      }
+    }
 
     //afterPlayerInteraction() non viene chiamata direttamente da questa funzione, ma dopo che il giocatore avrà preso visione dei materiali eventualmente sbloccati
   }

@@ -347,11 +347,10 @@ abstract class SharedAppDatabase extends _$SharedAppDatabase {
   }
 
   Future<List<Material>> getCombinationProducts(dynamic numeroLivello, List<Material> listaMateriali) {
-    //final intNumeroLivello = numeroLivello as int;
-    final intNumeroLivello = 100000000;
+    // final intNumeroLivello = numeroLivello as int;
+    final intNumeroLivello = 100000000; // WARN: considerare se effettuare controllo o meno
     final materialIds = listaMateriali.map((material) => material.id).toList();
 
-    // TODO: questa query dovrebbe controllare che la lista dei materiali in argomento faccia parte di una specifica combinazione e abbia attributo product 0 e, nel caso, selezionare i materiali con product 1 facenti parte di quella stessa combinazione
     return (customSelect(
       '''
       SELECT m.* 
@@ -365,7 +364,7 @@ abstract class SharedAppDatabase extends _$SharedAppDatabase {
         JOIN combination_material AS cm ON c.id = cm.combination_id
         WHERE cm.material_id IN (${materialIds.join(',')}) AND cm.product = 0
         GROUP BY c.id
-        HAVING COUNT(cm.material_id) = ${materialIds.length}
+        HAVING COUNT(DISTINCT cm.material_id) = ${materialIds.length} AND COUNT(cm.material_id) = ${materialIds.length}
       )
       AND (l.number <= ? OR c.level_id IS NULL)
       ''',
