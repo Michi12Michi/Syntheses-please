@@ -8,9 +8,11 @@ import '../../utils/common_widgets.dart';
 import 'package:wolt_modal_sheet/wolt_modal_sheet.dart';
 
 class LaboratoryView extends StatelessWidget {
-  const LaboratoryView({super.key, required this.numeroPartita});
+  LaboratoryView({super.key, required this.numeroPartita});
   
   final String numeroPartita;
+  final ScrollController _scrollControllerMaterials = ScrollController();
+  final ScrollController _scrollControllerCategories = ScrollController();
   static const routeName = '/laboratory';
 
   @override
@@ -125,38 +127,42 @@ class LaboratoryView extends StatelessWidget {
                           shape: BoxShape.rectangle,
                           borderRadius: BorderRadius.zero,
                         ),
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            children: viewModel.categories.map((category) {
-                              return GestureDetector(
-                                onTap: () {
-                                  viewModel.loadMaterialsByCategory(category.id);
-                                },
-                                child: Container(
-                                  width: 100,
-                                  margin: const EdgeInsets.all(4),
-                                  decoration: BoxDecoration(
-                                    color: const Color.fromARGB(60, 0, 0, 0),
-                                    borderRadius: BorderRadius.circular(8.0),
-                                  ),
-                                  child: SingleChildScrollView(
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        buildSvgImage(category.image),
-                                        const SizedBox(height: 8),
-                                        Text(
-                                          category.name,
-                                          style: const TextStyle(color: Colors.white),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      ],
+                        child: Scrollbar(
+                          controller: _scrollControllerCategories,
+                          child: SingleChildScrollView( // riga delle categorie
+                            scrollDirection: Axis.horizontal,
+                            controller: _scrollControllerCategories,
+                            child: Row( 
+                              children: viewModel.categories.map((category) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    viewModel.loadMaterialsByCategory(category.id);
+                                  },
+                                  child: Container(
+                                    width: 100,
+                                    margin: const EdgeInsets.all(4),
+                                    decoration: BoxDecoration(
+                                      color: const Color.fromARGB(60, 0, 0, 0),
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
+                                    child: SingleChildScrollView(
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          buildSvgImage(category.image),
+                                          const SizedBox(height: 8),
+                                          Text(
+                                            category.name,
+                                            style: const TextStyle(color: Colors.white),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                              );
-                            }).toList(),
+                                );
+                              }).toList(),
+                            ),
                           ),
                         ),
                       ),
@@ -172,20 +178,24 @@ class LaboratoryView extends StatelessWidget {
                           shape: BoxShape.rectangle,
                           borderRadius: BorderRadius.zero,
                         ),
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            children: viewModel.materials.map((material) {
-                              return Draggable<int>(
-                                data: material.id,  // ID materiale per drag and drop
-                                feedback: MaterialFeedbackWidget(material: material),
-                                childWhenDragging: Opacity(
-                                  opacity: 0.5,
+                        child: Scrollbar(
+                          controller: _scrollControllerMaterials,
+                          child: SingleChildScrollView( // riga dei materiali
+                            scrollDirection: Axis.horizontal,
+                            controller: _scrollControllerMaterials,
+                            child: Row(
+                              children: viewModel.materials.map((material) {
+                                return Draggable<int>(
+                                  data: material.id,  // ID materiale per drag and drop
+                                  feedback: MaterialFeedbackWidget(material: material),
+                                  childWhenDragging: Opacity(
+                                    opacity: 0.5,
+                                    child: MaterialWidget(material: material),
+                                  ),
                                   child: MaterialWidget(material: material),
-                                ),
-                                child: MaterialWidget(material: material),
-                              );
-                            }).toList(),
+                                );
+                              }).toList(),
+                            ),
                           ),
                         ),
                       ),
