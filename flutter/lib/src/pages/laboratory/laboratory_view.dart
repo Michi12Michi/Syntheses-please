@@ -89,6 +89,8 @@ class LaboratoryView extends StatelessWidget {
                   ],
                 ).then((_) {
                   // chiamata quando il modal dei nuovi materiali prodotti viene chiuso
+                  viewModel.lastMaterials.addAll(viewModel.newMaterials);
+                  viewModel.loadLastMaterials();
                   viewModel.newMaterials.clear();
                   viewModel.afterPlayerInteraction();
                 });
@@ -136,7 +138,11 @@ class LaboratoryView extends StatelessWidget {
                               children: viewModel.categories.map((category) {
                                 return GestureDetector(
                                   onTap: () {
-                                    viewModel.loadMaterialsByCategory(category.id);
+                                    if (category.id == -1) { // si tratta della categoria a cui appartengono le ultime scoperte e gli ultimi materiali 
+                                      viewModel.loadLastMaterials();
+                                    } else {
+                                      viewModel.loadMaterialsByCategory(category.id);
+                                    }
                                   },
                                   child: Container(
                                     width: 100,

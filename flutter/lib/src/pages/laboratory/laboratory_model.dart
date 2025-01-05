@@ -15,6 +15,7 @@ class LaboratoryModel with ChangeNotifier {
   String _numeroPartita = "0";
   List<database.Material> _materials = [];
   List<database.Material> _newMaterials = [];
+  final List<database.Material> _lastMaterials = [];
   final List<database.Material> _materialsToCombine = [];
   List<database.Category> _categories = [];
   List<database.Quest> _quests = [];
@@ -25,7 +26,11 @@ class LaboratoryModel with ChangeNotifier {
   Map<String, dynamic> get partitaMap => _partitaMap;
   List<database.Material> get materials => _materials;
   List<database.Material> get newMaterials => _newMaterials;
-  List<database.Category> get categories => _categories;
+  List<database.Material> get lastMaterials => _lastMaterials;
+  List<database.Category> get categories {
+    final latestCategory = database.Category(id: -1, name: nomeCategoriaUltimiMateriali, purchasable: 0);
+    return [latestCategory, ..._categories];
+  }
   List<database.Quest> get quests => _quests;
   bool get isLoading => _isLoading;
   List<database.Material> get materialsToCombine => _materialsToCombine;
@@ -45,10 +50,19 @@ class LaboratoryModel with ChangeNotifier {
     savePartita();    
   }
 
+  Future<void> loadLastMaterials() async { // serve per caricare gli ultimi materiali prodotti e usati
+    final db = await openDatabase();
+
+    _materials = await db.getSelectedMaterials(_lastMaterials.map((e) => e.id).toList());
+
+    notifyListeners();
+  }
+
   Future<void> checkCombination() async {
     final db = await openDatabase();
 
     _newMaterials = await db.getCombinationProducts(_partitaMap["level"], _materialsToCombine);
+    _lastMaterials.addAll(_materialsToCombine);
 
     // aggiungi a _partitaMap["material_discovered_list"], se non sono già presenti nella lista, tutti gli id dei materiali appena prodotti. Aggiorna crediti e esperienza
     for (var materialeSingolo in _newMaterials) {
@@ -70,7 +84,7 @@ class LaboratoryModel with ChangeNotifier {
         _contatorePenalita = 0;
         _materialsToCombine.clear();
         // esegui penalità
-        _partitaMap["credit"] -= punizioneFallimentoCombinazione;
+        _partitaMap["credit"] -= _partitaMap["credit"] * punizioneFallimentoCombinazionePercentuale;
         if (_partitaMap["credit"] < 0) {
           _partitaMap["credit"] = 0;
         }
