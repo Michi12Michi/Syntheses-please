@@ -164,6 +164,7 @@ class LaboratoryModel with ChangeNotifier {
         notifyListeners();
       });
     });
+    notifyListeners();
   }
 
   Future<void> loadPartita(String numeroPartita) async {
