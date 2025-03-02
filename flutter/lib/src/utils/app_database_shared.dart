@@ -456,7 +456,7 @@ abstract class SharedAppDatabase extends _$SharedAppDatabase {
     final questSvolte = listaIdQuestSvolte.isEmpty ? '0' : listaIdQuestSvolte.keys.join(", ");
     
     return (customSelect(
-      'SELECT quests.id, quests.name, quests.description, quests.starting_dialog, '
+      'SELECT quests.id as qid, quests.name, quests.description, quests.starting_dialog, '
       'quests.ending_dialog_success, quests.ending_dialog_failure, quests.minimum_money_required, '
       'quests.maximum_money_required, quests.level_when_active, quests.character_issuer, '
       'quests.objective_material, quests.experience_added, quests.money_added_success, '
@@ -469,7 +469,7 @@ abstract class SharedAppDatabase extends _$SharedAppDatabase {
       variables: [Variable.withInt(intNumeroLivello)],
       readsFrom: {quests, levels},
     ).map((row) => Quest(
-          id: row.read<int>('id'),
+          id: row.read<int>('qid'),
           name: row.read<String>('name'),
           description: row.read<String>('description'),
           startingDialog: row.read<String>('starting_dialog'),
@@ -490,6 +490,44 @@ abstract class SharedAppDatabase extends _$SharedAppDatabase {
           likeAddedSuccess: row.read<int?>('like_added_success'),
           likeAddedFailure: row.read<int?>('like_added_failure'),
         )).get());
+  }
+
+  // ottiene la quest singola correlata
+  Future<Quest> getQuestById(int questId) {
+    return customSelect(
+      'SELECT quests.id as qid, quests.name, quests.description, quests.starting_dialog, '
+      'quests.ending_dialog_success, quests.ending_dialog_failure, quests.minimum_money_required, '
+      'quests.maximum_money_required, quests.level_when_active, quests.character_issuer, '
+      'quests.objective_material, quests.experience_added, quests.money_added_success, '
+      'quests.money_added_failure, quests.accept_button, quests.decline_button, '
+      'quests.minimum_like_required, quests.maximum_like_required, quests.like_added_success, '
+      'quests.like_added_failure '
+      'FROM quests '
+      'WHERE id = ? ',
+      variables: [Variable.withInt(questId)],
+      readsFrom: {quests},
+    ).map((row) => Quest(
+      id: row.read<int>('qid'),
+      name: row.read<String>('name'),
+      description: row.read<String>('description'),
+      startingDialog: row.read<String>('starting_dialog'),
+      endingDialogSuccess: row.read<String>('ending_dialog_success'),
+      endingDialogFailure: row.read<String>('ending_dialog_failure'),
+      minimumMoneyRequired: row.read<int?>('minimum_money_required'),
+      maximumMoneyRequired: row.read<int?>('maximum_money_required'),
+      levelWhenActive: row.read<int?>('level_when_active'),
+      characterIssuer: row.read<int?>('character_issuer'),
+      objectiveMaterial: row.read<int?>('objective_material'),
+      experienceAdded: row.read<int?>('experience_added'),
+      moneyAddedSuccess: row.read<int?>('money_added_success'),
+      moneyAddedFailure: row.read<int?>('money_added_failure'),
+      acceptButton: row.read<String>('accept_button'),
+      declineButton: row.read<String>('decline_button'),
+      minimumLikeRequired: row.read<int?>('minimum_like_required'),
+      maximumLikeRequired: row.read<int?>('maximum_like_required'),
+      likeAddedSuccess: row.read<int?>('like_added_success'),
+      likeAddedFailure: row.read<int?>('like_added_failure'),
+    )).getSingle();
   }
 
 }

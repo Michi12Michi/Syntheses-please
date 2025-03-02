@@ -3,7 +3,6 @@
 part of 'app_database_shared.dart';
 
 // ignore_for_file: type=lint, unnecessary_null_comparison, unnecessary_non_null_assertion
-
 class $CreditsTable extends Credits with TableInfo<$CreditsTable, Credit> {
   @override
   final GeneratedDatabase attachedDatabase;
@@ -7127,8 +7126,7 @@ final class $$BlogsTableReferences
   static $LevelsTable _levelTable(_$SharedAppDatabase db) =>
       db.levels.createAlias($_aliasNameGenerator(db.blogs.level, db.levels.id));
 
-  $$LevelsTableProcessedTableManager? get level {
-    if ($_item.level == null) return null;
+  $$LevelsTableProcessedTableManager get level {
     final manager = $$LevelsTableTableManager($_db, $_db.levels)
         .filter((f) => f.id($_item.level!));
     final item = $_typedResult.readTableOrNull(_levelTable($_db));
@@ -7974,8 +7972,7 @@ final class $$CombinationMaterialsTableReferences extends BaseReferences<
       db.combinations.createAlias($_aliasNameGenerator(
           db.combinationMaterials.combinationId, db.combinations.id));
 
-  $$CombinationsTableProcessedTableManager? get combinationId {
-    if ($_item.combinationId == null) return null;
+  $$CombinationsTableProcessedTableManager get combinationId {
     final manager = $$CombinationsTableTableManager($_db, $_db.combinations)
         .filter((f) => f.id($_item.combinationId!));
     final item = $_typedResult.readTableOrNull(_combinationIdTable($_db));
@@ -7988,8 +7985,7 @@ final class $$CombinationMaterialsTableReferences extends BaseReferences<
       db.materials.createAlias($_aliasNameGenerator(
           db.combinationMaterials.materialId, db.materials.id));
 
-  $$MaterialsTableProcessedTableManager? get materialId {
-    if ($_item.materialId == null) return null;
+  $$MaterialsTableProcessedTableManager get materialId {
     final manager = $$MaterialsTableTableManager($_db, $_db.materials)
         .filter((f) => f.id($_item.materialId!));
     final item = $_typedResult.readTableOrNull(_materialIdTable($_db));
@@ -8427,8 +8423,7 @@ final class $$LevelMaterialsTableReferences extends BaseReferences<
       db.levels.createAlias(
           $_aliasNameGenerator(db.levelMaterials.levelId, db.levels.id));
 
-  $$LevelsTableProcessedTableManager? get levelId {
-    if ($_item.levelId == null) return null;
+  $$LevelsTableProcessedTableManager get levelId {
     final manager = $$LevelsTableTableManager($_db, $_db.levels)
         .filter((f) => f.id($_item.levelId!));
     final item = $_typedResult.readTableOrNull(_levelIdTable($_db));
@@ -8441,8 +8436,7 @@ final class $$LevelMaterialsTableReferences extends BaseReferences<
       db.materials.createAlias(
           $_aliasNameGenerator(db.levelMaterials.materialId, db.materials.id));
 
-  $$MaterialsTableProcessedTableManager? get materialId {
-    if ($_item.materialId == null) return null;
+  $$MaterialsTableProcessedTableManager get materialId {
     final manager = $$MaterialsTableTableManager($_db, $_db.materials)
         .filter((f) => f.id($_item.materialId!));
     final item = $_typedResult.readTableOrNull(_materialIdTable($_db));
@@ -8733,8 +8727,7 @@ final class $$MaterialCategoriesTableReferences extends BaseReferences<
       db.materials.createAlias($_aliasNameGenerator(
           db.materialCategories.materialId, db.materials.id));
 
-  $$MaterialsTableProcessedTableManager? get materialId {
-    if ($_item.materialId == null) return null;
+  $$MaterialsTableProcessedTableManager get materialId {
     final manager = $$MaterialsTableTableManager($_db, $_db.materials)
         .filter((f) => f.id($_item.materialId!));
     final item = $_typedResult.readTableOrNull(_materialIdTable($_db));
@@ -8747,8 +8740,7 @@ final class $$MaterialCategoriesTableReferences extends BaseReferences<
       db.categories.createAlias($_aliasNameGenerator(
           db.materialCategories.categoryId, db.categories.id));
 
-  $$CategoriesTableProcessedTableManager? get categoryId {
-    if ($_item.categoryId == null) return null;
+  $$CategoriesTableProcessedTableManager get categoryId {
     final manager = $$CategoriesTableTableManager($_db, $_db.categories)
         .filter((f) => f.id($_item.categoryId!));
     final item = $_typedResult.readTableOrNull(_categoryIdTable($_db));
@@ -9044,8 +9036,7 @@ final class $$QuestMaterialsTableReferences extends BaseReferences<
       db.quests.createAlias(
           $_aliasNameGenerator(db.questMaterials.questId, db.quests.id));
 
-  $$QuestsTableProcessedTableManager? get questId {
-    if ($_item.questId == null) return null;
+  $$QuestsTableProcessedTableManager get questId {
     final manager = $$QuestsTableTableManager($_db, $_db.quests)
         .filter((f) => f.id($_item.questId!));
     final item = $_typedResult.readTableOrNull(_questIdTable($_db));
@@ -9058,8 +9049,7 @@ final class $$QuestMaterialsTableReferences extends BaseReferences<
       db.materials.createAlias(
           $_aliasNameGenerator(db.questMaterials.materialId, db.materials.id));
 
-  $$MaterialsTableProcessedTableManager? get materialId {
-    if ($_item.materialId == null) return null;
+  $$MaterialsTableProcessedTableManager get materialId {
     final manager = $$MaterialsTableTableManager($_db, $_db.materials)
         .filter((f) => f.id($_item.materialId!));
     final item = $_typedResult.readTableOrNull(_materialIdTable($_db));
@@ -9364,8 +9354,7 @@ final class $$QuestQuestsTableReferences
       db.quests.createAlias(
           $_aliasNameGenerator(db.questQuests.questActive, db.quests.id));
 
-  $$QuestsTableProcessedTableManager? get questActive {
-    if ($_item.questActive == null) return null;
+  $$QuestsTableProcessedTableManager get questActive {
     final manager = $$QuestsTableTableManager($_db, $_db.quests)
         .filter((f) => f.id($_item.questActive!));
     final item = $_typedResult.readTableOrNull(_questActiveTable($_db));
@@ -9378,8 +9367,7 @@ final class $$QuestQuestsTableReferences
       db.quests.createAlias(
           $_aliasNameGenerator(db.questQuests.questRequired, db.quests.id));
 
-  $$QuestsTableProcessedTableManager? get questRequired {
-    if ($_item.questRequired == null) return null;
+  $$QuestsTableProcessedTableManager get questRequired {
     final manager = $$QuestsTableTableManager($_db, $_db.quests)
         .filter((f) => f.id($_item.questRequired!));
     final item = $_typedResult.readTableOrNull(_questRequiredTable($_db));

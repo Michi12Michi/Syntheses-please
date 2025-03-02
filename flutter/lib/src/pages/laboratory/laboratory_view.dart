@@ -338,7 +338,7 @@ class LaboratoryView extends StatelessWidget {
                                       children: viewModel.quests.map((quest) {
                                         return GestureDetector(
                                           onTap: () {
-                                            // TODO: viewModel.showQuestDetails(quest.id);
+                                            viewModel.showQuestDetails(context, quest.id);
                                           },
                                           child: Container(
                                             width: 100,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wolt_modal_sheet/wolt_modal_sheet.dart';
 import '../../constants.dart';
 import 'dart:convert';
 import '../../utils/app_database.dart';
@@ -94,6 +95,75 @@ class LaboratoryModel with ChangeNotifier {
     notifyListeners();
 
     //afterPlayerInteraction() non viene chiamata direttamente da questa funzione, ma dopo che il giocatore avrà preso visione dei materiali eventualmente sbloccati
+  }
+
+  Future<void> showQuestDetails(BuildContext context, int questId) async {
+    final db = await openDatabase();
+
+    // Ottiene dettagli della quest dal database
+    final quest = await db.getQuestById(questId);
+
+    // Mostra il modal
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      WoltModalSheet.show(
+        context: context,
+        modalTypeBuilder: (_) => WoltModalType.dialog(),
+        pageListBuilder: (modalSheetContext) => [
+          SliverWoltModalSheetPage(
+            pageTitle: Text(
+              quest.name,
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
+            ),
+            mainContentSliversBuilder: (context) => [
+              SliverPadding(
+                padding: const EdgeInsets.all(16.0),
+                sliver: SliverList(
+                  delegate: SliverChildListDelegate([
+                    Text(
+                      quest.description,
+                      style: const TextStyle(fontSize: 16),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 16),
+                    if (quest.startingDialog.isNotEmpty) ...[
+                      Text(
+                        '"${quest.startingDialog}"',
+                        style: const TextStyle(fontStyle: FontStyle.italic),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 16),
+                    ],
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).pop(true);
+                            // TODO: attiva la quest
+                          },
+                          child: Text(quest.acceptButton),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            // TOOD: quest rifiutata
+                            Navigator.of(context).pop(false);
+                          },
+                          child: Text(quest.declineButton),
+                        ),
+                      ],
+                    ),
+                  ]),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ).then((value) {
+        // azioni alla chiusura del modal
+        notifyListeners();
+      });
+    });
   }
 
   Future<void> loadPartita(String numeroPartita) async {
