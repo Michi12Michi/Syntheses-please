@@ -464,7 +464,7 @@ abstract class SharedAppDatabase extends _$SharedAppDatabase {
       'quests.minimum_like_required, quests.maximum_like_required, quests.like_added_success, '
       'quests.like_added_failure '
       'FROM quests '
-      'JOIN levels ON quests.level_when_active = levels.id '
+      'JOIN levels ON quests.level_when_active = levels.number '
       'WHERE levels.number = ? AND quests.id NOT IN ($questSvolte) ',
       variables: [Variable.withInt(intNumeroLivello)],
       readsFrom: {quests, levels},

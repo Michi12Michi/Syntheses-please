@@ -28,7 +28,7 @@ class ShopModel with ChangeNotifier {
 
     int materialeDaComprare = _purchasableMaterials[indice].id;
 
-    // TODO: modifiche a soldi e esperienza
+    // modifiche a soldi e esperienza
     // aggiungi a _partitaMap["material_discovered_list"], se non è già presente nella lista, il materiale appena comprato
     if (!_partitaMap["material_discovered_list"].contains(materialeDaComprare)) {
       _partitaMap["material_discovered_list"].add(materialeDaComprare);

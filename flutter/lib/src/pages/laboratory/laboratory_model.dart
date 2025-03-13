@@ -1,3 +1,4 @@
+import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -45,10 +46,106 @@ class LaboratoryModel with ChangeNotifier {
     notifyListeners();
   }
 
+
+
+  Future<List<int>> getCompletedQuests(List<int> activeQuestIds) async {
+  final db = await openDatabase();
+  final completedQuests = <int>[];
+
+  for (var questId in activeQuestIds) {
+    final quest = await (db.select(db.quests)..where((q) => q.id.equals(questId))).getSingleOrNull();
+
+    if (quest != null) {
+      bool isCompleted = true;
+
+      // Controlla se ci sono materiali richiesti per completare la quest
+      final requiredMaterials = await (db.select(db.questMaterials)..where((qm) => qm.questId.equals(questId))).get();
+
+      for (var qm in requiredMaterials) {
+        if (!(_partitaMap["material_discovered_list"].contains(qm.materialId))) {
+          isCompleted = false;
+          break;
+        }
+      }
+
+      if (isCompleted) {
+        completedQuests.add(questId);
+      }
+    }
+  }
+
+  return completedQuests;
+}
+
+Future<int> getNextLevelIfEligible(int currentLevelId, int playerExperience) async {
+  final db = await openDatabase();
+
+  // Ottieni il livello attuale
+  final currentLevel = await (db.select(db.levels)..where((l) => l.id.equals(currentLevelId))).getSingleOrNull();
+  if (currentLevel == null) return currentLevelId;
+
+  // Trova il livello successivo con esperienza richiesta minore o uguale a quella del giocatore
+  final nextLevel = await (db.select(db.levels)
+        ..where((l) => l.requiredExperience.isSmallerOrEqualValue(playerExperience))
+        ..orderBy([(l) => OrderingTerm(expression: l.requiredExperience, mode: OrderingMode.desc)])
+        ..limit(1))
+      .getSingleOrNull();
+
+  return (nextLevel != null && nextLevel.id != currentLevelId) ? nextLevel.id : currentLevelId;
+}
+
+
+
+
   Future<void> afterPlayerInteraction() async {
-    // TODO: quest eccetera
+    final db = await openDatabase();
+
+    // Controlla le quest completate
+    List<int> completedQuests = await getCompletedQuests(_partitaMap["quest_active_list"]);
     
-    savePartita();    
+    for (var questId in completedQuests) {
+      final quest = await db.getQuestById(questId);
+
+      // Aggiorna crediti, esperienza e like in base all'esito della quest
+      if (_partitaMap["credit"] >= (quest.minimumMoneyRequired ?? 0) &&
+          _partitaMap["credit"] <= (quest.maximumMoneyRequired ?? double.infinity) &&
+          _partitaMap["like"] >= (quest.minimumLikeRequired ?? 0) &&
+          _partitaMap["like"] <= (quest.maximumLikeRequired ?? double.infinity)) {
+        
+        _partitaMap["credit"] += (quest.moneyAddedSuccess ?? 0);
+        _partitaMap["experience"] += (quest.experienceAdded ?? 0);
+        _partitaMap["like"] += (quest.likeAddedSuccess ?? 0);
+      } else {
+        _partitaMap["credit"] += (quest.moneyAddedFailure ?? 0);
+        _partitaMap["like"] += (quest.likeAddedFailure ?? 0);
+      }
+
+      _partitaMap["quest_done_list"][questId.toString()] = 1;
+      _partitaMap["quest_active_list"].remove(questId);
+    }
+
+    // Controlla se il giocatore può salire di livello
+    int nextLevelId = await getNextLevelIfEligible(_partitaMap["level"], _partitaMap["experience"]);
+    if (nextLevelId > _partitaMap["level"]) {
+      _partitaMap["level"] = nextLevelId;
+
+      // Aggiungi nuovi materiali disponibili al livello
+      List<int> newMaterials = await db.getMaterialsIdByLevelNumber(nextLevelId);
+      for (var materialId in newMaterials) {
+        if (!_partitaMap["material_discovered_list"].contains(materialId)) {
+          _partitaMap["material_discovered_list"].add(materialId);
+        }
+      }
+
+      // Aggiorna categorie disponibili
+      _categories = await db.getConnectedCategories(_partitaMap["material_discovered_list"]);
+
+      // Carica nuove quest disponibili per il nuovo livello
+      _quests = await db.getDoableQuests(_partitaMap["level"], _partitaMap["quest_done_list"]);
+    }
+
+    savePartita();
+    notifyListeners();
   }
 
   Future<void> loadLastMaterials() async { // serve per caricare gli ultimi materiali prodotti e usati
@@ -99,11 +196,8 @@ class LaboratoryModel with ChangeNotifier {
 
   Future<void> showQuestDetails(BuildContext context, int questId) async {
     final db = await openDatabase();
-
-    // Ottiene dettagli della quest dal database
     final quest = await db.getQuestById(questId);
 
-    // Mostra il modal
     WidgetsBinding.instance.addPostFrameCallback((_) {
       WoltModalSheet.show(
         context: context,
@@ -139,15 +233,17 @@ class LaboratoryModel with ChangeNotifier {
                       children: [
                         ElevatedButton(
                           onPressed: () {
+                            _partitaMap["quest_active_list"].add(questId);
                             Navigator.of(context).pop(true);
-                            // TODO: attiva la quest
+                            notifyListeners();
                           },
                           child: Text(quest.acceptButton),
                         ),
                         ElevatedButton(
                           onPressed: () {
-                            // TOOD: quest rifiutata
+                            _partitaMap["quest_done_list"][questId.toString()] = 0;
                             Navigator.of(context).pop(false);
+                            notifyListeners();
                           },
                           child: Text(quest.declineButton),
                         ),
@@ -160,12 +256,11 @@ class LaboratoryModel with ChangeNotifier {
           ),
         ],
       ).then((value) {
-        // azioni alla chiusura del modal
         notifyListeners();
       });
     });
     notifyListeners();
-  }
+}
 
   Future<void> loadPartita(String numeroPartita) async {
     final db = await openDatabase();
