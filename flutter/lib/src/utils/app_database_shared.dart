@@ -107,7 +107,7 @@ class Materials extends Table {
   TextColumn get image => text().nullable()();
   TextColumn get description => text().nullable()();
   RealColumn get price => real().nullable()();
-  RealColumn get experience => real().withDefault(Constant(0.0))();
+  IntColumn get experience => integer().withDefault(Constant(0))();
   IntColumn get level => integer().nullable()();
   BoolColumn get temporary => boolean().withDefault(Constant(false))();
 }
@@ -290,7 +290,7 @@ abstract class SharedAppDatabase extends _$SharedAppDatabase {
           description: row.read<String?>('description'),
           commonName: row.read<String>('common_name'),
           iupacName: row.read<String?>('iupac_name'),
-          experience: row.read<double>('experience'),
+          experience: row.read<int>('experience'),
           price: row.read<double?>('price'),
           temporary: row.read<bool>('temporary'),
         )).get());
@@ -320,7 +320,7 @@ abstract class SharedAppDatabase extends _$SharedAppDatabase {
           description: row.read<String?>('description'),
           commonName: row.read<String>('common_name'),
           iupacName: row.read<String?>('iupac_name'),
-          experience: row.read<double>('experience'),
+          experience: row.read<int>('experience'),
           price: row.read<double?>('price'),
           temporary: row.read<bool>('temporary'),
         )).get());
@@ -340,7 +340,7 @@ abstract class SharedAppDatabase extends _$SharedAppDatabase {
           description: row.read<String?>('description'),
           commonName: row.read<String>('common_name'),
           iupacName: row.read<String?>('iupac_name'),
-          experience: row.read<double>('experience'),
+          experience: row.read<int>('experience'),
           price: row.read<double?>('price'),
           temporary: row.read<bool>('temporary'),
         )).get());
@@ -383,7 +383,7 @@ abstract class SharedAppDatabase extends _$SharedAppDatabase {
       description: row.read<String?>('description'),
       commonName: row.read<String>('common_name'),
       iupacName: row.read<String?>('iupac_name'),
-      experience: row.read<double>('experience'),
+      experience: row.read<int>('experience'),
       price: row.read<double?>('price'),
       temporary: row.read<bool>('temporary'),
     )).get());

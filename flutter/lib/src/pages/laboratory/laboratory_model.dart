@@ -46,62 +46,63 @@ class LaboratoryModel with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<List<dynamic>> getCompletedQuests(List<dynamic> activeQuestIds) async {
+    final db = await openDatabase();
+    final completedQuests = <dynamic>[];
 
+    for (var questId in activeQuestIds) {
+      final query = db.selectOnly(db.quests)
+      ..addColumns([db.quests.name])
+      ..where(db.quests.id.equals(questId));
 
-  Future<List<int>> getCompletedQuests(List<int> activeQuestIds) async {
-  final db = await openDatabase();
-  final completedQuests = <int>[];
+      final quest = await query.map((row) => {
+        'name': row.read(db.quests.name),
+      }).getSingleOrNull();
 
-  for (var questId in activeQuestIds) {
-    final quest = await (db.select(db.quests)..where((q) => q.id.equals(questId))).getSingleOrNull();
+      if (quest != null) {
+        bool isCompleted = true;
 
-    if (quest != null) {
-      bool isCompleted = true;
+        // Controlla se ci sono materiali richiesti per completare la quest
+        final requiredMaterials = await (db.select(db.questMaterials)..where((qm) => qm.questId.equals(questId))).get();
 
-      // Controlla se ci sono materiali richiesti per completare la quest
-      final requiredMaterials = await (db.select(db.questMaterials)..where((qm) => qm.questId.equals(questId))).get();
+        for (var qm in requiredMaterials) {
+          if (!(_partitaMap["material_discovered_list"].contains(qm.materialId))) {
+            isCompleted = false;
+            break;
+          }
+        }
 
-      for (var qm in requiredMaterials) {
-        if (!(_partitaMap["material_discovered_list"].contains(qm.materialId))) {
-          isCompleted = false;
-          break;
+        if (isCompleted) {
+          completedQuests.add(questId);
         }
       }
-
-      if (isCompleted) {
-        completedQuests.add(questId);
-      }
     }
+
+    return completedQuests;
   }
 
-  return completedQuests;
-}
+  Future<int> getNextLevelIfEligible(int currentLevelId, int playerExperience) async {
+    final db = await openDatabase();
 
-Future<int> getNextLevelIfEligible(int currentLevelId, int playerExperience) async {
-  final db = await openDatabase();
+    // Ottieni il livello attuale
+    final currentLevel = await (db.select(db.levels)..where((l) => l.id.equals(currentLevelId))).getSingleOrNull();
+    if (currentLevel == null) return currentLevelId;
 
-  // Ottieni il livello attuale
-  final currentLevel = await (db.select(db.levels)..where((l) => l.id.equals(currentLevelId))).getSingleOrNull();
-  if (currentLevel == null) return currentLevelId;
+    // Trova il livello successivo con esperienza richiesta minore o uguale a quella del giocatore
+    final nextLevel = await (db.select(db.levels)
+          ..where((l) => l.requiredExperience.isSmallerOrEqualValue(playerExperience))
+          ..orderBy([(l) => OrderingTerm(expression: l.requiredExperience, mode: OrderingMode.desc)])
+          ..limit(1))
+        .getSingleOrNull();
 
-  // Trova il livello successivo con esperienza richiesta minore o uguale a quella del giocatore
-  final nextLevel = await (db.select(db.levels)
-        ..where((l) => l.requiredExperience.isSmallerOrEqualValue(playerExperience))
-        ..orderBy([(l) => OrderingTerm(expression: l.requiredExperience, mode: OrderingMode.desc)])
-        ..limit(1))
-      .getSingleOrNull();
-
-  return (nextLevel != null && nextLevel.id != currentLevelId) ? nextLevel.id : currentLevelId;
-}
-
-
-
+    return (nextLevel != null && nextLevel.id != currentLevelId) ? nextLevel.id : currentLevelId;
+  }
 
   Future<void> afterPlayerInteraction() async {
     final db = await openDatabase();
 
     // Controlla le quest completate
-    List<int> completedQuests = await getCompletedQuests(_partitaMap["quest_active_list"]);
+    List<dynamic> completedQuests = await getCompletedQuests(_partitaMap["quest_active_list"]);
     
     for (var questId in completedQuests) {
       final quest = await db.getQuestById(questId);
@@ -122,6 +123,10 @@ Future<int> getNextLevelIfEligible(int currentLevelId, int playerExperience) asy
 
       _partitaMap["quest_done_list"][questId.toString()] = 1;
       _partitaMap["quest_active_list"].remove(questId);
+
+      _quests.removeWhere((q) => q.id == questId);
+
+      // TODO: modal risultato quest
     }
 
     // Controlla se il giocatore può salire di livello
@@ -242,6 +247,8 @@ Future<int> getNextLevelIfEligible(int currentLevelId, int playerExperience) asy
                         ElevatedButton(
                           onPressed: () {
                             _partitaMap["quest_done_list"][questId.toString()] = 0;
+                            _quests.removeWhere((q) => q.id == questId);
+                            _partitaMap["quest_active_list"].remove(questId);
                             Navigator.of(context).pop(false);
                             notifyListeners();
                           },

@@ -531,11 +531,11 @@ class $MaterialsTable extends Materials
   static const VerificationMeta _experienceMeta =
       const VerificationMeta('experience');
   @override
-  late final GeneratedColumn<double> experience = GeneratedColumn<double>(
+  late final GeneratedColumn<int> experience = GeneratedColumn<int>(
       'experience', aliasedName, false,
-      type: DriftSqlType.double,
+      type: DriftSqlType.int,
       requiredDuringInsert: false,
-      defaultValue: Constant(0.0));
+      defaultValue: Constant(0));
   static const VerificationMeta _levelMeta = const VerificationMeta('level');
   @override
   late final GeneratedColumn<int> level = GeneratedColumn<int>(
@@ -638,7 +638,7 @@ class $MaterialsTable extends Materials
       price: attachedDatabase.typeMapping
           .read(DriftSqlType.double, data['${effectivePrefix}price']),
       experience: attachedDatabase.typeMapping
-          .read(DriftSqlType.double, data['${effectivePrefix}experience'])!,
+          .read(DriftSqlType.int, data['${effectivePrefix}experience'])!,
       level: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}level']),
       temporary: attachedDatabase.typeMapping
@@ -659,7 +659,7 @@ class Material extends DataClass implements Insertable<Material> {
   final String? image;
   final String? description;
   final double? price;
-  final double experience;
+  final int experience;
   final int? level;
   final bool temporary;
   const Material(
@@ -689,7 +689,7 @@ class Material extends DataClass implements Insertable<Material> {
     if (!nullToAbsent || price != null) {
       map['price'] = Variable<double>(price);
     }
-    map['experience'] = Variable<double>(experience);
+    map['experience'] = Variable<int>(experience);
     if (!nullToAbsent || level != null) {
       map['level'] = Variable<int>(level);
     }
@@ -728,7 +728,7 @@ class Material extends DataClass implements Insertable<Material> {
       image: serializer.fromJson<String?>(json['image']),
       description: serializer.fromJson<String?>(json['description']),
       price: serializer.fromJson<double?>(json['price']),
-      experience: serializer.fromJson<double>(json['experience']),
+      experience: serializer.fromJson<int>(json['experience']),
       level: serializer.fromJson<int?>(json['level']),
       temporary: serializer.fromJson<bool>(json['temporary']),
     );
@@ -743,7 +743,7 @@ class Material extends DataClass implements Insertable<Material> {
       'image': serializer.toJson<String?>(image),
       'description': serializer.toJson<String?>(description),
       'price': serializer.toJson<double?>(price),
-      'experience': serializer.toJson<double>(experience),
+      'experience': serializer.toJson<int>(experience),
       'level': serializer.toJson<int?>(level),
       'temporary': serializer.toJson<bool>(temporary),
     };
@@ -756,7 +756,7 @@ class Material extends DataClass implements Insertable<Material> {
           Value<String?> image = const Value.absent(),
           Value<String?> description = const Value.absent(),
           Value<double?> price = const Value.absent(),
-          double? experience,
+          int? experience,
           Value<int?> level = const Value.absent(),
           bool? temporary}) =>
       Material(
@@ -828,7 +828,7 @@ class MaterialsCompanion extends UpdateCompanion<Material> {
   final Value<String?> image;
   final Value<String?> description;
   final Value<double?> price;
-  final Value<double> experience;
+  final Value<int> experience;
   final Value<int?> level;
   final Value<bool> temporary;
   const MaterialsCompanion({
@@ -860,7 +860,7 @@ class MaterialsCompanion extends UpdateCompanion<Material> {
     Expression<String>? image,
     Expression<String>? description,
     Expression<double>? price,
-    Expression<double>? experience,
+    Expression<int>? experience,
     Expression<int>? level,
     Expression<bool>? temporary,
   }) {
@@ -884,7 +884,7 @@ class MaterialsCompanion extends UpdateCompanion<Material> {
       Value<String?>? image,
       Value<String?>? description,
       Value<double?>? price,
-      Value<double>? experience,
+      Value<int>? experience,
       Value<int?>? level,
       Value<bool>? temporary}) {
     return MaterialsCompanion(
@@ -922,7 +922,7 @@ class MaterialsCompanion extends UpdateCompanion<Material> {
       map['price'] = Variable<double>(price.value);
     }
     if (experience.present) {
-      map['experience'] = Variable<double>(experience.value);
+      map['experience'] = Variable<int>(experience.value);
     }
     if (level.present) {
       map['level'] = Variable<int>(level.value);
@@ -5236,7 +5236,7 @@ typedef $$MaterialsTableCreateCompanionBuilder = MaterialsCompanion Function({
   Value<String?> image,
   Value<String?> description,
   Value<double?> price,
-  Value<double> experience,
+  Value<int> experience,
   Value<int?> level,
   Value<bool> temporary,
 });
@@ -5247,7 +5247,7 @@ typedef $$MaterialsTableUpdateCompanionBuilder = MaterialsCompanion Function({
   Value<String?> image,
   Value<String?> description,
   Value<double?> price,
-  Value<double> experience,
+  Value<int> experience,
   Value<int?> level,
   Value<bool> temporary,
 });
@@ -5365,7 +5365,7 @@ class $$MaterialsTableFilterComposer
   ColumnFilters<double> get price => $composableBuilder(
       column: $table.price, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<double> get experience => $composableBuilder(
+  ColumnFilters<int> get experience => $composableBuilder(
       column: $table.experience, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<int> get level => $composableBuilder(
@@ -5508,7 +5508,7 @@ class $$MaterialsTableOrderingComposer
   ColumnOrderings<double> get price => $composableBuilder(
       column: $table.price, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<double> get experience => $composableBuilder(
+  ColumnOrderings<int> get experience => $composableBuilder(
       column: $table.experience, builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<int> get level => $composableBuilder(
@@ -5545,7 +5545,7 @@ class $$MaterialsTableAnnotationComposer
   GeneratedColumn<double> get price =>
       $composableBuilder(column: $table.price, builder: (column) => column);
 
-  GeneratedColumn<double> get experience => $composableBuilder(
+  GeneratedColumn<int> get experience => $composableBuilder(
       column: $table.experience, builder: (column) => column);
 
   GeneratedColumn<int> get level =>
@@ -5697,7 +5697,7 @@ class $$MaterialsTableTableManager extends RootTableManager<
             Value<String?> image = const Value.absent(),
             Value<String?> description = const Value.absent(),
             Value<double?> price = const Value.absent(),
-            Value<double> experience = const Value.absent(),
+            Value<int> experience = const Value.absent(),
             Value<int?> level = const Value.absent(),
             Value<bool> temporary = const Value.absent(),
           }) =>
@@ -5719,7 +5719,7 @@ class $$MaterialsTableTableManager extends RootTableManager<
             Value<String?> image = const Value.absent(),
             Value<String?> description = const Value.absent(),
             Value<double?> price = const Value.absent(),
-            Value<double> experience = const Value.absent(),
+            Value<int> experience = const Value.absent(),
             Value<int?> level = const Value.absent(),
             Value<bool> temporary = const Value.absent(),
           }) =>
